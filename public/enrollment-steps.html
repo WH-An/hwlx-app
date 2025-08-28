@@ -130,7 +130,13 @@
   </div>
 
   <script>
-    const API_BASE='http://127.0.0.1:3001';
+    // 自动检测API基础URL
+    const API_BASE = (() => {
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        return 'http://127.0.0.1:3001';
+      }
+      return ''; // 生产环境使用相对路径
+    })();
     const CATEGORY='enroll';
     let allPosts=[];
     function toAbs(u){ if(!u)return''; if(/^https?:\/\//i.test(u))return u; return u.startsWith('/')?API_BASE+u:API_BASE+'/'+u; }
