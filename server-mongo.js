@@ -279,14 +279,31 @@ app.post('/api/upload/avatar', upload.single('avatar'), async (req, res) => {
 
     const avatarPath = '/uploads/' + req.file.filename;
     
+    // 检查文件是否成功保存
+    const fs = require('fs');
+    const filePath = path.join(UPLOADS_DIR, req.file.filename);
+    
+    if (!fs.existsSync(filePath)) {
+      return res.status(500).json({ msg: '文件保存失败，请重试' });
+    }
+    
     // 更新用户头像
-    await User.findOneAndUpdate(
+    const updatedUser = await User.findOneAndUpdate(
       { email },
       { avatarPath },
       { new: true }
     );
 
-    res.json({ msg: '头像上传成功', avatarPath });
+    if (!updatedUser) {
+      return res.status(404).json({ msg: '用户不存在' });
+    }
+
+    res.json({ 
+      msg: '头像上传成功', 
+      avatarPath,
+      filename: req.file.filename,
+      fileExists: fs.existsSync(filePath)
+    });
   } catch (error) {
     console.error('头像上传失败:', error);
     res.status(500).json({ msg: '头像上传失败' });
@@ -690,6 +707,51 @@ app.get('/api/debug-frontend', async (req, res) => {
         uploads: '/uploads',
         public: '/public'
       }
+    });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+});
+
+// 检查文件是否存在
+app.get('/api/check-file/:filename', (req, res) => {
+  try {
+    const filename = req.params.filename;
+    const fs = require('fs');
+    const filePath = path.join(UPLOADS_DIR, filename);
+    
+    const exists = fs.existsSync(filePath);
+    const stats = exists ? fs.statSync(filePath) : null;
+    
+    res.json({
+      filename,
+      exists,
+      filePath,
+      size: exists ? stats.size : null,
+      modified: exists ? stats.mtime : null
+    });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+});
+
+// 获取可用头像文件列表
+app.get('/api/available-avatars', (req, res) => {
+  try {
+    const fs = require('fs');
+    const uploadsPath = path.join(__dirname, 'uploads');
+    const files = fs.readdirSync(uploadsPath);
+    
+    // 过滤图片文件
+    const imageFiles = files.filter(file => {
+      const ext = file.toLowerCase().split('.').pop();
+      return ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext);
+    });
+    
+    res.json({
+      totalFiles: files.length,
+      imageFiles: imageFiles.length,
+      availableAvatars: imageFiles.slice(0, 20) // 返回前20个
     });
   } catch (error) {
     res.json({ error: error.message });
