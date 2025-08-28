@@ -52,6 +52,7 @@ const FRONTEND_ALLOWED = [
   // Render 部署域名
   'https://hwlx-app.onrender.com',
   'https://hwlx-app.render.com',
+  'https://hai-wai-liu-xue.onrender.com',
 ];
 const DATA_FILE     = path.join(__dirname, 'users.json');
 const UPLOADS_DIR   = path.join(__dirname, 'uploads');
@@ -126,6 +127,14 @@ app.use(cookieParser());
 // 静态资源
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 app.use('/uploads', express.static(UPLOADS_DIR));
+
+// 静态文件服务 - 提供public目录中的HTML文件
+app.use(express.static(path.join(__dirname, 'public')));
+
+// 默认路由 - 当访问根路径时返回主页
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'main page.html'));
+});
 
 // ====== JSON “数据库”工具 ======
 function readUsers() {
