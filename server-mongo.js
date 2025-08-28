@@ -421,6 +421,77 @@ app.post('/api/messages', async (req, res) => {
   }
 });
 
+// 获取消息线程列表
+app.get('/api/messages/threads', async (req, res) => {
+  try {
+    const email = normalizeEmail(req.cookies.email);
+    if (!email) {
+      return res.status(401).json({ msg: '请先登录' });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ msg: '用户不存在' });
+    }
+
+    // 获取用户参与的所有消息线程
+    const threads = await Message.aggregate([
+      {
+        $match: {
+          $or: [{ from: user._id }, { to: user._id }]
+        }
+      },
+      {
+        $sort: { createdAt: -1 }
+      },
+      {
+        $group: {
+          _id: {
+            $cond: [
+              { $eq: ['$from', user._id] },
+              '$to',
+              '$from'
+            ]
+          },
+          lastMessage: { $first: '$$ROOT' },
+          messageCount: { $sum: 1 }
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'otherUser'
+        }
+      },
+      {
+        $unwind: '$otherUser'
+      },
+      {
+        $project: {
+          _id: 0,
+          userId: '$otherUser._id',
+          nickname: '$otherUser.nickname',
+          email: '$otherUser.email',
+          avatarPath: '$otherUser.avatarPath',
+          lastMessage: {
+            content: '$lastMessage.content',
+            createdAt: '$lastMessage.createdAt',
+            fromMe: { $eq: ['$lastMessage.from', user._id] }
+          },
+          messageCount: 1
+        }
+      }
+    ]);
+
+    res.json(threads);
+  } catch (error) {
+    console.error('获取消息线程失败:', error);
+    res.status(500).json({ msg: '获取消息线程失败' });
+  }
+});
+
 // 获取评论列表
 app.get('/api/comments/:postId', async (req, res) => {
   try {
