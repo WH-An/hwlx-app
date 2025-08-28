@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录调试</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .test-case { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+    .success { background-color: #d4edda; border-color: #c3e6cb; }
+    .error { background-color: #f8d7da; border-color: #f5c6cb; }
+    button { margin: 5px; padding: 8px 15px; }
+    input { margin: 5px; padding: 5px; }
+  </style>
+</head>
+<body>
+  <h1>登录调试页面</h1>
+  
+  <div class="test-case">
+    <h3>测试账号列表</h3>
+    <p>根据users.json中的账号信息：</p>
+    <ul>
+      <li><strong>an69760925@gmail.com</strong> - 密码哈希存储</li>
+      <li><strong>anjunli@gmail.com</strong> - 密码哈希存储</li>
+      <li><strong>a@123.com</strong> - 密码: 123</li>
+      <li><strong>l@123.com</strong> - 密码: 123</li>
+      <li><strong>kk@123.com</strong> - 密码: 123</li>
+      <li><strong>admin@123.com</strong> - 密码: 123456</li>
+    </ul>
+  </div>
+
+  <div class="test-case">
+    <h3>测试登录</h3>
+    <input type="email" id="testEmail" placeholder="邮箱" value="a@123.com">
+    <input type="password" id="testPassword" placeholder="密码" value="123">
+    <button onclick="testLogin()">测试登录</button>
+    <div id="testResult"></div>
+  </div>
+
+  <div class="test-case">
+    <h3>检查当前登录状态</h3>
+    <button onclick="checkLoginStatus()">检查登录状态</button>
+    <div id="loginStatus"></div>
+  </div>
+
+  <script>
+    // 自动检测API基础URL
+    const API_BASE = (() => {
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        return 'http://127.0.0.1:3001/api';
+      }
+      return '/api'; // 生产环境使用相对路径
+    })();
+
+    async function testLogin() {
+      const email = document.getElementById('testEmail').value;
+      const password = document.getElementById('testPassword').value;
+      const resultDiv = document.getElementById('testResult');
+      
+      try {
+        const res = await fetch(`${API_BASE}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email, password })
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok) {
+          resultDiv.innerHTML = `<div class="success">✅ 登录成功: ${data.msg}</div>`;
+        } else {
+          resultDiv.innerHTML = `<div class="error">❌ 登录失败: ${data.msg}</div>`;
+        }
+      } catch (err) {
+        resultDiv.innerHTML = `<div class="error">❌ 网络错误: ${err.message}</div>`;
+      }
+    }
+
+    async function checkLoginStatus() {
+      const statusDiv = document.getElementById('loginStatus');
+      
+      try {
+        const res = await fetch(`${API_BASE}/users/me`, {
+          credentials: 'include'
+        });
+        
+        if (res.ok) {
+          const user = await res.json();
+          statusDiv.innerHTML = `<div class="success">✅ 已登录: ${user.email} (${user.nickname})</div>`;
+        } else {
+          statusDiv.innerHTML = `<div class="error">❌ 未登录</div>`;
+        }
+      } catch (err) {
+        statusDiv.innerHTML = `<div class="error">❌ 检查失败: ${err.message}</div>`;
+      }
+    }
+  </script>
+</body>
+</html>
