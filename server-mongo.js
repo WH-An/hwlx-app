@@ -515,6 +515,52 @@ app.get('/api/test-avatar', async (req, res) => {
   }
 });
 
+// 测试设置用户头像
+app.get('/api/test-set-avatar/:filename', async (req, res) => {
+  try {
+    const { email, isAdmin } = getCurrentUser(req);
+    
+    if (!email) {
+      return res.json({ error: '未登录' });
+    }
+    
+    if (isAdmin) {
+      return res.json({ error: '管理员不支持此操作' });
+    }
+    
+    const filename = req.params.filename;
+    const avatarPath = '/uploads/' + filename;
+    
+    // 检查文件是否存在
+    const fs = require('fs');
+    const filePath = path.join(UPLOADS_DIR, filename);
+    
+    if (!fs.existsSync(filePath)) {
+      return res.json({ error: '文件不存在', filePath });
+    }
+    
+    // 更新用户头像
+    const updatedUser = await User.findOneAndUpdate(
+      { email },
+      { avatarPath },
+      { new: true }
+    );
+    
+    if (!updatedUser) {
+      return res.json({ error: '用户不存在' });
+    }
+    
+    res.json({
+      success: true,
+      message: '头像设置成功',
+      avatarPath: updatedUser.avatarPath,
+      nickname: updatedUser.nickname
+    });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+});
+
 // 启动服务器
 async function startServer() {
   try {
