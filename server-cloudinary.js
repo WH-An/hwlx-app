@@ -83,7 +83,12 @@ app.get('/__ping', (req, res) => {
     ok: true, 
     ts: Date.now(),
     message: 'Cloudinary服务器运行正常',
-    mode: 'cloudinary'
+    mode: 'cloudinary',
+    env: {
+      cloudName: process.env.CLOUDINARY_CLOUD_NAME ? '已设置' : '未设置',
+      apiKey: process.env.CLOUDINARY_API_KEY ? '已设置' : '未设置',
+      apiSecret: process.env.CLOUDINARY_API_SECRET ? '已设置' : '未设置'
+    }
   });
 });
 
