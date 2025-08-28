@@ -244,14 +244,31 @@ app.get('/api/users/by-email', async (req, res) => {
 // 上传头像（使用Cloudinary）
 app.post('/api/upload/avatar', upload.single('avatar'), async (req, res) => {
   try {
+    console.log('开始头像上传处理...');
+    console.log('环境变量检查:', {
+      cloudName: process.env.CLOUDINARY_CLOUD_NAME ? '已设置' : '未设置',
+      apiKey: process.env.CLOUDINARY_API_KEY ? '已设置' : '未设置',
+      apiSecret: process.env.CLOUDINARY_API_SECRET ? '已设置' : '未设置'
+    });
+    
     const email = normalizeEmail(req.cookies.email);
+    console.log('用户邮箱:', email);
+    
     if (!email) {
       return res.status(401).json({ msg: '请先登录' });
     }
 
     if (!req.file) {
+      console.log('没有接收到文件');
       return res.status(400).json({ msg: '请选择文件' });
     }
+
+    console.log('文件信息:', {
+      originalname: req.file.originalname,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+      path: req.file.path
+    });
 
     // 获取Cloudinary URL
     const avatarUrl = req.file.path;
@@ -267,6 +284,7 @@ app.post('/api/upload/avatar', upload.single('avatar'), async (req, res) => {
       return res.status(404).json({ msg: '用户不存在' });
     }
 
+    console.log('头像上传成功:', avatarUrl);
     res.json({ 
       msg: '头像上传成功', 
       avatarPath: avatarUrl,
@@ -274,7 +292,12 @@ app.post('/api/upload/avatar', upload.single('avatar'), async (req, res) => {
     });
   } catch (error) {
     console.error('头像上传失败:', error);
-    res.status(500).json({ msg: '头像上传失败' });
+    console.error('错误堆栈:', error.stack);
+    res.status(500).json({ 
+      msg: '头像上传失败',
+      error: error.message,
+      stack: error.stack
+    });
   }
 });
 
