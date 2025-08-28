@@ -561,6 +561,46 @@ app.get('/api/test-set-avatar/:filename', async (req, res) => {
   }
 });
 
+// 前端诊断工具
+app.get('/api/debug-frontend', async (req, res) => {
+  try {
+    const { email, isAdmin } = getCurrentUser(req);
+    
+    // 获取所有用户信息
+    const users = await User.find({}, 'email nickname avatarPath');
+    
+    // 检查uploads目录
+    const fs = require('fs');
+    const uploadsPath = path.join(__dirname, 'uploads');
+    const files = fs.readdirSync(uploadsPath);
+    
+    res.json({
+      currentUser: {
+        email,
+        isAdmin,
+        loggedIn: !!email
+      },
+      users: users.map(u => ({
+        email: u.email,
+        nickname: u.nickname,
+        avatarPath: u.avatarPath,
+        hasAvatar: !!u.avatarPath
+      })),
+      uploads: {
+        path: uploadsPath,
+        fileCount: files.length,
+        sampleFiles: files.slice(0, 10)
+      },
+      staticRoutes: {
+        uploads: '/uploads',
+        public: '/public'
+      }
+    });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+});
+
 // 启动服务器
 async function startServer() {
   try {
