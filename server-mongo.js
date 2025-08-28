@@ -480,6 +480,41 @@ app.get('/api/test-upload', (req, res) => {
   }
 });
 
+// 测试当前用户头像路径
+app.get('/api/test-avatar', async (req, res) => {
+  try {
+    const { email, isAdmin } = getCurrentUser(req);
+    
+    if (!email) {
+      return res.json({ error: '未登录' });
+    }
+    
+    if (isAdmin) {
+      return res.json({
+        user: 'admin',
+        email,
+        avatarPath: '/uploads/default-admin.jpg',
+        isAdmin: true
+      });
+    }
+    
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.json({ error: '用户不存在' });
+    }
+    
+    res.json({
+      user: 'normal',
+      email,
+      avatarPath: user.avatarPath,
+      nickname: user.nickname,
+      isAdmin: false
+    });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+});
+
 // 启动服务器
 async function startServer() {
   try {
