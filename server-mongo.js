@@ -182,14 +182,14 @@ app.post('/api/logout', (req, res) => {
 // 获取当前用户信息
 app.get('/api/users/me', async (req, res) => {
   try {
-    const email = normalizeEmail(req.cookies.email);
+    const { email, isAdmin } = getCurrentUser(req);
     
     if (!email) {
-      return res.status(401).json({ msg: '未登录' });
+      return res.status(401).json({ msg: '请先登录' });
     }
 
-    // 固定管理员
-    if (isFixedAdmin(email)) {
+    // 管理员
+    if (isAdmin) {
       return res.json({
         id: 1,
         nickname: '海外留学',
@@ -213,6 +213,30 @@ app.get('/api/users/me', async (req, res) => {
     res.json(userResponse);
   } catch (error) {
     console.error('获取用户信息失败:', error);
+    res.status(500).json({ msg: '获取用户信息失败' });
+  }
+});
+
+// 根据邮箱获取用户信息
+app.get('/api/users/by-email', async (req, res) => {
+  try {
+    const email = normalizeEmail(req.query.email);
+    
+    if (!email) {
+      return res.status(400).json({ msg: '邮箱参数必填' });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ msg: '用户不存在' });
+    }
+
+    const userResponse = user.toObject();
+    delete userResponse.password;
+    
+    res.json(userResponse);
+  } catch (error) {
+    console.error('根据邮箱获取用户失败:', error);
     res.status(500).json({ msg: '获取用户信息失败' });
   }
 });
