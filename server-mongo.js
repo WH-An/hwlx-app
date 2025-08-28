@@ -449,7 +449,36 @@ app.post('/api/comments', async (req, res) => {
 });
 
 // 健康检查
-app.get('/__ping', (req, res) => res.json({ ok: true, ts: Date.now() }));
+app.get('/__ping', (req, res) => {
+  res.json({ 
+    ok: true, 
+    ts: Date.now(),
+    message: '服务器运行正常',
+    mode: 'production'
+  });
+});
+
+// 文件上传测试
+app.get('/api/test-upload', (req, res) => {
+  const fs = require('fs');
+  const uploadsPath = path.join(__dirname, 'uploads');
+  
+  try {
+    const files = fs.readdirSync(uploadsPath);
+    res.json({
+      uploadsDir: uploadsPath,
+      fileCount: files.length,
+      files: files.slice(0, 5), // 只显示前5个文件
+      exists: fs.existsSync(uploadsPath)
+    });
+  } catch (error) {
+    res.json({
+      error: error.message,
+      uploadsDir: uploadsPath,
+      exists: fs.existsSync(uploadsPath)
+    });
+  }
+});
 
 // 启动服务器
 async function startServer() {
