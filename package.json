@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "vite",
-    "start": "node server-fallback.js",
+    "start": "node server-mongo-debug.js",
+    "start:fallback": "node server-fallback.js",
     "start:mongo": "node server-mongo.js",
     "start:debug": "node server-debug.js",
     "start:old": "node server.js",
