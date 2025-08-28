@@ -92,6 +92,29 @@ app.get('/__ping', (req, res) => {
   });
 });
 
+// Cloudinary连接测试
+app.get('/api/test-cloudinary', async (req, res) => {
+  try {
+    const { cloudinary } = require('./config/cloudinary');
+    
+    // 测试Cloudinary连接
+    const result = await cloudinary.api.ping();
+    
+    res.json({
+      success: true,
+      message: 'Cloudinary连接正常',
+      result: result
+    });
+  } catch (error) {
+    console.error('Cloudinary连接测试失败:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Cloudinary连接失败',
+      error: error.message
+    });
+  }
+});
+
 // 注册
 app.post('/api/register', async (req, res) => {
   try {
