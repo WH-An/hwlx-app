@@ -14,7 +14,7 @@
     /* 关键：整页禁用滚动，只让内部容器滚动 */
     html,body{
       height:100%;
-      overflow:hidden;
+      overflow:visible;
       overscroll-behavior:none;
     }
     body{
@@ -27,7 +27,7 @@
     /* 占满视口且自身不滚动 */
     .shell{
       display:grid; grid-template-columns:280px 1fr; gap:18px;
-      height:100dvh; height:100vh; padding:24px; overflow:hidden;
+      height:100dvh; height:100vh; padding:24px; overflow:visible;
     }
     .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);color:var(--text);display:flex;flex-direction:column;min-height:0}
     .header{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;z-index:2}
