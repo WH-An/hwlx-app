@@ -75,7 +75,13 @@
       }
     });
     // 和你之前页面一致的最小依赖
-  const API_BASE = 'http://127.0.0.1:3001';
+  // 自动检测API基础URL
+  const API_BASE = (() => {
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+      return 'http://127.0.0.1:3001';
+    }
+    return ''; // 生产环境使用相对路径
+  })();
 
   // 把相对路径头像补成绝对路径
   function toAbs(u){
