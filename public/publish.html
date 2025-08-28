@@ -348,7 +348,7 @@
       const u = getLocalUser();
       const fd = new FormData();
       fd.append('title', title);
-      fd.append('desc', desc);
+      fd.append('content', desc);
       fd.append('category', category);
       // 附带作者信息（后端会优先使用已登录用户覆盖）
       fd.append('authorName',  currentUserName(u));
