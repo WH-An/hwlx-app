@@ -5,10 +5,9 @@
   "main": "server.js",
   "scripts": {
     "dev": "vite",
-    "start": "node server-mongo-debug.js",
+    "start": "node server-mongo.js",
     "start:fallback": "node server-fallback.js",
-    "start:mongo": "node server-mongo.js",
-    "start:debug": "node server-debug.js",
+    "start:debug": "node server-mongo-debug.js",
     "start:old": "node server.js",
     "migrate": "node scripts/migrate.js",
     "test": "echo \"Error: no test specified\" && exit 1"
