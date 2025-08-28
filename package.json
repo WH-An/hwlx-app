@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "start": "node server-mongo.js",
+    "start:cloudinary": "node server-cloudinary.js",
     "start:fallback": "node server-fallback.js",
+    "start:mongo": "node server-mongo.js",
     "start:debug": "node server-mongo-debug.js",
     "start:old": "node server.js",
     "migrate": "node scripts/migrate.js",
@@ -17,12 +19,14 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "cloudinary": "^1.45.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "mongoose": "^8.18.0",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0"
   },
   "devDependencies": {
     "vite": "^5.0.0"

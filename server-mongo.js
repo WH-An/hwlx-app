@@ -207,8 +207,29 @@ app.get('/api/users/me', async (req, res) => {
       return res.status(404).json({ msg: '用户不存在' });
     }
 
+    // 检查头像文件是否存在
+    const fs = require('fs');
+    let avatarPath = user.avatarPath;
+    
+    if (avatarPath && avatarPath.startsWith('/uploads/')) {
+      const filename = avatarPath.replace('/uploads/', '');
+      const filePath = path.join(UPLOADS_DIR, filename);
+      
+      if (!fs.existsSync(filePath)) {
+        console.log(`头像文件不存在: ${filename}，重置为空`);
+        // 文件不存在，重置头像路径
+        await User.findOneAndUpdate(
+          { email },
+          { avatarPath: '' },
+          { new: true }
+        );
+        avatarPath = '';
+      }
+    }
+
     const userResponse = user.toObject();
     delete userResponse.password;
+    userResponse.avatarPath = avatarPath; // 使用检查后的路径
     
     res.json(userResponse);
   } catch (error) {
@@ -231,8 +252,29 @@ app.get('/api/users/by-email', async (req, res) => {
       return res.status(404).json({ msg: '用户不存在' });
     }
 
+    // 检查头像文件是否存在
+    const fs = require('fs');
+    let avatarPath = user.avatarPath;
+    
+    if (avatarPath && avatarPath.startsWith('/uploads/')) {
+      const filename = avatarPath.replace('/uploads/', '');
+      const filePath = path.join(UPLOADS_DIR, filename);
+      
+      if (!fs.existsSync(filePath)) {
+        console.log(`头像文件不存在: ${filename}，重置为空`);
+        // 文件不存在，重置头像路径
+        await User.findOneAndUpdate(
+          { email },
+          { avatarPath: '' },
+          { new: true }
+        );
+        avatarPath = '';
+      }
+    }
+
     const userResponse = user.toObject();
     delete userResponse.password;
+    userResponse.avatarPath = avatarPath; // 使用检查后的路径
     
     res.json(userResponse);
   } catch (error) {
@@ -755,6 +797,41 @@ app.get('/api/available-avatars', (req, res) => {
     });
   } catch (error) {
     res.json({ error: error.message });
+  }
+});
+
+// 清理无效头像路径
+app.post('/api/cleanup-avatars', async (req, res) => {
+  try {
+    const fs = require('fs');
+    const users = await User.find({ avatarPath: { $ne: '' } });
+    let cleanedCount = 0;
+    let totalChecked = users.length;
+    
+    for (const user of users) {
+      if (user.avatarPath && user.avatarPath.startsWith('/uploads/')) {
+        const filename = user.avatarPath.replace('/uploads/', '');
+        const filePath = path.join(UPLOADS_DIR, filename);
+        
+        if (!fs.existsSync(filePath)) {
+          await User.findOneAndUpdate(
+            { _id: user._id },
+            { avatarPath: '' }
+          );
+          cleanedCount++;
+        }
+      }
+    }
+    
+    res.json({
+      message: '头像清理完成',
+      totalChecked,
+      cleanedCount,
+      remainingValid: totalChecked - cleanedCount
+    });
+  } catch (error) {
+    console.error('清理头像失败:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
