@@ -1,5 +1,12 @@
-// api 基础地址
-const API_BASE = "http://localhost:3001/api";
+// api 基础地址 - 自动检测环境
+const API_BASE = (() => {
+  // 如果是本地开发环境
+  if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+    return "http://localhost:3001/api";
+  }
+  // 如果是生产环境（Render），使用相对路径
+  return "/api";
+})();
 
 // sha256 加密
 function hashPassword(pwd) {

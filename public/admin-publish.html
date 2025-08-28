@@ -351,7 +351,13 @@
 
   
   <script>
-    const API_BASE = 'http://127.0.0.1:3001';
+    // 自动检测API基础URL
+  const API_BASE = (() => {
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+      return 'http://127.0.0.1:3001';
+    }
+    return ''; // 生产环境使用相对路径
+  })();
     const $ = sel => document.querySelector(sel);
     function toast(msg, ms=2000){ const el=$('#toast'); if(!el) return; el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'), ms); }
     async function api(path, opt={}){
