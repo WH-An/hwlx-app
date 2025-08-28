@@ -163,7 +163,7 @@
         
         // 先尝试从服务器获取最新用户信息
         try{
-          const res = await fetch(`${API_BASE}/users/me`, { credentials:'include' });
+          const res = await fetch(`${API_BASE}/api/users/me`, { credentials:'include' });
           if(res.ok){
             const u = await res.json();
             const name = u.nickname || u.username || u.displayName || u.name || u.email || '我的账号';

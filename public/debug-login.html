@@ -81,7 +81,7 @@
       const statusDiv = document.getElementById('loginStatus');
       
       try {
-        const res = await fetch(`${API_BASE}/users/me`, {
+        const res = await fetch(`${API_BASE}/api/users/me`, {
           credentials: 'include'
         });
         
