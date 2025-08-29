@@ -521,7 +521,7 @@ app.post('/api/messages', upload.array('images', 9), async (req, res) => {
     const message = new Message({
       from: fromUser.email,
       to: toUser.email,
-      content,
+      content: content || '',
       images,
       isRead: false
     });
