@@ -234,20 +234,13 @@
         });
 
         // — 文本 —
-                // 标题和文本
+                        // 只显示标题
         if(p.title){
           const title=document.createElement('div');
           title.className='card-title';
-          title.style.cssText = 'font-weight: 700; font-size: 16px; margin-bottom: 8px; color: #111827;';
+          title.style.cssText = 'font-weight: 700; font-size: 16px; margin-bottom: 8px; color: #111827; padding: 10px 12px;';
           title.textContent=p.title;
           card.appendChild(title);
-        }
-        
-        if(p.desc || p.content){
-          const t=document.createElement('div');
-          t.className='card-text';
-          t.textContent=p.desc || p.content;
-          card.appendChild(t);
         }
 
         // — 作者徽章 —
