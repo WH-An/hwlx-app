@@ -209,7 +209,18 @@ app.post('/api/login', async (req, res) => {
           secure: process.env.NODE_ENV === 'production',
           maxAge: 7 * 24 * 60 * 60 * 1000 
         });
-        return res.json({ msg: '管理员登录成功' });
+        return res.json({ 
+          msg: '管理员登录成功',
+          user: {
+            id: 1,
+            nickname: '海外留学',
+            email: email,
+            area: '',
+            degree: '',
+            avatarPath: '',
+            isAdmin: true
+          }
+        });
       }
       return res.status(401).json({ msg: '管理员密码错误' });
     }
