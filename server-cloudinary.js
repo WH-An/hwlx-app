@@ -530,7 +530,17 @@ app.post('/api/messages', upload.array('images', 9), async (req, res) => {
     res.json({ msg: '发送成功', message });
   } catch (error) {
     console.error('发送消息失败:', error);
-    res.status(500).json({ msg: '发送消息失败' });
+    console.error('错误详情:', {
+      message: error.message,
+      stack: error.stack,
+      body: req.body,
+      files: req.files ? req.files.length : 0
+    });
+    res.status(500).json({ 
+      msg: '发送消息失败',
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 });
 
@@ -583,8 +593,84 @@ app.get('/api/messages/threads', async (req, res) => {
   }
 });
 
+// 测试消息API
+app.get('/api/test-messages', async (req, res) => {
+  try {
+    const email = normalizeEmail(req.cookies.email);
+    if (!email) {
+      return res.json({ 
+        success: false, 
+        message: '未登录',
+        email: null,
+        userExists: false
+      });
+    }
+
+    const user = await User.findOne({ email });
+    const userExists = !!user;
+    
+    res.json({ 
+      success: true, 
+      message: '消息API测试',
+      email: email,
+      userExists: userExists,
+      messageCount: userExists ? await Message.countDocuments() : 0
+    });
+  } catch (error) {
+    console.error('消息API测试失败:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: '消息API测试失败',
+      error: error.message 
+    });
+  }
+});
+
+// 测试简单消息发送（不涉及文件上传）
+app.post('/api/test-send-message', async (req, res) => {
+  try {
+    const email = normalizeEmail(req.cookies.email);
+    if (!email) {
+      return res.status(401).json({ msg: '请先登录' });
+    }
+
+    const { toEmail, content } = req.body;
+    
+    if (!toEmail) {
+      return res.status(400).json({ msg: '收件人必填' });
+    }
+    
+    if (!content) {
+      return res.status(400).json({ msg: '内容必填' });
+    }
+
+    const fromUser = await User.findOne({ email });
+    const toUser = await User.findOne({ email: normalizeEmail(toEmail) });
+
+    if (!fromUser || !toUser) {
+      return res.status(404).json({ msg: '用户不存在' });
+    }
+
+    const message = new Message({
+      from: fromUser.email,
+      to: toUser.email,
+      content: content || '测试消息',
+      images: [],
+      isRead: false
+    });
+
+    await message.save();
+    res.json({ msg: '测试发送成功', message });
+  } catch (error) {
+    console.error('测试发送消息失败:', error);
+    res.status(500).json({ 
+      msg: '测试发送消息失败',
+      error: error.message
+    });
+  }
+});
+
 // 启动服务器
-async function startServer() {
   try {
     await connectDB();
     console.log('✅ MongoDB连接成功');
