@@ -485,17 +485,22 @@ app.delete('/api/posts/:id', async (req, res) => {
 app.patch('/api/posts/:id', async (req, res) => {
   try {
     const { email: me, isAdmin: isAdminUser } = getCurrentUser(req);
+    console.log('置顶帖子权限检查:', { me, isAdminUser, cookies: req.cookies });
+    
     if (!me) {
       return res.status(401).json({ msg: '未登录' });
     }
     
     // 只有管理员可以置顶帖子
     if (!isAdminUser && !isFixedAdmin(me)) {
+      console.log('权限不足:', { me, isAdminUser, isFixedAdmin: isFixedAdmin(me) });
       return res.status(403).json({ msg: '只有管理员可以置顶帖子' });
     }
 
     const { id } = req.params;
     const { pinned, pinnedAt } = req.body || {};
+    
+    console.log('置顶操作:', { id, pinned, pinnedAt });
     
     const post = await Post.findById(id);
     if (!post) {
@@ -510,6 +515,7 @@ app.patch('/api/posts/:id', async (req, res) => {
     }
 
     await post.save();
+    console.log('置顶成功:', { postId: post._id, pinned: post.pinned });
     res.json(post);
   } catch (error) {
     console.error('置顶帖子失败:', error);
@@ -713,6 +719,35 @@ app.post('/api/test-send-message', async (req, res) => {
     res.status(500).json({ 
       msg: '测试发送消息失败',
       error: error.message
+    });
+  }
+});
+
+// 调试：检查当前用户状态
+app.get('/api/debug-user-status', (req, res) => {
+  try {
+    const { email: me, isAdmin: isAdminUser } = getCurrentUser(req);
+    const cookies = req.cookies;
+    
+    res.json({
+      success: true,
+      currentUser: { me, isAdminUser },
+      cookies: {
+        email: cookies.email,
+        admin_email: cookies.admin_email,
+        hasEmail: !!cookies.email,
+        hasAdminEmail: !!cookies.admin_email
+      },
+      permissions: {
+        isFixedAdmin: isFixedAdmin(me),
+        canPinPosts: isAdminUser || isFixedAdmin(me)
+      }
+    });
+  } catch (error) {
+    console.error('调试用户状态失败:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
     });
   }
 });
