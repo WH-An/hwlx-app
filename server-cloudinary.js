@@ -72,7 +72,7 @@ function isAdmin(email) {
   return false;
 }
 
-function getCurrentUser(req) {
+async function getCurrentUser(req) {
   let email = normalizeEmail(req.cookies.email);
   let isAdminUser = false;
   
@@ -80,6 +80,18 @@ function getCurrentUser(req) {
     email = normalizeEmail(req.cookies.admin_email);
     if (email) {
       isAdminUser = true;
+    }
+  }
+  
+  // 检查数据库中的用户是否为管理员
+  if (email && !isAdminUser) {
+    try {
+      const user = await User.findOne({ email });
+      if (user && user.isAdmin) {
+        isAdminUser = true;
+      }
+    } catch (error) {
+      console.warn('检查用户管理员权限失败:', error);
     }
   }
   
@@ -257,7 +269,7 @@ app.post('/api/logout', (req, res) => {
 // 获取当前用户信息
 app.get('/api/users/me', async (req, res) => {
   try {
-    const { email, isAdmin } = getCurrentUser(req);
+    const { email, isAdmin } = await getCurrentUser(req);
     
     if (!email) {
       return res.status(401).json({ msg: '请先登录' });
@@ -495,7 +507,7 @@ app.delete('/api/posts/:id', async (req, res) => {
 // 置顶/取消置顶帖子
 app.patch('/api/posts/:id', async (req, res) => {
   try {
-    const { email: me, isAdmin: isAdminUser } = getCurrentUser(req);
+    const { email: me, isAdmin: isAdminUser } = await getCurrentUser(req);
     console.log('置顶帖子权限检查:', { me, isAdminUser, cookies: req.cookies });
     
     if (!me) {
@@ -763,6 +775,43 @@ app.get('/api/debug-user-status', (req, res) => {
   }
 });
 
+// 提升用户为管理员（仅限固定管理员使用）
+app.post('/api/users/:email/promote-admin', async (req, res) => {
+  try {
+    const { email: me, isAdmin: isAdminUser } = await getCurrentUser(req);
+    
+    // 只有固定管理员可以提升其他用户为管理员
+    if (!isFixedAdmin(me)) {
+      return res.status(403).json({ msg: '只有超级管理员可以提升用户权限' });
+    }
+
+    const targetEmail = req.params.email;
+    if (!targetEmail) {
+      return res.status(400).json({ msg: '目标邮箱必填' });
+    }
+
+    const user = await User.findOne({ email: normalizeEmail(targetEmail) });
+    if (!user) {
+      return res.status(404).json({ msg: '用户不存在' });
+    }
+
+    user.isAdmin = true;
+    await user.save();
+
+    res.json({ 
+      msg: '用户已提升为管理员',
+      user: {
+        email: user.email,
+        nickname: user.nickname,
+        isAdmin: user.isAdmin
+      }
+    });
+  } catch (error) {
+    console.error('提升用户权限失败:', error);
+    res.status(500).json({ msg: '提升用户权限失败' });
+  }
+});
+
 // ====== 评论API ======
 
 // 获取评论列表
@@ -840,7 +889,7 @@ app.get('/api/posts/:id/comments', async (req, res) => {
 // 发表评论
 app.post('/api/posts/:id/comments', async (req, res) => {
   try {
-    const { email: me } = getCurrentUser(req);
+    const { email: me } = await getCurrentUser(req);
     if (!me) {
       return res.status(401).json({ msg: '未登录' });
     }
@@ -896,7 +945,7 @@ app.post('/api/posts/:id/comments', async (req, res) => {
 // 删除评论
 app.delete('/api/comments/:id', async (req, res) => {
   try {
-    const { email: me, isAdmin: isAdminUser } = getCurrentUser(req);
+    const { email: me, isAdmin: isAdminUser } = await getCurrentUser(req);
     if (!me) {
       return res.status(401).json({ msg: '未登录' });
     }
@@ -927,7 +976,7 @@ app.delete('/api/comments/:id', async (req, res) => {
 // 删除帖子评论（兼容旧API）
 app.delete('/api/posts/:id/comments/:cid', async (req, res) => {
   try {
-    const { email: me, isAdmin: isAdminUser } = getCurrentUser(req);
+    const { email: me, isAdmin: isAdminUser } = await getCurrentUser(req);
     if (!me) {
       return res.status(401).json({ msg: '未登录' });
     }
