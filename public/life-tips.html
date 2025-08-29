@@ -143,7 +143,7 @@
       try{
         const avatarEl = document.querySelector('.avatar');
         const nameEl   = document.querySelector('.username');
-        const FALLBACK = 'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect width="100%" height="100%" fill="#e5e7eb"/><circle cx="64" cy="54" r="26" fill="#cbd5e1"/><rect x="24" y="86" width="80" height="28" rx="14" fill="#cbd5e1"/></svg>');
+        const FALLBACK = 'https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp';
         
         // 优先从服务器获取最新用户信息
         try {
@@ -248,7 +248,7 @@
 
         const ava=document.createElement('img');
         ava.alt=name;
-        const FALLBACK_AVA='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="100%" height="100%" fill="#e5e7eb"/><circle cx="32" cy="26" r="12" fill="#cbd5e1"/><rect x="12" y="44" width="40" height="14" rx="7" fill="#cbd5e1"/></svg>');
+        const FALLBACK_AVA='https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp';
         ava.onerror=()=>{ava.src=FALLBACK_AVA};
         ava.src=avatar||FALLBACK_AVA;
 

@@ -145,7 +145,7 @@
         $('#role').textContent = role === 'admin' ? '管理员' : role;
         $('#createdAt').textContent = created;
         $('#emailText').textContent = email;
-        const FALLBACK_AVATAR = 'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect width="100%" height="100%" fill="#e5e7eb"/><circle cx="64" cy="54" r="26" fill="#cbd5e1"/><rect x="24" y="86" width="80" height="28" rx="14" fill="#cbd5e1"/></svg>');
+        const FALLBACK_AVATAR = 'https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp';
         $('#avatar').src = avatar? toAbs(avatar): FALLBACK_AVATAR;
         $('#avatar').alt = name;
         $('#avatar').onerror = () => { $('#avatar').src = FALLBACK_AVATAR; };
@@ -158,7 +158,7 @@
         toast('读取资料失败：'+e.message);
         
         // 设置默认值
-        const FALLBACK_AVATAR = 'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect width="100%" height="100%" fill="#e5e7eb"/><circle cx="64" cy="54" r="26" fill="#cbd5e1"/><rect x="24" y="86" width="80" height="28" rx="14" fill="#cbd5e1"/></svg>');
+        const FALLBACK_AVATAR = 'https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp';
         $('#displayName').value = '海外留学';
         $('#sidebarName').textContent = '海外留学';
         $('#sidebarName').title = '海外留学';
