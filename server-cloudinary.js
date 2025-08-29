@@ -572,7 +572,7 @@ app.patch('/api/posts/:id', async (req, res) => {
 // 获取消息列表
 app.get('/api/messages', async (req, res) => {
   try {
-    const email = normalizeEmail(req.cookies.email);
+    const { email, isAdmin } = await getCurrentUser(req);
     if (!email) {
       return res.status(401).json({ msg: '请先登录' });
     }
@@ -594,8 +594,8 @@ app.get('/api/messages', async (req, res) => {
 // 发送消息
 app.post('/api/messages', upload.array('images', 9), async (req, res) => {
   try {
-    const email = normalizeEmail(req.cookies.email);
-    if (!email) {
+    const { email: me, isAdmin: isAdminUser } = await getCurrentUser(req);
+    if (!me) {
       return res.status(401).json({ msg: '请先登录' });
     }
 
@@ -610,15 +610,17 @@ app.post('/api/messages', upload.array('images', 9), async (req, res) => {
       return res.status(400).json({ msg: '请至少输入内容或选择图片' });
     }
 
-    const fromUser = await User.findOne({ email });
+    // 如果是管理员发送消息，使用管理员邮箱
+    const fromEmail = isAdminUser ? 'hwlx@hwlx.com' : me;
+    const fromUser = await User.findOne({ email: fromEmail });
     const toUser = await User.findOne({ email: normalizeEmail(toEmail) });
 
-    if (!fromUser || !toUser) {
-      return res.status(404).json({ msg: '用户不存在' });
+    if (!toUser) {
+      return res.status(404).json({ msg: '收件人不存在' });
     }
 
     const message = new Message({
-      from: fromUser.email,
+      from: fromEmail,
       to: toUser.email,
       content: content || '',
       images,
@@ -646,7 +648,7 @@ app.post('/api/messages', upload.array('images', 9), async (req, res) => {
 // 获取消息线程列表
 app.get('/api/messages/threads', async (req, res) => {
   try {
-    const email = normalizeEmail(req.cookies.email);
+    const { email, isAdmin } = await getCurrentUser(req);
     if (!email) {
       return res.status(401).json({ msg: '请先登录' });
     }
@@ -770,9 +772,9 @@ app.post('/api/test-send-message', async (req, res) => {
 });
 
 // 调试：检查当前用户状态
-app.get('/api/debug-user-status', (req, res) => {
+app.get('/api/debug-user-status', async (req, res) => {
   try {
-    const { email: me, isAdmin: isAdminUser } = getCurrentUser(req);
+    const { email: me, isAdmin: isAdminUser } = await getCurrentUser(req);
     const cookies = req.cookies;
     
     res.json({
