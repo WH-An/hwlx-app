@@ -357,8 +357,14 @@ app.post('/api/messages', (req, res) => {
   if (!email) return res.status(401).json({ msg: '请先登录' });
 
   const { toEmail, content } = req.body;
-  if (!toEmail || !content) {
-    return res.status(400).json({ msg: '收件人和内容必填' });
+  const images = req.files ? req.files.map(file => '/uploads/' + file.filename) : [];
+  
+  if (!toEmail) {
+    return res.status(400).json({ msg: '收件人必填' });
+  }
+  
+  if (!content && images.length === 0) {
+    return res.status(400).json({ msg: '请至少输入内容或选择图片' });
   }
 
   const users = readUsers();

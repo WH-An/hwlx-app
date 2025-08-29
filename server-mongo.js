@@ -490,8 +490,14 @@ app.post('/api/messages', upload.array('images', 9), async (req, res) => {
     }
 
     const { toEmail, content } = req.body;
-    if (!toEmail || !content) {
-      return res.status(400).json({ msg: '收件人和内容必填' });
+    const images = req.files ? req.files.map(file => '/uploads/' + file.filename) : [];
+    
+    if (!toEmail) {
+      return res.status(400).json({ msg: '收件人必填' });
+    }
+    
+    if (!content && images.length === 0) {
+      return res.status(400).json({ msg: '请至少输入内容或选择图片' });
     }
 
     const fromUser = await User.findOne({ email });
@@ -500,8 +506,6 @@ app.post('/api/messages', upload.array('images', 9), async (req, res) => {
     if (!fromUser || !toUser) {
       return res.status(404).json({ msg: '用户不存在' });
     }
-
-    const images = req.files ? req.files.map(file => '/uploads/' + file.filename) : [];
 
     const message = new Message({
       from: fromUser.email,
