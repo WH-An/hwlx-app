@@ -10,6 +10,9 @@ const { connectDB } = require('./config/database');
 // 导入Cloudinary配置
 const { upload, deleteFile, getFileUrl } = require('./config/cloudinary');
 
+// 导入mongoose
+const mongoose = require('mongoose');
+
 // 导入模型
 const User = require('./models/User');
 const Post = require('./models/Post');
