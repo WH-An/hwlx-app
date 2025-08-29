@@ -584,14 +584,42 @@ app.get('/api/messages', async (req, res) => {
       return res.status(401).json({ msg: '请先登录' });
     }
 
-    const messages = await Message.find({
-      $or: [
-        { from: email },
-        { to: email }
-      ]
-    }).sort({ createdAt: -1 });
+    const { peer } = req.query;
+    
+    if (peer) {
+      // 获取与特定用户的对话
+      const query = {
+        $or: [
+          { from: email, to: peer },
+          { from: peer, to: email }
+        ]
+      };
+      
+      console.log('获取对话消息查询条件:', { email, peer, query });
+      
+      const messages = await Message.find(query).sort({ createdAt: 1 }); // 按时间正序排列
+      
+      console.log('查询结果数量:', messages.length);
+      console.log('查询结果示例:', messages.slice(0, 3).map(m => ({ from: m.from, to: m.to, content: m.content })));
 
-    res.json(messages);
+      // 标记消息为已读
+      await Message.updateMany(
+        { from: peer, to: email, isRead: false },
+        { isRead: true }
+      );
+
+      res.json(messages);
+    } else {
+      // 获取所有消息（兼容旧API）
+      const messages = await Message.find({
+        $or: [
+          { from: email },
+          { to: email }
+        ]
+      }).sort({ createdAt: -1 });
+
+      res.json(messages);
+    }
   } catch (error) {
     console.error('获取消息失败:', error);
     res.status(500).json({ msg: '获取消息失败' });
@@ -700,6 +728,8 @@ app.get('/api/messages/threads', async (req, res) => {
     res.status(500).json({ msg: '获取消息线程失败' });
   }
 });
+
+
 
 // 测试消息API
 app.get('/api/test-messages', async (req, res) => {
