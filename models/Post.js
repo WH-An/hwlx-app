@@ -32,6 +32,14 @@ const postSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  pinned: {
+    type: Boolean,
+    default: false
+  },
+  pinnedAt: {
+    type: Date,
+    default: null
+  },
   createdAt: {
     type: Date,
     default: Date.now

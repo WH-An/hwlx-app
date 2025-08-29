@@ -481,6 +481,42 @@ app.delete('/api/posts/:id', async (req, res) => {
   }
 });
 
+// 置顶/取消置顶帖子
+app.patch('/api/posts/:id', async (req, res) => {
+  try {
+    const { email: me, isAdmin: isAdminUser } = getCurrentUser(req);
+    if (!me) {
+      return res.status(401).json({ msg: '未登录' });
+    }
+    
+    // 只有管理员可以置顶帖子
+    if (!isAdminUser && !isFixedAdmin(me)) {
+      return res.status(403).json({ msg: '只有管理员可以置顶帖子' });
+    }
+
+    const { id } = req.params;
+    const { pinned, pinnedAt } = req.body || {};
+    
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(404).json({ msg: '帖子不存在' });
+    }
+
+    post.pinned = Boolean(pinned);
+    if (pinned) {
+      post.pinnedAt = pinnedAt || new Date().toISOString();
+    } else {
+      post.pinnedAt = null;
+    }
+
+    await post.save();
+    res.json(post);
+  } catch (error) {
+    console.error('置顶帖子失败:', error);
+    res.status(500).json({ msg: '置顶帖子失败' });
+  }
+});
+
 // 获取消息列表
 app.get('/api/messages', async (req, res) => {
   try {
