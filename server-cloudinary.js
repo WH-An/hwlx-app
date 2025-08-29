@@ -671,6 +671,7 @@ app.post('/api/test-send-message', async (req, res) => {
 });
 
 // 启动服务器
+async function startServer() {
   try {
     await connectDB();
     console.log('✅ MongoDB连接成功');
