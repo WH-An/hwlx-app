@@ -681,6 +681,198 @@ app.post('/api/test-send-message', async (req, res) => {
   }
 });
 
+// ====== 评论API ======
+
+// 获取评论列表
+app.get('/api/comments', async (req, res) => {
+  try {
+    const { postId } = req.query;
+    if (!postId) {
+      return res.status(400).json({ msg: '缺少postId参数' });
+    }
+
+    const comments = await Comment.find({ post: postId })
+      .populate('author', 'nickname email avatarPath')
+      .sort({ createdAt: -1 });
+
+    const enriched = comments.map(c => ({
+      _id: c._id,
+      id: c._id,
+      postId: c.post,
+      content: c.content,
+      text: c.content,
+      createdAt: c.createdAt,
+      time: c.createdAt,
+      authorName: c.author?.nickname || c.author?.username || c.author?.email || '用户',
+      authorEmail: c.author?.email || '',
+      user: {
+        name: c.author?.nickname || c.author?.username || c.author?.email || '用户',
+        email: c.author?.email || '',
+        avatar: c.author?.avatarPath || ''
+      }
+    }));
+
+    res.json(enriched);
+  } catch (error) {
+    console.error('获取评论失败:', error);
+    res.status(500).json({ msg: '获取评论失败' });
+  }
+});
+
+// 获取帖子评论列表（兼容旧API）
+app.get('/api/posts/:id/comments', async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const offset = parseInt(req.query.offset) || 0;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const comments = await Comment.find({ post: postId })
+      .populate('author', 'nickname email avatarPath')
+      .sort({ createdAt: -1 })
+      .skip(offset)
+      .limit(limit);
+
+    const total = await Comment.countDocuments({ post: postId });
+
+    const items = comments.map(c => ({
+      _id: c._id,
+      id: c._id,
+      postId: c.post,
+      content: c.content,
+      createdAt: c.createdAt,
+      userEmail: c.author?.email || '',
+      user: {
+        name: c.author?.nickname || c.author?.username || c.author?.email || '用户',
+        email: c.author?.email || '',
+        avatar: c.author?.avatarPath || ''
+      }
+    }));
+
+    res.json({ items, total });
+  } catch (error) {
+    console.error('获取帖子评论失败:', error);
+    res.status(500).json({ msg: '获取评论失败' });
+  }
+});
+
+// 发表评论
+app.post('/api/posts/:id/comments', async (req, res) => {
+  try {
+    const { email: me } = getCurrentUser(req);
+    if (!me) {
+      return res.status(401).json({ msg: '未登录' });
+    }
+
+    const postId = req.params.id;
+    const content = String(req.body?.content || '').trim();
+    
+    if (!content) {
+      return res.status(400).json({ msg: '内容不能为空' });
+    }
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ msg: '帖子不存在' });
+    }
+
+    const user = await User.findOne({ email: me });
+    if (!user) {
+      return res.status(404).json({ msg: '用户不存在' });
+    }
+
+    const comment = new Comment({
+      post: postId,
+      author: user._id,
+      content: content
+    });
+
+    await comment.save();
+
+    res.json({
+      _id: comment._id,
+      id: comment._id,
+      postId: comment.post,
+      content: comment.content,
+      createdAt: comment.createdAt,
+      userEmail: user.email,
+      user: isFixedAdmin(me) ? {
+        name: '管理员',
+        avatar: '',
+        email: 'hwlx@hwlx.com'
+      } : {
+        name: user.nickname || user.username || user.email || '我',
+        avatar: user.avatarPath || '',
+        email: user.email
+      }
+    });
+  } catch (error) {
+    console.error('发表评论失败:', error);
+    res.status(500).json({ msg: '发表评论失败' });
+  }
+});
+
+// 删除评论
+app.delete('/api/comments/:id', async (req, res) => {
+  try {
+    const { email: me, isAdmin: isAdminUser } = getCurrentUser(req);
+    if (!me) {
+      return res.status(401).json({ msg: '未登录' });
+    }
+
+    const commentId = req.params.id;
+    const comment = await Comment.findById(commentId).populate('author', 'email');
+    
+    if (!comment) {
+      return res.status(404).json({ msg: '评论不存在' });
+    }
+
+    // 只有评论作者或管理员可以删除评论
+    const isAuthor = comment.author?.email === me;
+    const isAdmin = isAdminUser || isFixedAdmin(me);
+    
+    if (!isAuthor && !isAdmin) {
+      return res.status(403).json({ msg: '只有评论作者或管理员可以删除评论' });
+    }
+
+    await Comment.findByIdAndDelete(commentId);
+    res.json({ msg: '评论已删除' });
+  } catch (error) {
+    console.error('删除评论失败:', error);
+    res.status(500).json({ msg: '删除评论失败' });
+  }
+});
+
+// 删除帖子评论（兼容旧API）
+app.delete('/api/posts/:id/comments/:cid', async (req, res) => {
+  try {
+    const { email: me, isAdmin: isAdminUser } = getCurrentUser(req);
+    if (!me) {
+      return res.status(401).json({ msg: '未登录' });
+    }
+
+    const commentId = req.params.cid;
+    const comment = await Comment.findById(commentId).populate('author', 'email');
+    
+    if (!comment) {
+      return res.status(404).json({ msg: '评论不存在' });
+    }
+
+    // 只有评论作者或管理员可以删除评论
+    const isAuthor = comment.author?.email === me;
+    const isAdmin = isAdminUser || isFixedAdmin(me);
+    
+    if (!isAuthor && !isAdmin) {
+      return res.status(403).json({ msg: '只有评论作者或管理员可以删除评论' });
+    }
+
+    await Comment.findByIdAndDelete(commentId);
+    res.json({ msg: '评论已删除' });
+  } catch (error) {
+    console.error('删除评论失败:', error);
+    res.status(500).json({ msg: '删除评论失败' });
+  }
+});
+
 // 启动服务器
 async function startServer() {
   try {
