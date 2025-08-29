@@ -275,8 +275,12 @@
       const box=$('#chatBox'); const list=Array.isArray(arr)?arr:[];
       const wasAtBottom=isNearBottom(box);
       if(!list.length){ box.innerHTML='<div class="empty">暂无消息。</div>'; return; }
+      
+      // 按时间正序排列，最新的消息在下方
+      const sortedList = list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      
       box.innerHTML='';
-      for(const m of list){
+      for(const m of sortedList){
         const mine=(m.from||'').toLowerCase()===(ME?.email||'').toLowerCase();
         const row=document.createElement('div'); row.className='msgrow '+(mine?'me':'peer');
         if(!mine){
