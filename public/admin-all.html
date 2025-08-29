@@ -38,8 +38,7 @@
       border:1px solid var(--border); background:#fff; border-radius:14px; overflow:hidden;
       box-shadow:0 6px 18px rgba(0,0,0,.06); padding-bottom:46px;
       break-inside:avoid; -webkit-column-break-inside:avoid; page-break-inside:avoid; }
-    .post-card img{ width:100%; display:block; aspect-ratio:4/5; object-fit:cover; margin-bottom:4px; }
-    .post-card img:last-child{ margin-bottom:0; }
+    .post-card img{ width:100%; display:block; aspect-ratio:4/5; object-fit:cover }
     .post-text{ padding:10px 12px; color:#374151; line-height:1.6 }
 
     .author-badge{ position:absolute; right:10px; bottom:8px; display:flex; align-items:center; gap:8px;
@@ -136,7 +135,8 @@
         const card = document.createElement('div');
         card.className = 'post-card';
 
-        (post.images||[]).forEach(src=>{ const img=document.createElement('img'); img.loading='lazy'; img.src=toAbs(src); card.appendChild(img); });
+        // 图片 - 只显示第一张
+        if(post.images && post.images.length > 0){ const img=document.createElement('img'); img.loading='lazy'; img.src=toAbs(post.images[0]); card.appendChild(img); }
 
         if(post.desc){ const d=document.createElement('div'); d.className='post-text'; d.textContent=post.desc; card.appendChild(d); }
 

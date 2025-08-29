@@ -111,8 +111,7 @@
       padding-bottom:46px; break-inside:avoid; -webkit-column-break-inside:avoid; page-break-inside:avoid;
       cursor:pointer;
     }
-    .post-card img{ width:100%; display:block; aspect-ratio:4/5; object-fit:cover; margin-bottom:4px; }
-    .post-card img:last-child{ margin-bottom:0; }
+    .post-card img{ width:100%; display:block; aspect-ratio:4/5; object-fit:cover }
     .post-card-text{ padding:10px 12px; color:#374151; line-height:1.6 }
 
     .post-author-badge{
@@ -397,13 +396,14 @@
         card.style.cursor = 'pointer';
       }
 
-      (p.images||[]).forEach(src=>{
+      // 图片 - 只显示第一张
+      if(p.images && p.images.length > 0){
         const img = document.createElement('img');
-        img.src = toAbs(src);
+        img.src = toAbs(p.images[0]);
         img.alt = '';
         img.onerror = ()=>{ img.remove(); };
         card.appendChild(img);
-      });
+      }
 
       if(p.desc || p.title){
         const t = document.createElement('div');

@@ -56,8 +56,7 @@
     .card[role="link"]{ cursor:pointer; }
     .card[role="link"]:hover{ transform: translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.12); }
 
-    .card img{ width: 100%; display: block; aspect-ratio: 4 / 5; object-fit: cover; margin-bottom:4px; }
-    .card img:last-child{ margin-bottom:0; }
+    .card img{ width: 100%; display: block; aspect-ratio: 4 / 5; object-fit: cover; }
     .card-text{padding:10px 12px;color:#374151;line-height:1.6}
 
     /* 作者徽章：下移，与内容底基本齐平 */
@@ -233,15 +232,15 @@
           card.appendChild(pinBadge);
         }
 
-        // 图片
-        (p.images||[]).forEach(src=>{
-          const img=document.createElement('img'); 
+                // 图片 - 只显示第一张
+        if(p.images && p.images.length > 0){
+          const img=document.createElement('img');
           img.loading='lazy';
-          img.src=toAbs(src);
+          img.src=toAbs(p.images[0]);
           img.alt=p.title||'图片';
           img.onerror=()=>{ img.remove(); };
           card.appendChild(img);
-        });
+        }
 
                         // 只显示标题
         if(p.title){

@@ -78,9 +78,7 @@
       /* 统一图片纵横比，进一步减少高度差（不想裁切可删掉这两行） */
       aspect-ratio: 4 / 5;
       object-fit: cover;
-      margin-bottom:4px;
-    }
-    .card img:last-child{ margin-bottom:0; }
+
     .card-text{padding:10px 12px;color:#374151;line-height:1.6}
 
     /* 作者徽章：下移，与内容底对齐 */
@@ -267,12 +265,12 @@
           card.appendChild(pinBadge);
         }
 
-        // 图片
-        (p.images||[]).forEach(src=>{
+        // 图片 - 只显示第一张
+        if(p.images && p.images.length > 0){
           const img=document.createElement('img'); 
-          img.src=toAbs(src); 
+          img.src=toAbs(p.images[0]); 
           card.appendChild(img);
-        });
+        }
 
                         // 只显示标题
         if(p.title){
