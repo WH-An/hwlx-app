@@ -457,12 +457,14 @@ app.post('/api/posts', upload.array('images', 5), async (req, res) => {
 // 删除帖子
 app.delete('/api/posts/:id', async (req, res) => {
   try {
-    const email = normalizeEmail(req.cookies.email);
-    if (!email) {
+    const { email: me, isAdmin: isAdminUser } = await getCurrentUser(req);
+    if (!me) {
       return res.status(401).json({ msg: '请先登录' });
     }
 
     const { id } = req.params;
+    const { reason } = req.body || {}; // 删除原因
+    
     if (!id) {
       return res.status(400).json({ msg: '帖子ID必填' });
     }
@@ -473,9 +475,30 @@ app.delete('/api/posts/:id', async (req, res) => {
       return res.status(404).json({ msg: '帖子不存在' });
     }
 
-    // 检查权限：只有作者可以删除自己的帖子
-    if (post.authorEmail !== email) {
-      return res.status(403).json({ msg: '只有作者可以删除自己的帖子' });
+    // 检查权限：作者可以删除自己的帖子，管理员可以删除任何帖子
+    const isAuthor = post.authorEmail === me;
+    const isAdmin = isAdminUser || isFixedAdmin(me);
+    
+    if (!isAuthor && !isAdmin) {
+      return res.status(403).json({ msg: '只有作者或管理员可以删除帖子' });
+    }
+
+    // 如果是管理员删除帖子，发送消息给作者
+    if (isAdmin && !isAuthor && post.authorEmail && reason) {
+      try {
+        const message = new Message({
+          from: 'hwlx@hwlx.com', // 管理员邮箱
+          to: post.authorEmail,
+          content: `您的帖子"${post.title}"已被删除。原因：${reason}`,
+          images: [],
+          isRead: false
+        });
+        await message.save();
+        console.log('已发送删除通知给作者:', post.authorEmail);
+      } catch (messageError) {
+        console.warn('发送删除通知失败:', messageError);
+        // 继续删除帖子，即使消息发送失败
+      }
     }
 
     // 删除帖子中的图片（如果有的话）

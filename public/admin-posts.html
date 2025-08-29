@@ -288,9 +288,11 @@
       const reason = prompt('确认删除该帖子。请输入删除原因（将会发送给作者）：','内容不符合发布规范');
       if(reason===null) return;
       try{
-        await api(`/api/posts/${id}`, { method:'DELETE' });
+        await api(`/api/posts/${id}`, { 
+          method:'DELETE',
+          body: JSON.stringify({ reason: reason })
+        });
         toast('已删除帖子');
-        if(email){ try{ await api('/api/messages', { method:'POST', body: JSON.stringify({ toEmail: email, text: `您的帖子已被删除。原因：${reason}` }) }); }catch{} }
         loadPosts();
       }catch(e){ toast('删除失败：'+e.message); }
     }
