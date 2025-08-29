@@ -339,9 +339,16 @@
         return;
       }
 
+      // 如果标题为空，根据内容生成默认标题
+      let finalTitle = title.trim();
+      if (!finalTitle) {
+        const contentPreview = desc.trim().substring(0, 20);
+        finalTitle = contentPreview ? `${contentPreview}...` : '新帖子';
+      }
+
       const u = getLocalUser();
       const fd = new FormData();
-      fd.append('title', title);
+      fd.append('title', finalTitle);
       fd.append('desc', desc);
       fd.append('category', category);
       // 附带作者信息（后端会优先使用已登录用户覆盖）

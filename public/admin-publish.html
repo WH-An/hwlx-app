@@ -319,9 +319,18 @@
           }
           
           // 准备发布数据
+          let title = (e.target.title.value || '').trim();
+          const desc = (e.target.desc.value || '').trim();
+          
+          // 如果标题为空，根据内容生成默认标题
+          if (!title) {
+            const contentPreview = desc.substring(0, 20);
+            title = contentPreview ? `${contentPreview}...` : '新帖子';
+          }
+          
           const payload = {
-            title: (e.target.title.value || '').trim(),
-            desc: (e.target.desc.value || '').trim(),
+            title: title,
+            desc: desc,
             category: backendCat(currentCategory),
             images: uploadedImages,
             pinned: e.target.pinned.checked,

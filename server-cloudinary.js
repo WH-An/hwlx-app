@@ -95,22 +95,50 @@ app.get('/__ping', (req, res) => {
 // Cloudinary连接测试
 app.get('/api/test-cloudinary', async (req, res) => {
   try {
+    console.log('开始Cloudinary连接测试...');
+    console.log('环境变量检查:', {
+      cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+      apiKey: process.env.CLOUDINARY_API_KEY ? '已设置' : '未设置',
+      apiSecret: process.env.CLOUDINARY_API_SECRET ? '已设置' : '未设置'
+    });
+    
     const { cloudinary } = require('./config/cloudinary');
     
     // 测试Cloudinary连接
+    console.log('尝试ping Cloudinary...');
     const result = await cloudinary.api.ping();
+    console.log('Cloudinary ping结果:', result);
     
     res.json({
       success: true,
       message: 'Cloudinary连接正常',
-      result: result
+      result: result,
+      env: {
+        cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+        apiKeySet: !!process.env.CLOUDINARY_API_KEY,
+        apiSecretSet: !!process.env.CLOUDINARY_API_SECRET
+      }
     });
   } catch (error) {
     console.error('Cloudinary连接测试失败:', error);
+    console.error('错误详情:', {
+      message: error.message,
+      code: error.code,
+      statusCode: error.http_code,
+      stack: error.stack
+    });
+    
     res.status(500).json({
       success: false,
       message: 'Cloudinary连接失败',
-      error: error.message
+      error: error.message,
+      code: error.code,
+      statusCode: error.http_code,
+      env: {
+        cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+        apiKeySet: !!process.env.CLOUDINARY_API_KEY,
+        apiSecretSet: !!process.env.CLOUDINARY_API_SECRET
+      }
     });
   }
 });
@@ -360,8 +388,9 @@ app.post('/api/posts', upload.array('images', 5), async (req, res) => {
       return res.status(401).json({ msg: '请先登录' });
     }
 
-    const { title, content, category } = req.body;
-    if (!title || !content || !category) {
+    const { title, content, desc, category } = req.body;
+    const postContent = content || desc;
+    if (!title || !postContent || !category) {
       return res.status(400).json({ msg: '标题、内容和分类必填' });
     }
 
@@ -374,7 +403,7 @@ app.post('/api/posts', upload.array('images', 5), async (req, res) => {
 
     const post = new Post({
       title,
-      content,
+      content: postContent,
       category,
       author: user._id,
       authorName: user.nickname,

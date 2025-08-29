@@ -388,8 +388,9 @@ app.post('/api/posts', upload.array('images', 5), async (req, res) => {
       return res.status(401).json({ msg: '请先登录' });
     }
 
-    const { title, content, category } = req.body;
-    if (!title || !content || !category) {
+    const { title, content, desc, category } = req.body;
+    const postContent = content || desc;
+    if (!title || !postContent || !category) {
       return res.status(400).json({ msg: '标题、内容和分类必填' });
     }
 
@@ -402,7 +403,7 @@ app.post('/api/posts', upload.array('images', 5), async (req, res) => {
 
     const post = new Post({
       title,
-      content,
+      content: postContent,
       category,
       author: user._id,
       authorName: user.nickname,
