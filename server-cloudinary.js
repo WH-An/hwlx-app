@@ -73,14 +73,19 @@ function isAdmin(email) {
 }
 
 async function getCurrentUser(req) {
+  console.log('getCurrentUser调试:', { cookies: req.cookies });
+  
   let email = normalizeEmail(req.cookies.email);
   let isAdminUser = false;
   
   // 优先检查管理员cookie
   const adminEmail = normalizeEmail(req.cookies.admin_email);
+  console.log('getCurrentUser检查cookie:', { email, adminEmail });
+  
   if (adminEmail) {
     email = adminEmail;
     isAdminUser = true;
+    console.log('getCurrentUser使用管理员cookie:', { email, isAdminUser });
   }
   
   // 检查数据库中的用户是否为管理员
@@ -89,12 +94,14 @@ async function getCurrentUser(req) {
       const user = await User.findOne({ email });
       if (user && user.isAdmin) {
         isAdminUser = true;
+        console.log('getCurrentUser数据库检查管理员:', { email, isAdminUser });
       }
     } catch (error) {
       console.warn('检查用户管理员权限失败:', error);
     }
   }
   
+  console.log('getCurrentUser返回:', { email, isAdmin: isAdminUser });
   return { email, isAdmin: isAdminUser };
 }
 
