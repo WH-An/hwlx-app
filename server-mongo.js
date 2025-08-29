@@ -482,7 +482,7 @@ app.get('/api/messages', async (req, res) => {
 });
 
 // 发送消息
-app.post('/api/messages', async (req, res) => {
+app.post('/api/messages', upload.array('images', 9), async (req, res) => {
   try {
     const email = normalizeEmail(req.cookies.email);
     if (!email) {
@@ -501,10 +501,14 @@ app.post('/api/messages', async (req, res) => {
       return res.status(404).json({ msg: '用户不存在' });
     }
 
+    const images = req.files ? req.files.map(file => '/uploads/' + file.filename) : [];
+
     const message = new Message({
-      from: fromUser._id,
-      to: toUser._id,
-      content
+      from: fromUser.email,
+      to: toUser.email,
+      content,
+      images,
+      isRead: false
     });
 
     await message.save();
@@ -523,63 +527,41 @@ app.get('/api/messages/threads', async (req, res) => {
       return res.status(401).json({ msg: '请先登录' });
     }
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ msg: '用户不存在' });
+    // 获取所有与当前用户相关的消息
+    const messages = await Message.find({
+      $or: [
+        { from: email },
+        { to: email }
+      ]
+    }).sort({ createdAt: -1 });
+
+    // 按对话对方分组，获取最新的消息
+    const threads = new Map();
+    
+    messages.forEach(message => {
+      const peer = message.from === email ? message.to : message.from;
+      
+      if (!threads.has(peer) || threads.get(peer).createdAt < message.createdAt) {
+        threads.set(peer, {
+          peer,
+          lastMessage: message.content,
+          lastTime: message.createdAt,
+          unreadCount: 0
+        });
+      }
+    });
+
+    // 计算未读消息数
+    for (const [peer, thread] of threads) {
+      const unreadMessages = await Message.countDocuments({
+        from: peer,
+        to: email,
+        isRead: false
+      });
+      thread.unreadCount = unreadMessages;
     }
 
-    // 获取用户参与的所有消息线程
-    const threads = await Message.aggregate([
-      {
-        $match: {
-          $or: [{ from: user._id }, { to: user._id }]
-        }
-      },
-      {
-        $sort: { createdAt: -1 }
-      },
-      {
-        $group: {
-          _id: {
-            $cond: [
-              { $eq: ['$from', user._id] },
-              '$to',
-              '$from'
-            ]
-          },
-          lastMessage: { $first: '$$ROOT' },
-          messageCount: { $sum: 1 }
-        }
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: '_id',
-          foreignField: '_id',
-          as: 'otherUser'
-        }
-      },
-      {
-        $unwind: '$otherUser'
-      },
-      {
-        $project: {
-          _id: 0,
-          userId: '$otherUser._id',
-          nickname: '$otherUser.nickname',
-          email: '$otherUser.email',
-          avatarPath: '$otherUser.avatarPath',
-          lastMessage: {
-            content: '$lastMessage.content',
-            createdAt: '$lastMessage.createdAt',
-            fromMe: { $eq: ['$lastMessage.from', user._id] }
-          },
-          messageCount: 1
-        }
-      }
-    ]);
-
-    res.json(threads);
+    res.json(Array.from(threads.values()));
   } catch (error) {
     console.error('获取消息线程失败:', error);
     res.status(500).json({ msg: '获取消息线程失败' });

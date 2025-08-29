@@ -470,6 +470,115 @@ app.delete('/api/posts/:id', async (req, res) => {
   }
 });
 
+// 获取消息列表
+app.get('/api/messages', async (req, res) => {
+  try {
+    const email = normalizeEmail(req.cookies.email);
+    if (!email) {
+      return res.status(401).json({ msg: '请先登录' });
+    }
+
+    const messages = await Message.find({
+      $or: [
+        { from: email },
+        { to: email }
+      ]
+    }).sort({ createdAt: -1 });
+
+    res.json(messages);
+  } catch (error) {
+    console.error('获取消息失败:', error);
+    res.status(500).json({ msg: '获取消息失败' });
+  }
+});
+
+// 发送消息
+app.post('/api/messages', upload.array('images', 9), async (req, res) => {
+  try {
+    const email = normalizeEmail(req.cookies.email);
+    if (!email) {
+      return res.status(401).json({ msg: '请先登录' });
+    }
+
+    const { toEmail, content } = req.body;
+    if (!toEmail || !content) {
+      return res.status(400).json({ msg: '收件人和内容必填' });
+    }
+
+    const fromUser = await User.findOne({ email });
+    const toUser = await User.findOne({ email: normalizeEmail(toEmail) });
+
+    if (!fromUser || !toUser) {
+      return res.status(404).json({ msg: '用户不存在' });
+    }
+
+    const images = req.files ? req.files.map(file => file.path) : [];
+
+    const message = new Message({
+      from: fromUser.email,
+      to: toUser.email,
+      content,
+      images,
+      isRead: false
+    });
+
+    await message.save();
+    res.json({ msg: '发送成功', message });
+  } catch (error) {
+    console.error('发送消息失败:', error);
+    res.status(500).json({ msg: '发送消息失败' });
+  }
+});
+
+// 获取消息线程列表
+app.get('/api/messages/threads', async (req, res) => {
+  try {
+    const email = normalizeEmail(req.cookies.email);
+    if (!email) {
+      return res.status(401).json({ msg: '请先登录' });
+    }
+
+    // 获取所有与当前用户相关的消息
+    const messages = await Message.find({
+      $or: [
+        { from: email },
+        { to: email }
+      ]
+    }).sort({ createdAt: -1 });
+
+    // 按对话对方分组，获取最新的消息
+    const threads = new Map();
+    
+    messages.forEach(message => {
+      const peer = message.from === email ? message.to : message.from;
+      
+      if (!threads.has(peer) || threads.get(peer).createdAt < message.createdAt) {
+        threads.set(peer, {
+          peer,
+          lastMessage: message.content,
+          lastTime: message.createdAt,
+          unreadCount: 0
+        });
+      }
+    });
+
+    // 计算未读消息数
+    for (const [peer, thread] of threads) {
+      const unreadMessages = await Message.countDocuments({
+        from: peer,
+        to: email,
+        isRead: false
+      });
+      thread.unreadCount = unreadMessages;
+    }
+
+    res.json(Array.from(threads.values()));
+  } catch (error) {
+    console.error('获取消息线程失败:', error);
+    res.status(500).json({ msg: '获取消息线程失败' });
+  }
+});
+
 // 启动服务器
 async function startServer() {
   try {
