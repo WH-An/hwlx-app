@@ -424,7 +424,7 @@
             const lastRead = new Date(lastReadISO);
             const unread = msgs.filter(m =>
               String(m.to||'').toLowerCase() === meMail &&
-              new Date(m.time) > lastRead
+              new Date(m.createdAt) > lastRead
             ).length;
             total += unread;
           }catch{}
