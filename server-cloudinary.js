@@ -76,11 +76,11 @@ async function getCurrentUser(req) {
   let email = normalizeEmail(req.cookies.email);
   let isAdminUser = false;
   
-  if (!email) {
-    email = normalizeEmail(req.cookies.admin_email);
-    if (email) {
-      isAdminUser = true;
-    }
+  // 优先检查管理员cookie
+  const adminEmail = normalizeEmail(req.cookies.admin_email);
+  if (adminEmail) {
+    email = adminEmail;
+    isAdminUser = true;
   }
   
   // 检查数据库中的用户是否为管理员
