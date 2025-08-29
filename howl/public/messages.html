@@ -208,7 +208,7 @@
       return new Promise((resolve,reject)=>{
         const fd=new FormData();
         fd.append('toEmail',peer);
-        fd.append('text',text||'');
+        fd.append('content',text||'');
         (files||[]).forEach(f=>fd.append('images',f));
         const xhr=new XMLHttpRequest();
         xhr.open('POST', BASE_URL+'/api/messages', true);
@@ -239,7 +239,7 @@
         div.innerHTML=`<div class="peerRow">
             <img class="avatar" src="" alt=""/><span class="peer">${esc(peer)}</span>
           </div>
-          <div class="last">${esc(t.last||'（无消息）')}</div>
+          <div class="last">${esc(t.lastMessage||'（无消息）')}</div>
           <div class="badge" style="display:none"></div>`;
         div.onclick=()=>openChat(peer);
         box.appendChild(div);
@@ -254,7 +254,7 @@
           try{
             const msgs=await apiListMessages(peer);
             const lastRead=new Date(getLastRead(ME.email,peer));
-            const unread=msgs.filter(m=>String(m.to||'').toLowerCase()===String(ME.email||'').toLowerCase() && new Date(m.time)>lastRead).length;
+            const unread=msgs.filter(m=>String(m.to||'').toLowerCase()===String(ME.email||'').toLowerCase() && new Date(m.createdAt)>lastRead).length;
             updateBadge(peer, unread);
           }catch{}
         }
@@ -286,13 +286,13 @@
         const bubble=document.createElement('div'); bubble.className='msg '+(mine?'me':'peer');
         const displayName=(await getUser(m.from))?.nickname||m.from;
         let html='';
-        if(m.text && m.text.trim()) html+=`<div>${esc(m.text)}</div>`;
+        if(m.content && m.content.trim()) html+=`<div>${esc(m.content)}</div>`;
         if(Array.isArray(m.images)&&m.images.length){
           const abs=m.images.map(u=>toAbs(u));
           const imgs=abs.map(u=>`<img src="${esc(u)}" alt="" data-msg-images="${esc(abs.join('|'))}" onclick="return false;">`).join('');
           html+=`<div class="img-grid">${imgs}</div>`;
         }
-        html+=`<div class="meta">${esc(displayName)} · ${new Date(m.time||Date.now()).toLocaleString()}</div>`;
+        html+=`<div class="meta">${esc(displayName)} · ${new Date(m.createdAt||Date.now()).toLocaleString()}</div>`;
         bubble.innerHTML=html; row.appendChild(bubble); box.appendChild(row);
       }
       // 图片点击 → Lightbox
