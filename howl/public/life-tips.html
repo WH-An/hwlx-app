@@ -332,7 +332,7 @@
             const msgs = await apiDialog(peer);
             const lastReadISO = localStorage.getItem(READ_KEY(meMail, peer.toLowerCase())) || '1970-01-01T00:00:00.000Z';
             const lastRead = new Date(lastReadISO);
-            const unread = msgs.filter(m => String(m.to||'').toLowerCase() === meMail && new Date(m.time) > lastRead).length;
+            const unread = msgs.filter(m => String(m.to||'').toLowerCase() === meMail && new Date(m.createdAt) > lastRead).length;
             total += unread;
           }catch{}
         }
