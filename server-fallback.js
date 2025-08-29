@@ -305,6 +305,35 @@ app.post('/api/posts', upload.array('images', 5), (req, res) => {
   res.json({ msg: '发布成功', post });
 });
 
+// 删除帖子
+app.delete('/api/posts/:id', (req, res) => {
+  const email = normalizeEmail(req.cookies.email);
+  if (!email) return res.status(401).json({ msg: '请先登录' });
+
+  const { id } = req.params;
+  if (!id) return res.status(400).json({ msg: '帖子ID必填' });
+
+  const posts = readPosts();
+  const postIndex = posts.findIndex(p => String(p.id) === String(id));
+  
+  if (postIndex === -1) {
+    return res.status(404).json({ msg: '帖子不存在' });
+  }
+
+  const post = posts[postIndex];
+  
+  // 检查权限：只有作者可以删除自己的帖子
+  if (post.authorEmail !== email) {
+    return res.status(403).json({ msg: '只有作者可以删除自己的帖子' });
+  }
+
+  // 删除帖子
+  posts.splice(postIndex, 1);
+  writePosts(posts);
+  
+  res.json({ msg: '帖子删除成功' });
+});
+
 // 获取消息列表
 app.get('/api/messages', (req, res) => {
   const email = normalizeEmail(req.cookies.email);

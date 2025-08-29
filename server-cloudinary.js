@@ -420,6 +420,56 @@ app.post('/api/posts', upload.array('images', 5), async (req, res) => {
   }
 });
 
+// 删除帖子
+app.delete('/api/posts/:id', async (req, res) => {
+  try {
+    const email = normalizeEmail(req.cookies.email);
+    if (!email) {
+      return res.status(401).json({ msg: '请先登录' });
+    }
+
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ msg: '帖子ID必填' });
+    }
+
+    // 查找帖子
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(404).json({ msg: '帖子不存在' });
+    }
+
+    // 检查权限：只有作者可以删除自己的帖子
+    if (post.authorEmail !== email) {
+      return res.status(403).json({ msg: '只有作者可以删除自己的帖子' });
+    }
+
+    // 删除帖子中的图片（如果有的话）
+    if (post.images && post.images.length > 0) {
+      try {
+        for (const imageUrl of post.images) {
+          // 从Cloudinary删除图片
+          if (imageUrl && imageUrl.includes('cloudinary')) {
+            const publicId = imageUrl.split('/').pop().split('.')[0];
+            await cloudinary.uploader.destroy(publicId);
+          }
+        }
+      } catch (imageError) {
+        console.warn('删除图片失败:', imageError);
+        // 继续删除帖子，即使图片删除失败
+      }
+    }
+
+    // 删除帖子
+    await Post.findByIdAndDelete(id);
+    
+    res.json({ msg: '帖子删除成功' });
+  } catch (error) {
+    console.error('删除帖子失败:', error);
+    res.status(500).json({ msg: '删除帖子失败' });
+  }
+});
+
 // 启动服务器
 async function startServer() {
   try {
