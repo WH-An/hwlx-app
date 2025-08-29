@@ -13,8 +13,16 @@ const { upload, deleteFile, getFileUrl } = require('./config/cloudinary');
 // 导入模型
 const User = require('./models/User');
 const Post = require('./models/Post');
-const Message = require('./models/Message');
 const Comment = require('./models/Comment');
+
+// 清除Message模型缓存并重新导入
+if (mongoose.models.Message) {
+  delete mongoose.models.Message;
+}
+const Message = require('./models/Message');
+
+// 调试：检查Message模型的schema定义
+console.log('Message模型content字段定义:', Message.schema.paths.content);
 
 const app = express();
 const PORT = process.env.PORT || 10000;
