@@ -608,8 +608,9 @@ app.get('/api/messages', async (req, res) => {
         { isRead: true }
       );
 
-      res.json(messages);
+            res.json(messages);
     } else {
+      console.log('没有peer参数，获取所有消息');
       // 获取所有消息（兼容旧API）
       const messages = await Message.find({
         $or: [
