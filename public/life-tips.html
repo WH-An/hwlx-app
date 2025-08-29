@@ -212,11 +212,19 @@
           card.appendChild(img);
         });
 
-        // 文本
-        if(post.desc){
+        // 标题和文本
+        if(post.title){
+          const title=document.createElement('div');
+          title.className='card-title';
+          title.style.cssText = 'font-weight: 700; font-size: 16px; margin-bottom: 8px; color: #111827;';
+          title.textContent=post.title;
+          card.appendChild(title);
+        }
+        
+        if(post.desc || post.content){
           const desc=document.createElement('div');
           desc.className='card-text';
-          desc.textContent=post.desc;
+          desc.textContent=post.desc || post.content;
           card.appendChild(desc);
         }
 

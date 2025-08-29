@@ -240,10 +240,19 @@
         });
 
         // — 文本 —
-        if(p.desc){
-          const t=document.createElement('div'); 
-          t.className='card-text'; 
-          t.textContent=p.desc; 
+        // 标题和文本
+        if(p.title){
+          const title=document.createElement('div');
+          title.className='card-title';
+          title.style.cssText = 'font-weight: 700; font-size: 16px; margin-bottom: 8px; color: #111827;';
+          title.textContent=p.title;
+          card.appendChild(title);
+        }
+        
+        if(p.desc || p.content){
+          const t=document.createElement('div');
+          t.className='card-text';
+          t.textContent=p.desc || p.content;
           card.appendChild(t);
         }
 
