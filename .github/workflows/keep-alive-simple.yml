@@ -1,0 +1,23 @@
+name: Keep Alive Simple
+
+on:
+  schedule:
+    # 每5分钟运行一次
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simple ping
+        run: |
+          echo "🔄 简单保活检查开始..."
+          echo "📅 时间: $(date)"
+          echo "🌐 目标: https://hai-wai-liu-xue.onrender.com"
+          
+          # 简单的curl请求，不检查状态码
+          curl -s --max-time 10 https://hai-wai-liu-xue.onrender.com > /dev/null
+          
+          echo "✅ 保活请求已发送"
+          echo "🎉 保活完成！"

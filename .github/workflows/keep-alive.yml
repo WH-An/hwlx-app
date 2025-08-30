@@ -21,7 +21,9 @@ jobs:
           
           # 发送GET请求到网站
           echo "📡 发送请求..."
-          response=$(curl -s -o /dev/null -w "%{http_code}" --max-time $timeout https://hai-wai-liu-xue.onrender.com)
+          
+          # 使用更健壮的curl命令
+          response=$(curl -s -o /dev/null -w "%{http_code}" --max-time $timeout --retry 2 --retry-delay 1 https://hai-wai-liu-xue.onrender.com 2>/dev/null || echo "000")
           curl_exit_code=$?
           
           echo "📊 响应状态码: $response"
@@ -31,19 +33,24 @@ jobs:
           if [ $curl_exit_code -eq 0 ] && [ "$response" = "200" ]; then
             echo "✅ 网站响应正常 (HTTP $response)"
             echo "🎉 保活成功！"
+            exit 0
           elif [ $curl_exit_code -eq 28 ]; then
             echo "⏰ 请求超时 (超过${timeout}秒)"
             echo "⚠️  网站可能正在启动中..."
+            exit 0  # 超时不算失败，继续保活
           elif [ $curl_exit_code -ne 0 ]; then
             echo "❌ 网络连接失败 (cURL错误码: $curl_exit_code)"
             echo "⚠️  请检查网络连接或网站状态"
+            exit 0  # 网络问题不算失败，继续保活
           else
             echo "⚠️  网站响应异常 (HTTP $response)"
             echo "🔍 可能的原因："
             echo "   - 网站正在维护"
             echo "   - 服务器错误"
             echo "   - 重定向或其他HTTP状态"
+            # 对于非200状态码，也继续保活，不标记为失败
+            exit 0
           fi
           
           echo "✅ 保活检查完成"
-          echo "⏰ 下次检查时间: $(date -d '+5 minutes' '+%Y-%m-%d %H:%M:%S')"
+          echo "⏰ 下次检查时间: $(date -v+5M '+%Y-%m-%d %H:%M:%S' 2>/dev/null || date -d '+5 minutes' '+%Y-%m-%d %H:%M:%S' 2>/dev/null || echo '无法计算下次时间')"
