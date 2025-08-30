@@ -37,7 +37,6 @@
       margin-top: 20px;
       flex: 1;
       overflow: hidden;
-      display: flex;
       flex-direction: column;
     }
     
@@ -410,8 +409,9 @@
         tbody.appendChild(row);
       });
       
-      // 显示表格
+      // 显示表格并设置为flex布局
       container.style.display = 'flex';
+      container.style.flexDirection = 'column';
     }
 
     // 隐藏EMGS诊所表格
