@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>海外留学 · 保险公司选择</title>
+  <title>海外留学 · 地区选择</title>
   <style>
     :root{--bg:#0b0f14; --panel:#ffffff; --text:#0f172a; --muted:#64748b; --accent:#16a34a; --border:#e5e7eb; --shadow:0 10px 30px rgba(0,0,0,.18); --radius:18px;}
     *{box-sizing:border-box} html,body{height:100%}
@@ -51,17 +51,41 @@
 
     <div class="panel">
       <div class="search-box">
-        <input type="text" id="searchInput" placeholder="搜索保险公司...">
+        <input type="text" id="searchInput" placeholder="搜索地区...">
         <button onclick="alert('请输入关键词后再搜索')">搜索</button>
       </div>
       <div class="panel-header">
-        <h2 class="panel-title">保险公司</h2>
+        <h2 class="panel-title">地区</h2>
         <div class="spacer"></div>
-        <select id="insuranceSelect" class="btn">
-          <option value="">请选择保险公司</option>
-          <option value="etiqa">Etiqa Family Takaful Berhad</option>
-          <option value="great-eastern">Great Eastern Takaful Berhad</option>
-          <option value="pacific">The Pacific Insurance Berhad</option>
+        <select id="regionSelect" class="btn">
+          <option value="">请选择你所在的地区</option>
+          <option value="putrajaya">Putrajaya</option>
+          <option value="cyberjaya">Cyberjaya</option>
+          <option value="petaling-jaya">Petaling Jaya</option>
+          <option value="puchong">Puchong</option>
+          <option value="subang-jaya">Subang Jaya</option>
+          <option value="kajang">Kajang</option>
+          <option value="seri-kembangan">Seri Kembangan</option>
+          <option value="bangi">Bangi</option>
+          <option value="cheras">Cheras</option>
+          <option value="sungai-buloh">Sungai Buloh</option>
+          <option value="shah-alam">Shah Alam</option>
+          <option value="klang">Klang</option>
+          <option value="port-klang">Port Klang</option>
+          <option value="banting">Banting</option>
+          <option value="rawang">Rawang</option>
+          <option value="sepang">Sepang</option>
+          <option value="melaka">Melaka</option>
+          <option value="johor">Johor</option>
+          <option value="perak">Perak</option>
+          <option value="pahang">Pahang</option>
+          <option value="perlis">Perlis</option>
+          <option value="terengganu">Terengganu</option>
+          <option value="kelantan">Kelantan</option>
+          <option value="kedah">Kedah</option>
+          <option value="pulau-pinang">Pulau Pinang</option>
+          <option value="sarawak">Sarawak</option>
+          <option value="university-campuses">University Campuses</option>
         </select>
       </div>
     </div>
@@ -69,7 +93,7 @@
 
   <script>
     // 简单选择逻辑
-    document.getElementById('insuranceSelect').addEventListener('change', function() {
+    document.getElementById('regionSelect').addEventListener('change', function() {
       if (this.value) {
         alert("您选择了: " + this.options[this.selectedIndex].text);
       }
