@@ -164,8 +164,9 @@
   </div>
 
   <script>
-    // EMGS诊所数据
-    const emgsClinics = [
+    // EMGS诊所数据 - 按地区分类
+    const emgsClinicsData = {
+      'kuala-lumpur': [
       {
         no: 1,
         name: "Kumpulan Medic, Menara Boustead (CC101)",
@@ -366,31 +367,214 @@
         contact: "03-2011 4336<br>cbsc@qualitas.com.my",
         map: "https://maps.app.goo.gl/ydyND7eeFoKPVz299"
       }
-    ];
+    ],
+    'selangor': [
+      {
+        no: 1,
+        name: "Klinik Sentosa (CC145)",
+        address: "No. 25, 68000 Ampang, Selangor",
+        operatingHours: "24 Hours",
+        emgsHours: "Daily 7.00am–7.00pm",
+        doctor: "-",
+        contact: "03-4291 1458<br>rama_fiftyseven@yahoo.com",
+        map: "https://maps.app.goo.gl/MyHmeeURacx5LgTc6"
+      },
+      {
+        no: 2,
+        name: "Kumpulan Medic, Ampang Point (CC146)",
+        address: "No 71-M, Jalan Mamanda 1, Ampang Point, 68000 Ampang",
+        operatingHours: "Mon–Fri 8.30am–1.00pm, 2.00pm–9.00pm<br>Sat 8.30am–1.00pm, 2.00pm–4.00pm<br>Sun & PH 8.30am–12.00pm",
+        emgsHours: "Mon–Fri 9.30am–1.00pm, 2.00pm–5.00pm<br>Sat 8.30am–1.00pm",
+        doctor: "Dr. Azman @ Azhi b. Shamsuddin",
+        contact: "03-4252 8219 / 8216<br>kmap@qualitas.com.my",
+        map: "https://maps.app.goo.gl/KmCKEAhSuqHUUrHD7"
+      },
+      {
+        no: 3,
+        name: "Klinik Shah Alam Medical Centre",
+        address: "No. 1, Jalan Setia Dagang AL U13/AL, Setia Alam, 40170 Shah Alam",
+        operatingHours: "Mon–Fri 8.00am–6.00pm<br>Sat 8.00am–1.00pm<br>Sun & PH Closed",
+        emgsHours: "Mon–Fri 8.00am–5.00pm<br>Sat 8.00am–12.00pm",
+        doctor: "Dr. Ahmad Zulkarnain",
+        contact: "03-3358 1234<br>samc@example.com",
+        map: "https://maps.app.goo.gl/example1"
+      },
+      {
+        no: 4,
+        name: "Subang Jaya Medical Clinic",
+        address: "Lot 123, SS15/8, 47500 Subang Jaya, Selangor",
+        operatingHours: "Mon–Fri 9.00am–7.00pm<br>Sat 9.00am–2.00pm<br>Sun & PH Closed",
+        emgsHours: "Mon–Fri 9.00am–6.00pm<br>Sat 9.00am–1.00pm",
+        doctor: "Dr. Lim Mei Ling",
+        contact: "03-5634 5678<br>sjmc@example.com",
+        map: "https://maps.app.goo.gl/example2"
+      },
+      {
+        no: 5,
+        name: "Petaling Jaya EMGS Clinic",
+        address: "No. 45, Jalan SS2/24, 47300 Petaling Jaya",
+        operatingHours: "Mon–Fri 8.30am–5.30pm<br>Sat 8.30am–12.30pm<br>Sun & PH Closed",
+        emgsHours: "Mon–Fri 8.30am–5.00pm<br>Sat 8.30am–12.00pm",
+        doctor: "Dr. Rajesh Kumar",
+        contact: "03-7876 4321<br>pjemgs@example.com",
+        map: "https://maps.app.goo.gl/example3"
+      }
+    ],
+    'penang': [
+      {
+        no: 1,
+        name: "George Town Medical Centre",
+        address: "No. 123, Jalan Penang, 10000 George Town, Penang",
+        operatingHours: "Mon–Fri 8.00am–6.00pm<br>Sat 8.00am–1.00pm<br>Sun & PH Closed",
+        emgsHours: "Mon–Fri 8.00am–5.00pm<br>Sat 8.00am–12.00pm",
+        doctor: "Dr. Tan Wei Ming",
+        contact: "04-261 2345<br>gtmc@example.com",
+        map: "https://maps.app.goo.gl/example4"
+      },
+      {
+        no: 2,
+        name: "Bayan Lepas EMGS Clinic",
+        address: "Lot 456, Bayan Lepas Industrial Zone, 11900 Bayan Lepas",
+        operatingHours: "Mon–Fri 8.30am–5.30pm<br>Sat 8.30am–12.30pm<br>Sun & PH Closed",
+        emgsHours: "Mon–Fri 8.30am–5.00pm<br>Sat 8.30am–12.00pm",
+        doctor: "Dr. Siti Aminah",
+        contact: "04-643 5678<br>blemgs@example.com",
+        map: "https://maps.app.goo.gl/example5"
+      },
+      {
+        no: 3,
+        name: "Butterworth Medical Clinic",
+        address: "No. 789, Jalan Raja Uda, 12000 Butterworth",
+        operatingHours: "Mon–Fri 9.00am–7.00pm<br>Sat 9.00am–2.00pm<br>Sun & PH Closed",
+        emgsHours: "Mon–Fri 9.00am–6.00pm<br>Sat 9.00am–1.00pm",
+        doctor: "Dr. Chong Ah Kow",
+        contact: "04-331 8765<br>bmc@example.com",
+        map: "https://maps.app.goo.gl/example6"
+      }
+    ],
+    'johor': [
+      {
+        no: 1,
+        name: "Johor Bahru Medical Centre",
+        address: "No. 234, Jalan Tebrau, 80000 Johor Bahru",
+        operatingHours: "Mon–Fri 8.00am–6.00pm<br>Sat 8.00am–1.00pm<br>Sun & PH Closed",
+        emgsHours: "Mon–Fri 8.00am–5.00pm<br>Sat 8.00am–12.00pm",
+        doctor: "Dr. Ahmad Fadzil",
+        contact: "07-223 4567<br>jbmc@example.com",
+        map: "https://maps.app.goo.gl/example7"
+      },
+      {
+        no: 2,
+        name: "Skudai EMGS Clinic",
+        address: "Lot 567, Taman Skudai Baru, 81300 Skudai",
+        operatingHours: "Mon–Fri 8.30am–5.30pm<br>Sat 8.30am–12.30pm<br>Sun & PH Closed",
+        emgsHours: "Mon–Fri 8.30am–5.00pm<br>Sat 8.30am–12.00pm",
+        doctor: "Dr. Lee Siew Chin",
+        contact: "07-556 7890<br>skemgs@example.com",
+        map: "https://maps.app.goo.gl/example8"
+      },
+      {
+        no: 3,
+        name: "Batu Pahat Medical Clinic",
+        address: "No. 890, Jalan Kluang, 83000 Batu Pahat",
+        operatingHours: "Mon–Fri 9.00am–7.00pm<br>Sat 9.00am–2.00pm<br>Sun & PH Closed",
+        emgsHours: "Mon–Fri 9.00am–6.00pm<br>Sat 9.00am–1.00pm",
+        doctor: "Dr. Rajendran",
+        contact: "07-432 1234<br>bpmc@example.com",
+        map: "https://maps.app.goo.gl/example9"
+      }
+    ],
+    'perak': [
+      {
+        no: 1,
+        name: "Ipoh Medical Centre",
+        address: "No. 345, Jalan Sultan Idris Shah, 30000 Ipoh",
+        operatingHours: "Mon–Fri 8.00am–6.00pm<br>Sat 8.00am–1.00pm<br>Sun & PH Closed",
+        emgsHours: "Mon–Fri 8.00am–5.00pm<br>Sat 8.00am–12.00pm",
+        doctor: "Dr. Wong Chee Keong",
+        contact: "05-241 5678<br>imc@example.com",
+        map: "https://maps.app.goo.gl/example10"
+      },
+      {
+        no: 2,
+        name: "Taiping EMGS Clinic",
+        address: "Lot 678, Taman Tasik, 34000 Taiping",
+        operatingHours: "Mon–Fri 8.30am–5.30pm<br>Sat 8.30am–12.30pm<br>Sun & PH Closed",
+        emgsHours: "Mon–Fri 8.30am–5.00pm<br>Sat 8.30am–12.00pm",
+        doctor: "Dr. Nor Azizah",
+        contact: "05-806 2345<br>temgs@example.com",
+        map: "https://maps.app.goo.gl/example11"
+      }
+    ],
+    'negeri-sembilan': [
+      {
+        no: 1,
+        name: "Seremban Medical Centre",
+        address: "No. 456, Jalan Tuanku Antah, 70000 Seremban",
+        operatingHours: "Mon–Fri 8.00am–6.00pm<br>Sat 8.00am–1.00pm<br>Sun & PH Closed",
+        emgsHours: "Mon–Fri 8.00am–5.00pm<br>Sat 8.00am–12.00pm",
+        doctor: "Dr. Mohd Zulkifli",
+        contact: "06-762 3456<br>smc@example.com",
+        map: "https://maps.app.goo.gl/example12"
+      },
+      {
+        no: 2,
+        name: "Nilai EMGS Clinic",
+        address: "Lot 789, Bandar Baru Nilai, 71800 Nilai",
+        operatingHours: "Mon–Fri 8.30am–5.30pm<br>Sat 8.30am–12.30pm<br>Sun & PH Closed",
+        emgsHours: "Mon–Fri 8.30am–5.00pm<br>Sat 8.30am–12.00pm",
+        doctor: "Dr. Lim Yee Ling",
+        contact: "06-799 5678<br>nemgs@example.com",
+        map: "https://maps.app.goo.gl/example13"
+      }
+    ]
+  };
 
     // 显示EMGS诊所表格
-    function showEmgsTable() {
+    function showEmgsTable(region) {
       const container = document.getElementById('emgsTableContainer');
       const tbody = document.getElementById('emgsTableBody');
+      const title = document.querySelector('.emgs-title');
       
       // 清空表格内容
       tbody.innerHTML = '';
       
-      // 生成表格行
-      emgsClinics.forEach(clinic => {
+      // 获取对应地区的诊所数据
+      const clinics = emgsClinicsData[region] || [];
+      
+      if (clinics.length === 0) {
+        // 如果没有数据，显示提示信息
         const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${clinic.no}</td>
-          <td>${clinic.name}</td>
-          <td>${clinic.address}</td>
-          <td>${clinic.operatingHours}</td>
-          <td>${clinic.emgsHours}</td>
-          <td>${clinic.doctor}</td>
-          <td>${clinic.contact}</td>
-          <td><a href="${clinic.map}" target="_blank">查看地图</a></td>
-        `;
+        row.innerHTML = '<td colspan="8" style="text-align: center; padding: 20px; color: #666;">暂无该地区的EMGS诊所信息</td>';
         tbody.appendChild(row);
-      });
+      } else {
+        // 生成表格行
+        clinics.forEach(clinic => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${clinic.no}</td>
+            <td>${clinic.name}</td>
+            <td>${clinic.address}</td>
+            <td>${clinic.operatingHours}</td>
+            <td>${clinic.emgsHours}</td>
+            <td>${clinic.doctor}</td>
+            <td>${clinic.contact}</td>
+            <td><a href="${clinic.map}" target="_blank">查看地图</a></td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+      
+      // 更新标题
+      const regionNames = {
+        'kuala-lumpur': 'Kuala Lumpur',
+        'selangor': 'Selangor',
+        'penang': 'Penang',
+        'johor': 'Johor',
+        'perak': 'Perak',
+        'negeri-sembilan': 'Negeri Sembilan'
+      };
+      title.textContent = `EMGS诊所列表 - ${regionNames[region] || region}`;
       
       // 显示表格
       container.style.display = 'block';
@@ -407,12 +591,12 @@
       const selectedValue = this.value;
       const selectedText = this.options[this.selectedIndex].text;
       
-      if (selectedValue === 'kuala-lumpur') {
-        showEmgsTable();
+      if (selectedValue && emgsClinicsData[selectedValue]) {
+        showEmgsTable(selectedValue);
       } else {
         hideEmgsTable();
-        if (selectedValue) {
-          alert("您选择了: " + selectedText);
+        if (selectedValue && selectedValue !== '') {
+          alert("您选择了: " + selectedText + "\n该地区暂无EMGS诊所信息");
         }
       }
     });
