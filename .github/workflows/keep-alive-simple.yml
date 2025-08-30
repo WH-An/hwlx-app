@@ -10,14 +10,14 @@ jobs:
   keep-alive:
     runs-on: ubuntu-latest
     steps:
-      - name: Simple ping
+      - name: Ping website
         run: |
-          echo "🔄 简单保活检查开始..."
+          echo "🔄 开始保活检查..."
           echo "📅 时间: $(date)"
           echo "🌐 目标: https://hai-wai-liu-xue.onrender.com"
           
-          # 简单的curl请求，不检查状态码
-          curl -s --max-time 10 https://hai-wai-liu-xue.onrender.com > /dev/null
+          # 简单的curl请求
+          curl -s -o /dev/null -w "HTTP状态码: %{http_code}\n" --max-time 30 https://hai-wai-liu-xue.onrender.com
           
           echo "✅ 保活请求已发送"
           echo "🎉 保活完成！"

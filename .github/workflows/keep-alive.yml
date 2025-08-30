@@ -53,4 +53,4 @@ jobs:
           fi
           
           echo "✅ 保活检查完成"
-          echo "⏰ 下次检查时间: $(date -v+5M '+%Y-%m-%d %H:%M:%S' 2>/dev/null || date -d '+5 minutes' '+%Y-%m-%d %H:%M:%S' 2>/dev/null || echo '无法计算下次时间')"
+          echo "⏰ 下次检查时间: 5分钟后"

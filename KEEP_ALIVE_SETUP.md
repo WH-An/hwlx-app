@@ -10,6 +10,8 @@
 
 - **频率**: 每5分钟自动访问一次
 - **文件位置**: `.github/workflows/keep-alive.yml`
+- **备用脚本**: `.github/workflows/keep-alive-simple.yml`
+- **最简脚本**: `.github/workflows/keep-alive-minimal.yml`
 - **状态**: 自动运行，无需手动操作
 - **监控**: 可在GitHub Actions页面查看运行日志
 
