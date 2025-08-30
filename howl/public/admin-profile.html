@@ -200,13 +200,18 @@
           // 如果有文件，先上传
           if(file){ 
             try{
+              console.log('开始上传头像文件:', file.name);
               const uploaded = await uploadFile(file);
+              console.log('头像上传结果:', uploaded);
               avatarUrl = uploaded || avatarUrl;
               toast('头像上传成功');
             }catch(e){
+              console.error('头像上传失败:', e);
               toast('上传头像失败：'+e.message+'；将尝试使用头像URL字段保存');
             }
           }
+          
+          console.log('最终头像URL:', avatarUrl);
           
           // 准备保存数据
           const payload = {
@@ -215,11 +220,11 @@
             avatarUrl: avatarUrl || undefined
           };
           
+          console.log('保存数据:', payload);
+          
           // 管理员头像保存：只更新localStorage，不调用服务器API
           // 这样可以避免影响普通用户信息
           console.log('管理员头像保存：只更新localStorage');
-          toast('已保存');
-          $('#saveHint').textContent = '已保存';
           
           // 立即更新显示
           const newName = ($('#displayName').value||'').trim();
@@ -230,6 +235,7 @@
           
           if(avatarUrl) {
             const absUrl = toAbs(avatarUrl);
+            console.log('设置头像URL:', absUrl);
             $('#avatar').src = absUrl;
             $('#sidebarAvatar').src = absUrl;
             $('#avatarUrl').value = avatarUrl;
@@ -239,7 +245,12 @@
           const adminUser = JSON.parse(localStorage.getItem('adminUser') || localStorage.getItem('tempAdminUser') || '{}');
           adminUser.name = newName || adminUser.name;
           adminUser.avatarPath = avatarUrl || adminUser.avatarPath;
+          adminUser.avatar = avatarUrl || adminUser.avatar; // 添加avatar字段
+          console.log('更新localStorage:', adminUser);
           localStorage.setItem('adminUser', JSON.stringify(adminUser));
+          
+          toast('已保存');
+          $('#saveHint').textContent = '已保存';
           
           // 管理员页面不需要重新获取用户信息，避免影响普通用户
           // await hydrate();
