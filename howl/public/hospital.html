@@ -35,16 +35,26 @@
     .emgs-table-container {
       display: none;
       margin-top: 20px;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .emgs-table-wrapper {
+      flex: 1;
+      overflow-y: auto;
       overflow-x: auto;
+      border-radius: 12px;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
     .emgs-table {
       width: 100%;
+      min-width: 800px;
       border-collapse: collapse;
       background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
     .emgs-table th,
@@ -53,12 +63,16 @@
       text-align: left;
       border-bottom: 1px solid #e5e7eb;
       font-size: 14px;
+      white-space: nowrap;
     }
     
     .emgs-table th {
       background: #f8fafc;
       font-weight: 700;
       color: #374151;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
     
     .emgs-table tr:hover {
@@ -79,6 +93,7 @@
       font-weight: 700;
       color: #111827;
       margin-bottom: 16px;
+      flex-shrink: 0;
     }
   </style>
 </head>
@@ -143,23 +158,25 @@
       <!-- EMGS诊所表格容器 -->
       <div id="emgsTableContainer" class="emgs-table-container">
         <h3 class="emgs-title">EMGS诊所列表 - Kuala Lumpur</h3>
-        <table class="emgs-table">
-          <thead>
-            <tr>
-              <th>编号</th>
-              <th>诊所名称</th>
-              <th>地址</th>
-              <th>营业时间</th>
-              <th>EMGS筛查时间</th>
-              <th>负责医生</th>
-              <th>联系方式</th>
-              <th>地图</th>
-            </tr>
-          </thead>
-          <tbody id="emgsTableBody">
-            <!-- 表格内容将通过JavaScript动态生成 -->
-          </tbody>
-        </table>
+        <div class="emgs-table-wrapper">
+          <table class="emgs-table">
+            <thead>
+              <tr>
+                <th>编号</th>
+                <th>诊所名称</th>
+                <th>地址</th>
+                <th>营业时间</th>
+                <th>EMGS筛查时间</th>
+                <th>负责医生</th>
+                <th>联系方式</th>
+                <th>地图</th>
+              </tr>
+            </thead>
+            <tbody id="emgsTableBody">
+              <!-- 表格内容将通过JavaScript动态生成 -->
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -394,7 +411,7 @@
       });
       
       // 显示表格
-      container.style.display = 'block';
+      container.style.display = 'flex';
     }
 
     // 隐藏EMGS诊所表格
