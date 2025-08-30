@@ -9,9 +9,15 @@
 ✅ **已配置完成**
 
 - **频率**: 每5分钟自动访问一次
-- **文件位置**: `.github/workflows/keep-alive.yml`
-- **备用脚本**: `.github/workflows/keep-alive-simple.yml`
+- **主脚本**: `.github/workflows/keep-alive.yml`
+- **简化脚本**: `.github/workflows/keep-alive-simple.yml`
 - **最简脚本**: `.github/workflows/keep-alive-minimal.yml`
+- **超简脚本**: `.github/workflows/keep-alive-ultra-simple.yml`
+- **HTTP脚本**: `.github/workflows/keep-alive-http.yml`
+- **可靠脚本**: `.github/workflows/keep-alive-reliable.yml`
+- **基础脚本**: `.github/workflows/keep-alive-basic.yml`
+- **Actions脚本**: `.github/workflows/keep-alive-actions.yml`
+- **内部脚本**: `.github/workflows/keep-alive-internal.yml`
 - **状态**: 自动运行，无需手动操作
 - **监控**: 可在GitHub Actions页面查看运行日志
 
@@ -86,8 +92,11 @@ https://hai-wai-liu-xue.onrender.com
    - 解决：已优化，非200状态码不会导致工作流失败
 
 3. **备选方案**
-   - 如果主保活脚本持续失败，可以使用 `keep-alive-simple.yml`
-   - 简单版本只发送请求，不检查响应状态
+   - 如果主保活脚本持续失败，可以使用其他备用脚本：
+     - `keep-alive-basic.yml` - 最基础的内部检查
+     - `keep-alive-internal.yml` - 不依赖外部网络
+     - `keep-alive-actions.yml` - 使用GitHub Actions内置功能
+     - `keep-alive-reliable.yml` - 多种方法确保成功
 
 4. **手动测试**
    ```bash
