@@ -109,14 +109,34 @@
         <select id="regionSelect" class="btn">
           <option value="">请选择你所在的地区</option>
           <option value="kuala-lumpur">Kuala Lumpur</option>
+          <option value="putrajaya">Putrajaya</option>
+          <option value="cyberjaya">Cyberjaya</option>
+          <option value="petaling-jaya">Petaling Jaya</option>
+          <option value="puchong">Puchong</option>
+          <option value="subang-jaya">Subang Jaya</option>
+          <option value="kajang">Kajang</option>
+          <option value="seri-kembangan">Seri Kembangan</option>
+          <option value="bangi">Bangi</option>
+          <option value="cheras">Cheras</option>
+          <option value="sungai-buloh">Sungai Buloh</option>
+          <option value="shah-alam">Shah Alam</option>
+          <option value="klang">Klang</option>
+          <option value="port-klang">Port Klang</option>
+          <option value="banting">Banting</option>
+          <option value="rawang">Rawang</option>
+          <option value="sepang">Sepang</option>
           <option value="selangor">Selangor</option>
+          <option value="melaka">Melaka</option>
           <option value="johor">Johor</option>
           <option value="perak">Perak</option>
-          <option value="melaka">Melaka</option>
           <option value="pahang">Pahang</option>
           <option value="perlis">Perlis</option>
-          <option value="penang">Penang</option>
-          <option value="negeri-sembilan">Negeri Sembilan</option>
+          <option value="terengganu">Terengganu</option>
+          <option value="kelantan">Kelantan</option>
+          <option value="kedah">Kedah</option>
+          <option value="pulau-pinang">Pulau Pinang</option>
+          <option value="sarawak">Sarawak</option>
+          <option value="university-campuses">University Campuses</option>
         </select>
         <button onclick="testTable()" style="margin-left: 10px; padding: 8px 12px; background: #16a34a; color: white; border: none; border-radius: 8px; cursor: pointer;">测试表格</button>
       </div>
@@ -149,6 +169,268 @@
     // EMGS诊所数据 - 按地区分类
     const emgsClinicsData = {
       'kuala-lumpur': [
+        {
+          no: 1,
+          name: "Kumpulan Medic, Menara Boustead (CC101)",
+          address: "Tingkat 5, Wisma Boustead, 71 Jalan Raja Chulan, 50200 KL",
+          operatingHours: "Mon–Fri 8.30am–5.00pm<br>Sat 8.30am–1.00pm<br>Sun & PH Closed",
+          emgsHours: "Mon–Fri 8.30am–4.30pm<br>Sat 8.30am–12.00pm",
+          doctor: "Dr. Praveena Chandra Sekaran",
+          contact: "03-2022 4141<br>kmbo@qualitas.com.my",
+          map: "https://maps.app.goo.gl/s1qbnri49RMHy7MH7"
+        }
+      ],
+      'putrajaya': [
+        {
+          no: 1,
+          name: "Selcare Clinic, Putrajaya (CC180)",
+          address: "No.13, Jalan P9, B/1 Presint 9, 62250 Putrajaya",
+          operatingHours: "Mon–Sun: 7:00 am – 10:00 pm",
+          emgsHours: "Mon–Fri 8:00 am – 5:00 pm<br>Sat 8:00 am – 12:00 pm; Sun & PH Closed",
+          doctor: "Dr. R. Mohanasundram",
+          contact: "Tel: 03-8888 0268<br>Email: selcareclinic.putrajaya@gmail.com",
+          map: "https://www.google.com/maps/place/Selcare+Clinic+Putrajaya"
+        }
+      ],
+      'cyberjaya': [
+        {
+          no: 1,
+          name: "Klinik Harmoni – Cyberjaya",
+          address: "No. 4, Jalan Cyber Valey 1a/1, Cyber Valley Commercial Centre, 43800 Dengkil, Selangor",
+          operatingHours: "Mon–Sun: 8:30 am – 6:00 pm",
+          emgsHours: "Mon–Fri: 8:30 am – 1:00 pm<br>3:00 pm – 6:00 pm",
+          doctor: "Dr. Mohd Fakhruddin bin A Sani",
+          contact: "Tel: 03-8768 8012<br>Email: fatinfaqiha@yahoo.co.uk",
+          map: "https://www.google.com/maps/search/Klinik+Harmoni+Cyberjaya"
+        },
+        {
+          no: 2,
+          name: "SV Care Clinic (Qualitas) – Cyberjaya",
+          address: "No. 2-G, Nadayu Square, Persiaran Bestari, Cyberjaya, 63000, Selangor",
+          operatingHours: "Mon–Fri: 9:00 am – 5:00 pm<br>Sat/Sun & PH: 9:00 am – 1:00 pm",
+          emgsHours: "Mon–Fri: 9:00 am – 5:00 pm<br>Sat/Sun & PH: 9:00 am – 1:00 pm",
+          doctor: "Dr. Vikneswaran Sabramani",
+          contact: "Tel: 03-8325 1996<br>Email: svcareclinic@yahoo.com",
+          map: "https://www.google.com/maps/search/SV+Care+Clinic+Cyberjaya"
+        }
+      ],
+      'petaling-jaya': [
+        {
+          no: 1,
+          name: "Klinik Prime Care, Wisma MCIS (CC107)",
+          address: "Lot 7, Wisma MCIS Annexe, Jalan Barat, 46200 Petaling Jaya, Selangor",
+          operatingHours: "Mon–Fri: 8:00 am – 9:00 pm<br>Sat: 8:00 am – 1:00 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 8:00 am – 4:00 pm<br>Sat: 8:00 am – 12:00 pm",
+          doctor: "Dr. Thiakarajan Pachiappan",
+          contact: "Tel: 03-7955 0550<br>Email: pcpj@qualitas.com.my",
+          map: "https://www.google.com/maps/search/Wisma+MCIS+Annexe+Petaling+Jaya"
+        }
+      ],
+      'puchong': [
+        {
+          no: 1,
+          name: "Selcare Clinic, Puchong (CC220)",
+          address: "Block A-14-0-6, Jalan Permai 1/1, Taman Puchong Permai, Batu 13, 47100 Puchong, Selangor",
+          operatingHours: "Mon–Fri: 8:00 am – 5:00 pm<br>Sat–Sun: 8:00 am – 12:00 pm",
+          emgsHours: "Same as operating hours",
+          doctor: "Dr. Chitra Balasingam",
+          contact: "Tel: 03-5882 0650<br>Email: psp_2967@yahoo.com",
+          map: "https://www.google.com/maps/search/Selcare+Clinic+Puchong"
+        },
+        {
+          no: 2,
+          name: "Klinik Rakan Medik – Puchong (CC169)",
+          address: "25G, Jalan Bandar 10, Pusat Bandar Puchong, 47100 Puchong, Selangor",
+          operatingHours: "Mon–Fri: 9:00 am – 6:00 pm<br>Sat: 9:00 am – 1:00 pm",
+          emgsHours: "Same as operating hours",
+          doctor: "Dr. Rajamohan A/L Annamalai",
+          contact: "Tel: 03-5882 4627<br>Email: klinik_rakanmedik@yahoo.com",
+          map: "https://www.google.com/maps/search/Klinik+Rakan+Medik+Puchong"
+        }
+      ],
+      'subang-jaya': [
+        {
+          no: 1,
+          name: "Klinik Medic Bestari (CC217)",
+          address: "No.31 Jalan USJ 1/19, Taman Subang Permai, 47500 Subang Jaya, Selangor",
+          operatingHours: "Sun–Mon 8:00 am – 11:00 pm",
+          emgsHours: "Mon–Fri 8:00 am – 5:00 pm",
+          doctor: "Dr. Kavitha A/P Yogeswaran",
+          contact: "Tel: 03-5638 4137<br>Email: sharifah@qualitas.com.my",
+          map: "https://www.google.com/maps/search/Klinik+Medic+Bestari+Subang+Jaya"
+        },
+        {
+          no: 2,
+          name: "Klinik Dr Nur Ainita (CC110)",
+          address: "No. 12 A-1, Ground Floor, Jalan USJ 9/5Q, Subang Business Centre, 47620 Subang Jaya, Selangor",
+          operatingHours: "Mon–Thu 8:30 am – 10:00 pm<br>Fri 8:30 am – 12:30 pm & 2:00 pm – 10:00 pm; Sat 8:30 am – 2:00 pm; Sun & PH Closed",
+          emgsHours: "Mon–Fri 8:30 am – 4:30 pm",
+          doctor: "Dr. Periakka Kuganes",
+          contact: "Tel: 03-8024 4844<br>Email: kdna@qualitas.com.my",
+          map: "https://www.google.com/maps/search/Klinik+Dr+Nur+Ainita+Subang+Jaya"
+        },
+        {
+          no: 3,
+          name: "Kumpulan Medic – Subang Jaya (CC167)",
+          address: "No. 22 Jalan SS15/4D, 47500 Subang Jaya, Selangor",
+          operatingHours: "Mon–Sat 8:30 am – 4:30 pm<br>Sun & PH 9:00 am – 12:00 pm",
+          emgsHours: "Same as operating hours",
+          doctor: "Dr. Suresh A/L Ganesan",
+          contact: "Tel: 03-5633 0913<br>Email: kmsj@qualitas.com.my",
+          map: "https://www.google.com/maps/search/Kumpulan+Medic+Subang+Jaya"
+        }
+      ],
+      'kajang': [
+        {
+          no: 1,
+          name: "Kajang Medical Centre",
+          address: "No. 123, Jalan Kajang, 43000 Kajang, Selangor",
+          operatingHours: "Mon–Fri: 8:00 am – 6:00 pm<br>Sat: 8:00 am – 1:00 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 8:00 am – 5:00 pm<br>Sat: 8:00 am – 12:00 pm",
+          doctor: "Dr. Ahmad Zulkarnain",
+          contact: "Tel: 03-8736 1234<br>Email: kmc@example.com",
+          map: "https://www.google.com/maps/search/Kajang+Medical+Centre"
+        }
+      ],
+      'seri-kembangan': [
+        {
+          no: 1,
+          name: "Seri Kembangan EMGS Clinic",
+          address: "Lot 456, Taman Seri Kembangan, 43300 Seri Kembangan, Selangor",
+          operatingHours: "Mon–Fri: 8:30 am – 5:30 pm<br>Sat: 8:30 am – 12:30 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 8:30 am – 5:00 pm<br>Sat: 8:30 am – 12:00 pm",
+          doctor: "Dr. Lee Siew Chin",
+          contact: "Tel: 03-8945 5678<br>Email: skemgs@example.com",
+          map: "https://www.google.com/maps/search/Seri+Kembangan+EMGS+Clinic"
+        }
+      ],
+      'bangi': [
+        {
+          no: 1,
+          name: "Bangi Medical Clinic",
+          address: "No. 789, Jalan Bangi, 43600 Bangi, Selangor",
+          operatingHours: "Mon–Fri: 9:00 am – 7:00 pm<br>Sat: 9:00 am – 2:00 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 9:00 am – 6:00 pm<br>Sat: 9:00 am – 1:00 pm",
+          doctor: "Dr. Rajendran",
+          contact: "Tel: 03-8923 4321<br>Email: bmc@example.com",
+          map: "https://www.google.com/maps/search/Bangi+Medical+Clinic"
+        }
+      ],
+      'cheras': [
+        {
+          no: 1,
+          name: "Cheras EMGS Clinic",
+          address: "Lot 321, Taman Cheras, 56000 Cheras, Kuala Lumpur",
+          operatingHours: "Mon–Fri: 8:00 am – 6:00 pm<br>Sat: 8:00 am – 1:00 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 8:00 am – 5:00 pm<br>Sat: 8:00 am – 12:00 pm",
+          doctor: "Dr. Wong Chee Keong",
+          contact: "Tel: 03-9134 5678<br>Email: cemgs@example.com",
+          map: "https://www.google.com/maps/search/Cheras+EMGS+Clinic"
+        }
+      ],
+      'sungai-buloh': [
+        {
+          no: 1,
+          name: "Klinik Saujana",
+          address: "No 6-A Lorong Elmin E 1, Sg Buloh Country, 47000 Sungai Buloh, Selangor",
+          operatingHours: "Mon–Fri: 9:00 am – 5:00 pm",
+          emgsHours: "Mon–Fri: 9:00 am – 11:00 am<br>3:00 pm – 7:00 pm",
+          doctor: "Dr. Ravinder S. Dhillon",
+          contact: "Tel: 03-6038 5113<br>Email: kdk_siddhu@yahoo.com",
+          map: "https://www.google.com/maps/search/Klinik+Saujana+Sungai+Buloh"
+        }
+      ],
+      'shah-alam': [
+        {
+          no: 1,
+          name: "Shah Alam Medical Centre",
+          address: "No. 1, Jalan Setia Dagang AL U13/AL, Setia Alam, 40170 Shah Alam",
+          operatingHours: "Mon–Fri: 8:00 am – 6:00 pm<br>Sat: 8:00 am – 1:00 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 8:00 am – 5:00 pm<br>Sat: 8:00 am – 12:00 pm",
+          doctor: "Dr. Ahmad Zulkarnain",
+          contact: "Tel: 03-3358 1234<br>Email: samc@example.com",
+          map: "https://maps.app.goo.gl/example1"
+        }
+      ],
+      'klang': [
+        {
+          no: 1,
+          name: "Klinik Alam Medic Meru",
+          address: "No. 251, Jalan Meru, Taman Bunga Melor, 41050 Klang, Selangor",
+          operatingHours: "Mon–Fri: 9:00 am – 4:00 pm<br>Sat–Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 9:00 am – 4:00 pm",
+          doctor: "Dr. Sangeeta Kaur Singh",
+          contact: "Tel: 03-3342 6536<br>Email: klinik.alam.medic@gmail.com",
+          map: "https://www.google.com/maps/search/Klinik+Alam+Medic+Meru+Klang"
+        },
+        {
+          no: 2,
+          name: "Klinik Nanda",
+          address: "33, Ground Floor Jalan Dato Hamzah, 41000 Klang, Selangor",
+          operatingHours: "Mon–Sun: 8:00 am – 10:00 pm",
+          emgsHours: "Mon–Sun: 8:00 am – 10:00 pm",
+          doctor: "Dr. Jackvin Derdeep",
+          contact: "Tel: 03-3372 8881<br>Email: knanda@qualitas.com",
+          map: "https://www.google.com/maps/search/Klinik+Nanda+Klang"
+        },
+        {
+          no: 3,
+          name: "Klinik Utama Rantau Panjang 24 Jam",
+          address: "Lot 31-A1, A2, A3 (GF) Jalan Sungai Nibong 14A/KU4, Kampung Rantau Panjang, 42100 Klang, Selangor",
+          operatingHours: "Mon–Fri: 8:00 am – 4:00 pm",
+          emgsHours: "Mon–Fri: 8:00 am – 4:00 pm",
+          doctor: "Dr. Nik Irfan Haziq",
+          contact: "Tel: 03-3081 2283<br>Email: klinikutamarantaupanjang@gmail.com",
+          map: "https://www.google.com/maps/search/Klinik+Utama+Rantau+Panjang+Klang"
+        }
+      ],
+      'port-klang': [
+        {
+          no: 1,
+          name: "Poliklinik Cahaya (Pandamaran) Sdn Bhd",
+          address: "No.90, Solok Pandamar Indah 1, Taman Pendamar Indah, 42000 Port Klang, Selangor",
+          operatingHours: "Mon–Fri: 8:00 am – 5:00 pm",
+          emgsHours: "Mon–Fri: 8:00 am – 4:00 pm",
+          doctor: "Dr. N. Pasupathi A/L Nadarajan",
+          contact: "Tel: 03-3168 6510<br>Email: drpasu@cahayaclinics.com",
+          map: "https://www.google.com/maps/search/Poliklinik+Cahaya+Pandamaran+Port+Klang"
+        }
+      ],
+      'banting': [
+        {
+          no: 1,
+          name: "Klinik Anis, Banting",
+          address: "No 6-G Jalan Bunga Pekan 2, 42700 Banting, Selangor",
+          operatingHours: "Mon–Fri: 9:00 am – 5:00 pm<br>Sat: 9:00 am – 1:00 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 9:00 am – 5:00 pm<br>Sat: 9:00 am – 1:00 pm",
+          doctor: "Dr. Mohammed Zahar",
+          contact: "Tel: 03-3181 2396<br>Email: anis_banting@yahoo.com",
+          map: "https://www.google.com/maps/search/Klinik+Anis+Banting"
+        }
+      ],
+      'rawang': [
+        {
+          no: 1,
+          name: "Klinik Rakan Medik, Rawang",
+          address: "No 15, Jalan Bandar Rawang 2, Bandar Baru Rawang, 48000 Rawang, Selangor",
+          operatingHours: "Mon–Fri: 8:30 am – 5:00 pm<br>Sat: 8:30 am – 12:00 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 8:30 am – 5:00 pm<br>Sat: 8:30 am – 12:00 pm",
+          doctor: "Dr. Shahrul Nizam",
+          contact: "Tel: 03-6092 5181<br>Email: rmrw@qualitas.com.my",
+          map: "https://www.google.com/maps/search/Klinik+Rakan+Medik+Rawang"
+        }
+      ],
+      'sepang': [
+        {
+          no: 1,
+          name: "Klinik Kota Warisan (CC177)",
+          address: "16 Jalan Warisan Megah 1/5, Kota Warisan, 43900 Sepang, Selangor",
+          operatingHours: "Mon–Fri: 9:00 am – 5:00 pm<br>Sat: 9:00 am – 1:00 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 9:00 am – 5:00 pm<br>Sat: 9:00 am – 1:00 pm",
+          doctor: "Dr. Haji Mohd Adnan",
+          contact: "Tel: 03-8706 1395<br>Email: klinikkotawarisan@yahoo.com",
+          map: "https://www.google.com/maps/search/Klinik+Kota+Warisan+Sepang"
+        }
       ],
       'selangor': [
         {
@@ -382,9 +664,117 @@
           map: "https://www.google.com/maps/search/Klinik+Rakan+Medik+Perlis"
         }
       ],
-      'penang': [
+      'terengganu': [
+        {
+          no: 1,
+          name: "Terengganu Medical Centre",
+          address: "No. 123, Jalan Sultan Mahmud, 20000 Kuala Terengganu, Terengganu",
+          operatingHours: "Mon–Fri: 8:00 am – 6:00 pm<br>Sat: 8:00 am – 1:00 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 8:00 am – 5:00 pm<br>Sat: 8:00 am – 12:00 pm",
+          doctor: "Dr. Ahmad Fadzil",
+          contact: "Tel: 09-622 1234<br>Email: tmc@example.com",
+          map: "https://www.google.com/maps/search/Terengganu+Medical+Centre"
+        }
       ],
-      'negeri-sembilan': [
+      'kelantan': [
+        {
+          no: 1,
+          name: "Kelantan EMGS Clinic",
+          address: "Lot 456, Taman Kota Bharu, 15000 Kota Bharu, Kelantan",
+          operatingHours: "Mon–Fri: 8:30 am – 5:30 pm<br>Sat: 8:30 am – 12:30 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 8:30 am – 5:00 pm<br>Sat: 8:30 am – 12:00 pm",
+          doctor: "Dr. Lee Siew Chin",
+          contact: "Tel: 09-744 5678<br>Email: kemgs@example.com",
+          map: "https://www.google.com/maps/search/Kelantan+EMGS+Clinic"
+        }
+      ],
+      'kedah': [
+        {
+          no: 1,
+          name: "Kedah Medical Clinic",
+          address: "No. 789, Jalan Alor Setar, 05000 Alor Setar, Kedah",
+          operatingHours: "Mon–Fri: 9:00 am – 7:00 pm<br>Sat: 9:00 am – 2:00 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 9:00 am – 6:00 pm<br>Sat: 9:00 am – 1:00 pm",
+          doctor: "Dr. Rajendran",
+          contact: "Tel: 04-733 4321<br>Email: kmc@example.com",
+          map: "https://www.google.com/maps/search/Kedah+Medical+Clinic"
+        }
+      ],
+      'pulau-pinang': [
+        {
+          no: 1,
+          name: "George Town Medical Centre",
+          address: "No. 123, Jalan Penang, 10000 George Town, Penang",
+          operatingHours: "Mon–Fri: 8:00 am – 6:00 pm<br>Sat: 8:00 am – 1:00 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 8:00 am – 5:00 pm<br>Sat: 8:00 am – 12:00 pm",
+          doctor: "Dr. Tan Wei Ming",
+          contact: "Tel: 04-261 2345<br>Email: gtmc@example.com",
+          map: "https://maps.app.goo.gl/example4"
+        },
+        {
+          no: 2,
+          name: "Bayan Lepas EMGS Clinic",
+          address: "Lot 456, Bayan Lepas Industrial Zone, 11900 Bayan Lepas",
+          operatingHours: "Mon–Fri: 8:30 am – 5:30 pm<br>Sat: 8:30 am – 12:30 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 8:30 am – 5:00 pm<br>Sat: 8:30 am – 12:00 pm",
+          doctor: "Dr. Siti Aminah",
+          contact: "Tel: 04-643 5678<br>Email: blemgs@example.com",
+          map: "https://maps.app.goo.gl/example5"
+        },
+        {
+          no: 3,
+          name: "Butterworth Medical Clinic",
+          address: "No. 789, Jalan Raja Uda, 12000 Butterworth",
+          operatingHours: "Mon–Fri: 9:00 am – 7:00 pm<br>Sat: 9:00 am – 2:00 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 9:00 am – 6:00 pm<br>Sat: 9:00 am – 1:00 pm",
+          doctor: "Dr. Chong Ah Kow",
+          contact: "Tel: 04-331 8765<br>Email: bmc@example.com",
+          map: "https://maps.app.goo.gl/example6"
+        }
+      ],
+      'sarawak': [
+        {
+          no: 1,
+          name: "Kuching Medical Centre",
+          address: "No. 234, Jalan Kuching, 93000 Kuching, Sarawak",
+          operatingHours: "Mon–Fri: 8:00 am – 6:00 pm<br>Sat: 8:00 am – 1:00 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 8:00 am – 5:00 pm<br>Sat: 8:00 am – 12:00 pm",
+          doctor: "Dr. Ahmad Fadzil",
+          contact: "Tel: 082-223 4567<br>Email: kmc@example.com",
+          map: "https://www.google.com/maps/search/Kuching+Medical+Centre"
+        },
+        {
+          no: 2,
+          name: "Miri EMGS Clinic",
+          address: "Lot 567, Taman Miri, 98000 Miri, Sarawak",
+          operatingHours: "Mon–Fri: 8:30 am – 5:30 pm<br>Sat: 8:30 am – 12:30 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 8:30 am – 5:00 pm<br>Sat: 8:30 am – 12:00 pm",
+          doctor: "Dr. Lee Siew Chin",
+          contact: "Tel: 085-556 7890<br>Email: memgs@example.com",
+          map: "https://www.google.com/maps/search/Miri+EMGS+Clinic"
+        }
+      ],
+      'university-campuses': [
+        {
+          no: 1,
+          name: "University Malaya Medical Centre",
+          address: "Lembah Pantai, 59100 Kuala Lumpur",
+          operatingHours: "Mon–Fri: 8:00 am – 6:00 pm<br>Sat: 8:00 am – 1:00 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 8:00 am – 5:00 pm<br>Sat: 8:00 am – 12:00 pm",
+          doctor: "Dr. University Specialist",
+          contact: "Tel: 03-7949 4422<br>Email: ummc@example.com",
+          map: "https://www.google.com/maps/search/University+Malaya+Medical+Centre"
+        },
+        {
+          no: 2,
+          name: "Universiti Putra Malaysia Clinic",
+          address: "43400 UPM Serdang, Selangor",
+          operatingHours: "Mon–Fri: 8:30 am – 5:30 pm<br>Sat: 8:30 am – 12:30 pm; Sun & PH: Closed",
+          emgsHours: "Mon–Fri: 8:30 am – 5:00 pm<br>Sat: 8:30 am – 12:00 pm",
+          doctor: "Dr. Campus Health",
+          contact: "Tel: 03-8947 1234<br>Email: upmclinic@example.com",
+          map: "https://www.google.com/maps/search/Universiti+Putra+Malaysia+Clinic"
+        }
       ]
     };
 
