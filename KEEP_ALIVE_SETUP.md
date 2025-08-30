@@ -18,6 +18,9 @@
 - **基础脚本**: `.github/workflows/keep-alive-basic.yml`
 - **Actions脚本**: `.github/workflows/keep-alive-actions.yml`
 - **内部脚本**: `.github/workflows/keep-alive-internal.yml`
+- **修复脚本**: `.github/workflows/keep-alive-fixed.yml` (新增)
+- **GitHub Actions脚本**: `.github/workflows/keep-alive-github-actions.yml` (新增)
+- **Wget脚本**: `.github/workflows/keep-alive-wget.yml` (新增)
 - **状态**: 自动运行，无需手动操作
 - **监控**: 可在GitHub Actions页面查看运行日志
 
@@ -93,6 +96,9 @@ https://hai-wai-liu-xue.onrender.com
 
 3. **备选方案**
    - 如果主保活脚本持续失败，可以使用其他备用脚本：
+     - `keep-alive-fixed.yml` - 修复版本，使用最简单的curl -I命令
+     - `keep-alive-github-actions.yml` - 使用GitHub Actions内置HTTP请求
+     - `keep-alive-wget.yml` - 使用wget替代curl
      - `keep-alive-basic.yml` - 最基础的内部检查
      - `keep-alive-internal.yml` - 不依赖外部网络
      - `keep-alive-actions.yml` - 使用GitHub Actions内置功能
@@ -110,6 +116,18 @@ https://hai-wai-liu-xue.onrender.com
 
 6. **重新部署**
    - 如果网站无法访问，可能需要重新部署
+
+7. **GitHub Actions权限问题**
+   - 如果所有脚本都失败，可能是GitHub Actions权限问题
+   - 解决方案：
+     - 检查仓库设置 → Actions → General → Workflow permissions
+     - 确保设置为 "Read and write permissions"
+     - 或者使用外部服务如UptimeRobot作为替代
+
+8. **网络连接问题**
+   - GitHub Actions可能在某些地区网络连接不稳定
+   - 建议同时使用多个保活方案
+   - 可以尝试使用不同的GitHub Actions runner区域
 
 ## 📝 注意事项
 
