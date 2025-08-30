@@ -109,34 +109,16 @@
         <select id="regionSelect" class="btn">
           <option value="">请选择你所在的地区</option>
           <option value="kuala-lumpur">Kuala Lumpur</option>
-          <option value="putrajaya">Putrajaya</option>
-          <option value="cyberjaya">Cyberjaya</option>
-          <option value="petaling-jaya">Petaling Jaya</option>
-          <option value="puchong">Puchong</option>
-          <option value="subang-jaya">Subang Jaya</option>
-          <option value="kajang">Kajang</option>
-          <option value="seri-kembangan">Seri Kembangan</option>
-          <option value="bangi">Bangi</option>
-          <option value="cheras">Cheras</option>
-          <option value="sungai-buloh">Sungai Buloh</option>
-          <option value="shah-alam">Shah Alam</option>
-          <option value="klang">Klang</option>
-          <option value="port-klang">Port Klang</option>
-          <option value="banting">Banting</option>
-          <option value="rawang">Rawang</option>
-          <option value="sepang">Sepang</option>
-          <option value="melaka">Melaka</option>
+          <option value="selangor">Selangor</option>
           <option value="johor">Johor</option>
           <option value="perak">Perak</option>
+          <option value="melaka">Melaka</option>
           <option value="pahang">Pahang</option>
           <option value="perlis">Perlis</option>
-          <option value="terengganu">Terengganu</option>
-          <option value="kelantan">Kelantan</option>
-          <option value="kedah">Kedah</option>
-          <option value="pulau-pinang">Pulau Pinang</option>
-          <option value="sarawak">Sarawak</option>
-          <option value="university-campuses">University Campuses</option>
+          <option value="penang">Penang</option>
+          <option value="negeri-sembilan">Negeri Sembilan</option>
         </select>
+        <button onclick="testTable()" style="margin-left: 10px; padding: 8px 12px; background: #16a34a; color: white; border: none; border-radius: 8px; cursor: pointer;">测试表格</button>
       </div>
       
       <!-- EMGS诊所表格容器 -->
@@ -462,12 +444,22 @@
       container.style.display = 'none';
     }
 
+    // 测试表格显示
+    function testTable() {
+      console.log('测试表格显示');
+      console.log('emgsClinicsData:', emgsClinicsData);
+      showEmgsTable('selangor');
+    }
+
     // 地区选择逻辑
     document.getElementById('regionSelect').addEventListener('change', function() {
       const selectedValue = this.value;
       const selectedText = this.options[this.selectedIndex].text;
       
-      if (selectedValue && emgsClinicsData[selectedValue]) {
+      console.log('选择的地区:', selectedValue);
+      console.log('地区数据:', emgsClinicsData[selectedValue]);
+      
+      if (selectedValue && emgsClinicsData[selectedValue] && emgsClinicsData[selectedValue].length > 0) {
         showEmgsTable(selectedValue);
       } else {
         hideEmgsTable();
