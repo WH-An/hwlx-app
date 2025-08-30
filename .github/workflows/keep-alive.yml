@@ -1,0 +1,49 @@
+name: Keep Alive
+
+on:
+  schedule:
+    # 每5分钟运行一次
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping website
+        run: |
+          echo "🔄 开始保活检查..."
+          echo "📅 时间: $(date '+%Y-%m-%d %H:%M:%S')"
+          echo "🌐 目标: https://hai-wai-liu-xue.onrender.com"
+          
+          # 设置超时时间
+          timeout=30
+          
+          # 发送GET请求到网站
+          echo "📡 发送请求..."
+          response=$(curl -s -o /dev/null -w "%{http_code}" --max-time $timeout https://hai-wai-liu-xue.onrender.com)
+          curl_exit_code=$?
+          
+          echo "📊 响应状态码: $response"
+          echo "🔧 cURL退出码: $curl_exit_code"
+          
+          # 检查结果
+          if [ $curl_exit_code -eq 0 ] && [ "$response" = "200" ]; then
+            echo "✅ 网站响应正常 (HTTP $response)"
+            echo "🎉 保活成功！"
+          elif [ $curl_exit_code -eq 28 ]; then
+            echo "⏰ 请求超时 (超过${timeout}秒)"
+            echo "⚠️  网站可能正在启动中..."
+          elif [ $curl_exit_code -ne 0 ]; then
+            echo "❌ 网络连接失败 (cURL错误码: $curl_exit_code)"
+            echo "⚠️  请检查网络连接或网站状态"
+          else
+            echo "⚠️  网站响应异常 (HTTP $response)"
+            echo "🔍 可能的原因："
+            echo "   - 网站正在维护"
+            echo "   - 服务器错误"
+            echo "   - 重定向或其他HTTP状态"
+          fi
+          
+          echo "✅ 保活检查完成"
+          echo "⏰ 下次检查时间: $(date -d '+5 minutes' '+%Y-%m-%d %H:%M:%S')"

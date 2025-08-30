@@ -1,0 +1,90 @@
+# 网站保活设置指南
+
+为了防止Render免费服务自动休眠，我们提供了多种保活解决方案。
+
+## 🚀 已配置的保活方案
+
+### 1. GitHub Actions 自动保活（推荐）
+
+✅ **已配置完成**
+
+- **频率**: 每5分钟自动访问一次
+- **文件位置**: `.github/workflows/keep-alive.yml`
+- **状态**: 自动运行，无需手动操作
+- **监控**: 可在GitHub Actions页面查看运行日志
+
+#### 查看运行状态：
+1. 访问您的GitHub仓库
+2. 点击 "Actions" 标签
+3. 查看 "Keep Alive" 工作流的运行历史
+
+#### 手动触发：
+1. 在GitHub仓库页面点击 "Actions"
+2. 选择 "Keep Alive" 工作流
+3. 点击 "Run workflow" 手动执行
+
+## 🔧 其他保活方案（可选）
+
+### 2. UptimeRobot（免费监控服务）
+
+**设置步骤：**
+1. 访问 https://uptimerobot.com/
+2. 注册免费账号
+3. 添加新监控：
+   - **Monitor Type**: HTTP(s)
+   - **URL**: `https://hai-wai-liu-xue.onrender.com`
+   - **Monitoring Interval**: 5 minutes
+   - **Alert When Down**: 可选
+
+### 3. Cron-job.org（免费定时任务）
+
+**设置步骤：**
+1. 访问 https://cron-job.org/
+2. 注册免费账号
+3. 创建定时任务：
+   - **Title**: `海外留学网站保活`
+   - **URL**: `https://hai-wai-liu-xue.onrender.com`
+   - **Schedule**: Every 5 minutes
+
+### 4. 手动保活（临时方案）
+
+如果其他方案不可用，可以手动访问：
+```
+https://hai-wai-liu-xue.onrender.com
+```
+
+## 📊 保活效果
+
+- ✅ 防止Render服务自动休眠
+- ✅ 减少首次访问的冷启动时间
+- ✅ 提供网站可用性监控
+- ✅ 免费且自动化
+
+## 🔍 故障排除
+
+### 如果保活失败：
+
+1. **检查GitHub Actions日志**
+   - 查看是否有错误信息
+   - 确认cron表达式是否正确
+
+2. **检查网站状态**
+   - 手动访问网站确认是否正常
+   - 检查Render部署状态
+
+3. **重新部署**
+   - 如果网站无法访问，可能需要重新部署
+
+## 📝 注意事项
+
+- GitHub Actions的免费额度每月有2000分钟
+- 每5分钟运行一次，每月约需要 30天 × 24小时 × 12次 = 8640次
+- 每次运行约需10秒，每月总时间约144分钟，远低于免费额度
+- 建议同时使用多个保活方案作为备份
+
+## 🎯 推荐配置
+
+**主要方案**: GitHub Actions（已配置）
+**备份方案**: UptimeRobot 或 Cron-job.org
+
+这样即使其中一个方案失效，其他方案仍能保持网站活跃。
