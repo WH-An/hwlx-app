@@ -112,10 +112,16 @@
       return ct.includes('application/json')? res.json(): res.text();
     }
     async function uploadFile(file){
-      const endpoints = ['/api/upload','/api/uploads','/api/files','/api/images','/upload','/uploads'];
+      const endpoints = ['/api/upload/avatar','/api/upload','/api/uploads','/api/files','/api/images','/upload','/uploads'];
       for(const ep of endpoints){
         try{
-          const fd = new FormData(); fd.append('file', file);
+          const fd = new FormData(); 
+          // 根据端点调整字段名
+          if(ep === '/api/upload/avatar') {
+            fd.append('avatar', file);
+          } else {
+            fd.append('file', file);
+          }
           const res = await fetch(API_BASE+ep, { method:'POST', body: fd, credentials:'include' });
           if(!res.ok) throw new Error('HTTP '+res.status);
           const ct = res.headers.get('content-type')||'';
@@ -218,7 +224,6 @@
           // 管理员头像保存：只更新localStorage，不调用服务器API
           // 这样可以避免影响普通用户信息
           console.log('管理员头像保存：只更新localStorage');
-          ok = true; // 直接标记为成功
           toast('已保存');
           $('#saveHint').textContent = '已保存';
           

@@ -343,10 +343,17 @@ app.post('/api/upload/avatar', upload.single('avatar'), async (req, res) => {
       apiSecret: process.env.CLOUDINARY_API_SECRET ? '已设置' : '未设置'
     });
     
-    const email = normalizeEmail(req.cookies.email);
-    console.log('用户邮箱:', email);
+    // 支持普通用户和管理员
+    let email = normalizeEmail(req.cookies.email);
+    const adminEmail = normalizeEmail(req.cookies.admin_email);
     
-    if (!email) {
+    // 如果是管理员，使用管理员邮箱
+    if (adminEmail) {
+      email = adminEmail;
+      console.log('管理员头像上传:', email);
+    } else if (email) {
+      console.log('普通用户头像上传:', email);
+    } else {
       return res.status(401).json({ msg: '请先登录' });
     }
 
