@@ -1,0 +1,13 @@
+name: Keep Alive Dummy
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  dummy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dummy task
+        run: echo "Dummy keep alive completed"
