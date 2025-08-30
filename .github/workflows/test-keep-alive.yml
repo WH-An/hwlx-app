@@ -1,0 +1,24 @@
+name: Test Keep Alive
+
+on:
+  workflow_dispatch: # 只允许手动触发
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test basic curl
+        run: |
+          echo "=== 基础curl测试 ==="
+          curl --version
+          echo ""
+          
+          echo "=== 测试网站连接 ==="
+          curl -I https://hai-wai-liu-xue.onrender.com
+          echo ""
+          
+          echo "=== 测试简单请求 ==="
+          curl -s -o /dev/null -w "状态码: %{http_code}\n" https://hai-wai-liu-xue.onrender.com
+          echo ""
+          
+          echo "=== 测试完成 ==="
