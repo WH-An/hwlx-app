@@ -100,6 +100,39 @@
             <label>正文/描述</label>
             <textarea name="desc" rows="4" placeholder="输入要发布的内容…" required></textarea>
           </div>
+          <div class="field" id="regionField" style="display: none;">
+            <label>地区选择</label>
+            <select name="region" class="field" style="border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-size:14px;outline:none">
+              <option value="">请选择你所在的地区</option>
+              <option value="putrajaya">Putrajaya</option>
+              <option value="cyberjaya">Cyberjaya</option>
+              <option value="petaling-jaya">Petaling Jaya</option>
+              <option value="puchong">Puchong</option>
+              <option value="subang-jaya">Subang Jaya</option>
+              <option value="kajang">Kajang</option>
+              <option value="seri-kembangan">Seri Kembangan</option>
+              <option value="bangi">Bangi</option>
+              <option value="cheras">Cheras</option>
+              <option value="sungai-buloh">Sungai Buloh</option>
+              <option value="shah-alam">Shah Alam</option>
+              <option value="klang">Klang</option>
+              <option value="port-klang">Port Klang</option>
+              <option value="banting">Banting</option>
+              <option value="rawang">Rawang</option>
+              <option value="sepang">Sepang</option>
+              <option value="melaka">Melaka</option>
+              <option value="johor">Johor</option>
+              <option value="perak">Perak</option>
+              <option value="pahang">Pahang</option>
+              <option value="perlis">Perlis</option>
+              <option value="terengganu">Terengganu</option>
+              <option value="kelantan">Kelantan</option>
+              <option value="kedah">Kedah</option>
+              <option value="pulau-pinang">Pulau Pinang</option>
+              <option value="sarawak">Sarawak</option>
+              <option value="university-campuses">University Campuses</option>
+            </select>
+          </div>
           <div class="field">
             <label>图片上传（可选，支持多选和拖拽）</label>
             <input type="file" id="imageUpload" multiple accept="image/*" style="display: none;"/>
@@ -158,7 +191,23 @@
       sel.addEventListener('change', e=>{
         currentCategory = e.target.value;
         localStorage.setItem('admin.category', currentCategory);
+        
+        // 当选择医院分类时显示地区选择框
+        const regionField = document.getElementById('regionField');
+        if (regionField) {
+          if (currentCategory === 'hospital') {
+            regionField.style.display = 'block';
+          } else {
+            regionField.style.display = 'none';
+          }
+        }
       });
+      
+      // 初始化时检查当前分类
+      const regionField = document.getElementById('regionField');
+      if (regionField && currentCategory === 'hospital') {
+        regionField.style.display = 'block';
+      }
     }
 
     let selectedImages = [];
@@ -336,6 +385,14 @@
             pinned: e.target.pinned.checked,
             authorEmail: (e.target.authorEmail.value || '').trim()
           };
+          
+          // 如果是医院分类，添加地区信息
+          if (currentCategory === 'hospital') {
+            const region = (e.target.region.value || '').trim();
+            if (region) {
+              payload.region = region;
+            }
+          }
           
           // 发布帖子
           await api('/api/posts', { method:'POST', body: JSON.stringify(payload) });
