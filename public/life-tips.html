@@ -93,7 +93,7 @@
   <div class="container">
     <div class="sidebar">
       <a class="account-info" href="profile.html">
-        <img src="" alt="头像" class="avatar"><span class="username">我的账号</span>
+        <img src="https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp" alt="头像" class="avatar"><span class="username">我的账号</span>
       </a>
       <ul class="nav-list">
         <li><a href="main page.html"><span class="nav-icon">🏠</span><span>主页</span></a></li>
@@ -145,6 +145,12 @@
         const nameEl   = document.querySelector('.username');
         const FALLBACK = 'https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp';
         
+        // 添加加载状态
+        if (avatarEl) {
+          avatarEl.style.opacity = '0.7';
+          avatarEl.style.transition = 'opacity 0.3s ease';
+        }
+        
         // 优先从服务器获取最新用户信息
         try {
           const response = await fetch(API_BASE + '/api/users/me', { 
@@ -157,8 +163,21 @@
             let avatar = user.avatarPath||user.avatarUrl||user.avatar||'';
             if (avatar && !/^https?:\/\//i.test(avatar)) avatar = avatar.startsWith('/') ? (API_BASE+avatar) : (API_BASE+'/'+avatar);
             
+            // 平滑更新用户信息
             nameEl.textContent = displayName; nameEl.title = displayName;
-            avatarEl.onerror = ()=>{ avatarEl.src = FALLBACK }; avatarEl.src = avatar||FALLBACK; avatarEl.alt = displayName;
+            
+            // 预加载头像，避免闪烁
+            const img = new Image();
+            img.onload = () => {
+              avatarEl.src = avatar||FALLBACK;
+              avatarEl.style.opacity = '1';
+            };
+            img.onerror = () => {
+              avatarEl.src = FALLBACK;
+              avatarEl.style.opacity = '1';
+            };
+            img.src = avatar||FALLBACK;
+            avatarEl.alt = displayName;
             
             // 更新本地存储
             localStorage.setItem('currentUser', JSON.stringify(user));
@@ -170,19 +189,40 @@
 
         // 如果服务器获取失败，回退到本地存储
         const raw = localStorage.getItem('currentUser')||localStorage.getItem('user')||localStorage.getItem('USER')||localStorage.getItem('auth_user');
-        if(!raw){ nameEl.textContent='我的账号'; avatarEl.src=FALLBACK; return; }
+        if(!raw){ 
+          nameEl.textContent='我的账号'; 
+          avatarEl.src=FALLBACK; 
+          avatarEl.style.opacity = '1';
+          return; 
+        }
         const u = JSON.parse(raw)||{};
         const displayName = u.nickname||u.username||u.displayName||u.name||u.email||'我的账号';
         let avatar = u.avatarPath||u.avatarUrl||u.avatar||'';
         if (avatar && !/^https?:\/\//i.test(avatar)) avatar = avatar.startsWith('/') ? (API_BASE+avatar) : (API_BASE+'/'+avatar);
+        
         nameEl.textContent = displayName; nameEl.title = displayName;
-        avatarEl.onerror = ()=>{ avatarEl.src = FALLBACK }; avatarEl.src = avatar||FALLBACK; avatarEl.alt = displayName;
+        
+        // 预加载头像，避免闪烁
+        const img = new Image();
+        img.onload = () => {
+          avatarEl.src = avatar||FALLBACK;
+          avatarEl.style.opacity = '1';
+        };
+        img.onerror = () => {
+          avatarEl.src = FALLBACK;
+          avatarEl.style.opacity = '1';
+        };
+        img.src = avatar||FALLBACK;
+        avatarEl.alt = displayName;
       }catch(e){
         console.error('用户信息渲染失败:', e);
         const avatarEl = document.querySelector('.avatar');
         const nameEl = document.querySelector('.username');
         if(nameEl) nameEl.textContent = '我的账号';
-        if(avatarEl) avatarEl.src = FALLBACK;
+        if(avatarEl) {
+          avatarEl.src = FALLBACK;
+          avatarEl.style.opacity = '1';
+        }
       }
     }
 

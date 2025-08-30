@@ -101,8 +101,8 @@
   <div class="container">
     <div class="sidebar">
       <a class="account-info" href="profile.html">
-        <img src="your-avatar.png" alt="头像" class="avatar">
-        <span class="username">用户名</span>
+        <img src="https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp" alt="头像" class="avatar">
+        <span class="username">我的账号</span>
       </a>
       <ul class="nav-list">
         <li><a href="main page.html"><span class="nav-icon">🏠</span><span class="nav-text">主页</span></a></li>
@@ -143,6 +143,12 @@
 
     const FALLBACK_AVATAR_DATAURL = 'https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp';
 
+    // 添加加载状态
+    if (avatarEl) {
+      avatarEl.style.opacity = '0.7';
+      avatarEl.style.transition = 'opacity 0.3s ease';
+    }
+
     // 优先从服务器获取最新用户信息
     try {
       // 自动检测API基础URL
@@ -171,8 +177,26 @@
           avatar = avatar.startsWith('/') ? (BACKEND_ORIGIN + avatar) : (BACKEND_ORIGIN + '/' + avatar);
         }
 
-        if (nameEl) { nameEl.textContent = displayName; nameEl.title = displayName; }
-        if (avatarEl) { avatarEl.onerror = () => { avatarEl.src = FALLBACK_AVATAR_DATAURL; }; avatarEl.src = avatar || FALLBACK_AVATAR_DATAURL; avatarEl.alt = displayName || '我的头像'; }
+        // 平滑更新用户信息
+        if (nameEl) { 
+          nameEl.textContent = displayName; 
+          nameEl.title = displayName; 
+        }
+        
+        if (avatarEl) { 
+          // 预加载头像，避免闪烁
+          const img = new Image();
+          img.onload = () => {
+            avatarEl.src = avatar || FALLBACK_AVATAR_DATAURL;
+            avatarEl.style.opacity = '1';
+          };
+          img.onerror = () => {
+            avatarEl.src = FALLBACK_AVATAR_DATAURL;
+            avatarEl.style.opacity = '1';
+          };
+          img.src = avatar || FALLBACK_AVATAR_DATAURL;
+          avatarEl.alt = displayName || '我的头像';
+        }
         
         // 更新本地存储
         localStorage.setItem('currentUser', JSON.stringify(user));
@@ -190,8 +214,12 @@
          || localStorage.getItem('auth_user');
 
     if(!raw){
-      if (nameEl)   nameEl.textContent = '我的账号';
-      if (avatarEl) { avatarEl.src = FALLBACK_AVATAR_DATAURL; avatarEl.alt = '我的头像'; }
+      if (nameEl) nameEl.textContent = '我的账号';
+      if (avatarEl) { 
+        avatarEl.src = FALLBACK_AVATAR_DATAURL; 
+        avatarEl.alt = '我的头像';
+        avatarEl.style.opacity = '1';
+      }
       return;
     }
 
@@ -209,7 +237,20 @@
     }
 
     if (nameEl) { nameEl.textContent = displayName; nameEl.title = displayName; }
-    if (avatarEl) { avatarEl.onerror = () => { avatarEl.src = FALLBACK_AVATAR_DATAURL; }; avatarEl.src = avatar || FALLBACK_AVATAR_DATAURL; avatarEl.alt = displayName || '我的头像'; }
+    if (avatarEl) { 
+      // 预加载头像，避免闪烁
+      const img = new Image();
+      img.onload = () => {
+        avatarEl.src = avatar || FALLBACK_AVATAR_DATAURL;
+        avatarEl.style.opacity = '1';
+      };
+      img.onerror = () => {
+        avatarEl.src = FALLBACK_AVATAR_DATAURL;
+        avatarEl.style.opacity = '1';
+      };
+      img.src = avatar || FALLBACK_AVATAR_DATAURL;
+      avatarEl.alt = displayName || '我的头像';
+    }
   }catch(e){ 
     console.error('用户信息渲染失败:', e);
     // 设置默认值
