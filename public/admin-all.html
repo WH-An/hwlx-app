@@ -58,8 +58,8 @@
   
 
     
-    /* 左上角导航按键 */
-    .top-nav-button{display:none;position:fixed;top:20px;left:20px;z-index:1001;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;box-shadow:var(--shadow);width:48px;height:48px;display:flex;align-items:center;justify-content:center}
+    /* 左下角导航按键 */
+    .top-nav-button{display:none;position:fixed;bottom:calc(var(--mobile-nav-height) + 20px);left:20px;z-index:1001;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;box-shadow:var(--shadow);width:48px;height:48px;display:flex;align-items:center;justify-content:center}
     .top-nav-button .nav-icon{font-size:20px;color:var(--text)}
     .top-nav-button:hover{transform:translateY(-1px);box-shadow:0 14px 28px rgba(0,0,0,.32)}
     .top-nav-button:active{transform:translateY(0);box-shadow:0 8px 18px rgba(0,0,0,.26)}
