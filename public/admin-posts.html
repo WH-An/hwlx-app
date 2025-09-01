@@ -4,6 +4,10 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>后台管理 · 帖子管理</title>
+  <!-- 移动端优化CSS -->
+  <link rel="stylesheet" href="mobile-optimization.css">
+  
+
   
   <style>
     :root{--bg:#0b0f14;--panel:#ffffff;--text:#0f172a;--muted:#64748b;--accent:#16a34a;--danger:#ef4444;--border:#e5e7eb;--shadow:0 10px 30px rgba(0,0,0,.18);--radius:18px}
@@ -52,10 +56,113 @@
     .modal header h3{margin:0;font-size:15px}
     .modal .content{padding:12px 14px;max-height:70vh;overflow:auto}
     .empty{padding:18px;text-align:center;color:#64748b}
-  </style>
+  
+
+    /* 移动端响应式优化 */
+    @media (max-width: 960px) {
+      .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        padding: 16px;
+        padding-bottom: calc(var(--mobile-nav-height) + 20px);
+      }
+      
+      .sidebar {
+        display: none;
+      }
+      
+      .panel {
+        padding: 16px;
+        border-radius: 16px;
+      }
+      
+      .search-box {
+        flex-direction: column;
+        gap: 12px;
+      }
+      
+      .search-box input {
+        padding: 14px 16px;
+        font-size: 16px;
+      }
+      
+      .search-box button {
+        padding: 14px 16px;
+        font-size: 16px;
+      }
+      
+      .panel-title {
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 12px;
+        padding-bottom: calc(var(--mobile-nav-height) + 16px);
+      }
+      
+      .panel {
+        padding: 12px;
+        border-radius: 12px;
+      }
+      
+      .search-box input {
+        padding: 16px;
+        font-size: 16px;
+      }
+      
+      .search-box button {
+        padding: 16px;
+        font-size: 16px;
+      }
+      
+      .panel-title {
+        font-size: 18px;
+      }
+      
+      .card {
+        border-radius: 12px;
+        margin-bottom: 12px;
+      }
+      
+      .card-text {
+        padding: 12px;
+        font-size: 14px;
+      }
+    }
+</style>
 
 </head>
 <body>
+  <!-- 汉堡菜单按钮 -->
+  <div class="hamburger" id="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- 移动端侧边栏 -->
+  <div class="mobile-sidebar" id="mobileSidebar">
+    <a class="account-info" href="profile.html">
+      <img src="https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp" alt="头像" class="avatar">
+      <span class="username">我的账号</span>
+    </a>
+    <ul class="nav-list">
+      <li><a href="main page.html"><span class="nav-icon">🏠</span><span>主页</span></a></li>
+      <li><a href="life-tips.html"><span class="nav-icon">💡</span><span>生活小贴士</span></a></li>
+      <li><a href="study-guide.html"><span class="nav-icon">📚</span><span>学习指导</span></a></li>
+      <li><a href="enrollment-steps.html"><span class="nav-icon">📝</span><span>入学步骤</span></a></li>
+      <li><a href="share.html"><span class="nav-icon">🔗</span><span>分享</span></a></li>
+      <li><a href="fun.html"><span class="nav-icon">🎉</span><span>娱乐</span></a></li>
+      <li><a href="hospital.html"><span class="nav-icon">🏥</span><span>医院</span></a></li>
+    </ul>
+  </div>
+
+  <!-- 移动端侧边栏遮罩 -->
+  <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay"></div>
+
+
   <div class="layout">
     <aside class="sidebar">
       <a class="account-info" href="admin-profile.html">
