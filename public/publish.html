@@ -130,6 +130,30 @@
     }
   
 
+    
+    /* 左上角导航按键 */
+    .top-nav-button{display:none;position:fixed;top:20px;left:20px;z-index:1001;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;box-shadow:var(--shadow);width:48px;height:48px;display:flex;align-items:center;justify-content:center}
+    .top-nav-button .nav-icon{font-size:20px;color:var(--text)}
+    .top-nav-button:hover{transform:translateY(-1px);box-shadow:0 14px 28px rgba(0,0,0,.32)}
+    .top-nav-button:active{transform:translateY(0);box-shadow:0 8px 18px rgba(0,0,0,.26)}
+
+    /* 顶部导航菜单 */
+    .top-nav-menu{position:fixed;top:0;left:-320px;width:320px;height:100vh;background:var(--panel);border-right:1px solid var(--border);z-index:1000;transition:.3s ease;overflow-y:auto}
+    .top-nav-menu.active{left:0}
+    .top-nav-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s ease}
+    .top-nav-overlay.active{opacity:1;visibility:visible}
+    
+    .nav-header{display:flex;justify-content:space-between;align-items:center;padding:20px;border-bottom:1px solid var(--border)}
+    .nav-title{font-size:18px;font-weight:700;color:var(--text)}
+    .close-btn{background:none;border:none;font-size:24px;color:var(--text);cursor:pointer;padding:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:.2s}
+    .close-btn:hover{background:var(--border)}
+    
+    .top-nav-menu .nav-list{list-style:none;margin:0;padding:20px}
+    .top-nav-menu .nav-list li{margin-bottom:8px}
+    .top-nav-menu .nav-list a{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);padding:12px;border-radius:8px;transition:.2s}
+    .top-nav-menu .nav-list a:hover{background:var(--border)}
+    .top-nav-menu .nav-list .nav-icon{font-size:18px;width:24px;text-align:center}
+
     /* 移动端响应式优化 */
     @media (max-width: 960px) {
       .container {
@@ -206,31 +230,33 @@
 </style>
 </head>
 <body>
-  <!-- 汉堡菜单按钮 -->
-  <div class="hamburger" id="hamburger">
-    <span></span>
-    <span></span>
-    <span></span>
+  
+  <!-- 左上角导航按键 -->
+  <div class="top-nav-button" id="topNavButton">
+    <span class="nav-icon">💬</span>
   </div>
 
-  <!-- 移动端侧边栏 -->
-  <div class="mobile-sidebar" id="mobileSidebar">
-    <a class="account-info" href="profile.html">
-      <img src="https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp" alt="头像" class="avatar">
-      <span class="username">我的账号</span>
-    </a>
+  <!-- 顶部导航菜单 -->
+  <div class="top-nav-menu" id="topNavMenu">
+    <div class="nav-header">
+      <span class="nav-title">导航菜单</span>
+      <button class="close-btn" id="closeNavBtn">×</button>
+    </div>
     <ul class="nav-list">
       <li><a href="main page.html"><span class="nav-icon">🏠</span><span>主页</span></a></li>
       <li><a href="life-tips.html"><span class="nav-icon">💡</span><span>生活小贴士</span></a></li>
       <li><a href="study-guide.html"><span class="nav-icon">📚</span><span>学习指导</span></a></li>
+      <li><a href="profile.html"><span class="nav-icon">👤</span><span>个人主页</span></a></li>
       <li><a href="enrollment-steps.html"><span class="nav-icon">📝</span><span>入学步骤</span></a></li>
       <li><a href="share.html"><span class="nav-icon">🔗</span><span>分享</span></a></li>
       <li><a href="fun.html"><span class="nav-icon">🎉</span><span>娱乐</span></a></li>
       <li><a href="hospital.html"><span class="nav-icon">🏥</span><span>医院</span></a></li>
+      <li><a href="messages.html"><span class="nav-icon">💬</span><span>消息</span></a></li>
     </ul>
   </div>
 
-  <!-- 移动端侧边栏遮罩 -->
+  <!-- 顶部导航遮罩 -->
+  <div class="top-nav-overlay" id="topNavOverlay"></div>
   <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay"></div>
 
 
@@ -497,5 +523,99 @@
   });
 </script>
 
+  <!-- 顶部导航交互JavaScript -->
+  <script>
+  /* 顶部导航交互功能 */
+  (function(){
+    const topNavButton = document.getElementById('topNavButton');
+    const topNavMenu = document.getElementById('topNavMenu');
+    const topNavOverlay = document.getElementById('topNavOverlay');
+    const closeNavBtn = document.getElementById('closeNavBtn');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+    // 顶部导航按键点击事件
+    if(topNavButton && topNavMenu && topNavOverlay) {
+      topNavButton.addEventListener('click', () => {
+        console.log('顶部导航按键被点击'); // 调试日志
+        topNavMenu.classList.add('active');
+        topNavOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+
+      // 关闭按钮点击事件
+      if(closeNavBtn) {
+        closeNavBtn.addEventListener('click', () => {
+          topNavMenu.classList.remove('active');
+          topNavOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+      }
+
+      // 点击遮罩关闭导航菜单
+      topNavOverlay.addEventListener('click', () => {
+        topNavMenu.classList.remove('active');
+        topNavOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+
+      // ESC键关闭导航菜单
+      document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && topNavMenu.classList.contains('active')) {
+          topNavMenu.classList.remove('active');
+          topNavOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+    } else {
+      console.warn('顶部导航元素未找到:', { topNavButton, topNavMenu, topNavOverlay });
+    }
+
+    // 移动端导航链接点击事件
+    mobileNavLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        // 移除所有active类
+        mobileNavLinks.forEach(l => l.classList.remove('active'));
+        // 添加active类到当前点击的链接
+        link.classList.add('active');
+      });
+    });
+
+    // 触摸手势支持
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
+
+    document.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    });
+
+    document.addEventListener('touchmove', (e) => {
+      currentX = e.touches[0].clientX;
+      currentY = e.touches[0].clientY;
+    });
+
+    document.addEventListener('touchend', () => {
+      const deltaX = currentX - startX;
+      const deltaY = currentY - startY;
+      const minSwipeDistance = 50;
+
+      // 从左向右滑动打开导航菜单
+      if(deltaX > minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && startX < 50) {
+        if(topNavMenu && !topNavMenu.classList.contains('active')) {
+          topNavMenu.classList.add('active');
+          topNavOverlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      }
+      // 从右向左滑动关闭导航菜单
+      else if(deltaX < -minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && topNavMenu && topNavMenu.classList.contains('active')) {
+        topNavMenu.classList.remove('active');
+        topNavOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  })();</script>
 </body>
 </html>
