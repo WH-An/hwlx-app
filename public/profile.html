@@ -9,125 +9,39 @@
   
 
   <style>
-    :root{
-      --bg:#0b0f14; --panel:#ffffff; --text:#0f172a; --muted:#64748b; --accent:#16a34a;
-      --border:#e5e7eb; --shadow:0 10px 30px rgba(0,0,0,.18); --radius:18px;
-      --chip:#f8fafc; --chipText:#0f172a;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;font-family:'Microsoft YaHei',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'PingFang SC',sans-serif;
+    :root{--bg:#0b0f14; --panel:#ffffff; --text:#0f172a; --muted:#64748b; --accent:#16a34a; --border:#e5e7eb; --shadow:0 10px 30px rgba(0,0,0,.18); --radius:18px;}
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font-family:'Microsoft YaHei',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'PingFang SC',sans-serif;
       background:radial-gradient(1200px 600px at 10% -10%,#1f8db8 18%, transparent 60%),
                  radial-gradient(900px 500px at 110% 110%,#2bb8d6 12%, transparent 60%),var(--bg);
-      color:#fff;
-      overflow:visible;
-    }
+      color:#fff;overflow:visible;}
     .container{display:grid;grid-template-columns:220px 1fr;gap:18px;height:100vh;padding:24px}
-
-    .sidebar{
-      background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
-      box-shadow:var(--shadow);padding:20px 16px;color:var(--text);display:flex;flex-direction:column;gap:16px
-    }
-    .account-info{
-      display:flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none;color:inherit;
-      border:1px dashed #eef2ff;border-radius:14px;padding:14px;background:#fff
-    }
+    .sidebar{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 16px;color:var(--text);display:flex;flex-direction:column;gap:16px}
+    .account-info{display:flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none;color:inherit;border:1px dashed #eef2ff;border-radius:14px;padding:14px;background:#fff}
     .avatar{width:56px;height:56px;border-radius:50%;object-fit:cover}
     .username{font-weight:700}
     .nav-list{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
-    .nav-list a{
-      display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);
-      border:1px solid var(--border);background:#fafafa;border-radius:12px;padding:10px 14px;transition:.2s
-    }
+    .nav-list a{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);border:1px solid var(--border);background:#fafafa;border-radius:12px;padding:10px 14px;transition:.2s}
     .nav-list a:hover{background:#f3f4f6;transform:translateY(-1px)}
     .nav-icon{width:22px;display:inline-flex;justify-content:center}
 
-    .panel{
-      background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
-      box-shadow:var(--shadow);padding:18px;color:var(--text);display:flex;flex-direction:column;gap:14px;
-      height:100%;
-      overflow-y:auto;
-    }
-    .panel-header{display:flex;align-items:center;gap:12px}
+    .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;color:var(--text);display:flex;flex-direction:column;gap:14px;height:100%;overflow-y:auto}
+    .search-box{display:flex;gap:10px;flex-shrink:0}
+    .search-box input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:12px;font-size:15px;outline:none}
+    .search-box button{padding:10px 16px;border:none;border-radius:12px;background:var(--accent);color:#fff;font-weight:700;cursor:pointer}
+    .search-box button:hover{background:#15803d}
+    .panel-header{display:flex;align-items:center;gap:12px;flex-shrink:0}
     .panel-title{font-size:18px;font-weight:800;margin:0}
-    .spacer{flex:1}
-    .btn{
-      display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:1px solid var(--border);
-      background:#fff;color:#111827;border-radius:12px;padding:8px 12px;font-weight:700;transition:.2s
-    }
+    .panel-header .spacer{flex:1}
+    .btn{display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:1px solid var(--border);background:#fff;color:#111827;border-radius:12px;padding:8px 12px;font-weight:700;transition:.2s}
     .btn:hover{background:#f3f4f6}
-    .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
 
-    .card{
-      display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:center;
-      background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;
-      box-shadow:0 6px 18px rgba(0,0,0,.06)
-    }
-    .big-avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;border:1px solid #e5e7eb}
-    .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    .muted{color:#64748b;font-size:13px}
-    .tip{min-height:18px;color:#d33}
-    .file-label.btn{display:inline-flex}
+    /* === Masonry：多列布局，减少空白 === */
+    .masonry{ column-count:3; column-gap:14px; }
+    @media (max-width:1200px){ .masonry{ column-count:2; } }
+    @media (max-width:640px){  .masonry{ column-count:1; } }
 
-    .headline{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-    .headline .name{font-size:20px;font-weight:800}
-    .headline .email{
-      font-size:13px;color:var(--muted);padding:6px 8px;border:1px solid var(--border);
-      border-radius:999px;background:var(--chip);color:var(--chipText)
-    }
 
-    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-    @media (max-width:680px){ .container{grid-template-columns:1fr} .info-grid{grid-template-columns:1fr} }
-
-    .info-item{
-      display:flex;align-items:center;gap:10px;border:1px solid var(--border);
-      padding:10px 12px;border-radius:12px;background:#fafafa
-    }
-    .info-item .icon{width:22px;text-align:center}
-    .info-item .label{font-size:12px;color:#6b7280}
-    .info-item .value{font-weight:700;color:#111827}
-
-    .id-row{display:flex;gap:8px;align-items:center}
-    .mini-btn{
-      border:1px solid var(--border);background:#fff;border-radius:999px;padding:4px 8px;cursor:pointer;font-size:12px
-    }
-    .mini-btn:hover{background:#f3f4f6}
-
-    /* 顶部行：我的帖子 / 我的收藏 切换 */
-    .section-bar{display:flex;align-items:center;gap:10px;margin-top:8px}
-    .section-title{font-size:16px;font-weight:800;margin:6px 0 2px}
-    .tabs{display:flex;gap:8px;align-items:center}
-    .tab{
-      border:1px solid var(--border);background:#fff;border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;
-    }
-    .tab.active{background:#0f172a;color:#fff;border-color:#0f172a}
-
-    /* Masonry 布局与卡片 */
-    .posts-masonry{column-count:3; column-gap:14px}
-    @media (max-width:1200px){ .posts-masonry{ column-count:2 } }
-    @media (max-width:640px){  .posts-masonry{ column-count:1 } }
-
-    .post-card{
-      position:relative; display:inline-block; width:100%;
-      margin:0 0 14px; border:1px solid var(--border); background:#fff;
-      border-radius:14px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,.06);
-      padding-bottom:46px; break-inside:avoid; -webkit-column-break-inside:avoid; page-break-inside:avoid;
-      cursor:pointer;
-    }
-    .post-card img{ width:100%; display:block; aspect-ratio:4/5; object-fit:cover }
-    .post-card-text{ padding:10px 12px; color:#374151; line-height:1.6 }
-
-    .post-author-badge{
-      position:absolute; right:10px; bottom:8px; display:flex; align-items:center; gap:8px;
-      background:rgba(255,255,255,.92); border:1px solid var(--border);
-      padding:6px 8px; border-radius:999px; box-shadow:0 4px 12px rgba(0,0,0,.10); max-width:80%;
-    }
-    .post-author-badge img{ width:22px; height:22px; border-radius:50%; object-fit:cover }
-    .post-author-badge .name{ font-size:12px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:150px }
-  
-
-    
     /* 左上角导航按键 */
     .top-nav-button{display:none;position:fixed;top:20px;left:20px;z-index:1001;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;box-shadow:var(--shadow);width:48px;height:48px;display:flex;align-items:center;justify-content:center}
     .top-nav-button .nav-icon{font-size:20px;color:var(--text)}
@@ -225,140 +139,36 @@
       }
     }
 
-    /* 个人主页专用样式 */
-    .profile-header {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      border-radius: 20px;
-      padding: 24px;
-      color: white;
-      margin-bottom: 24px;
-      text-align: center;
+    /* 卡片：列内排列 + 预留徽章空间 */
+    .card{
+      position:relative; display:inline-block; width:100%; margin:0 0 14px;
+      border:1px solid var(--border); background:#fff; border-radius:14px; overflow:hidden;
+      box-shadow:0 6px 18px rgba(0,0,0,.06); padding-bottom:46px;
+      break-inside:avoid; -webkit-column-break-inside:avoid; page-break-inside:avoid;
     }
-    
-    .profile-avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      margin: 0 auto 16px;
-      display: block;
-      object-fit: cover;
+    .card img{ width:100%; display:block; aspect-ratio:4/5; object-fit:cover }
+    .card-text{ padding:10px 12px; color:#374151; line-height:1.6 }
+
+    /* 作者徽章：下移，与内容底对齐 */
+    .author-badge{
+      position:absolute; right:10px; bottom:8px;
+      display:flex; align-items:center; gap:8px;
+      background:rgba(255,255,255,.92); border:1px solid var(--border);
+      padding:6px 8px; border-radius:999px; box-shadow:0 4px 12px rgba(0,0,0,.10);
+      max-width:80%; cursor:pointer;
     }
-    
-    .profile-name {
-      font-size: 28px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-    
-    .profile-email {
-      background: rgba(255, 255, 255, 0.2);
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 14px;
-      backdrop-filter: blur(10px);
-      display: inline-block;
-    }
-    
-    .profile-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin: 24px 0;
-    }
-    
-    .stat-item {
-      text-align: center;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 16px;
-      border-radius: 16px;
-      backdrop-filter: blur(10px);
-    }
-    
-    .stat-number {
-      font-size: 24px;
-      font-weight: 800;
-      display: block;
-    }
-    
-    .stat-label {
-      font-size: 12px;
-      opacity: 0.8;
-      margin-top: 4px;
-    }
-    
-    .profile-section {
-      background: white;
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    }
-    
-    .section-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #1f2937;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .section-title::before {
-      content: '';
-      width: 4px;
-      height: 20px;
-      background: linear-gradient(135deg, #4facfe, #00f2fe);
-      border-radius: 2px;
-    }
-    
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-    }
-    
-    .info-item {
-      background: #f8fafc;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 16px;
-      transition: all 0.2s ease;
-    }
-    
-    .info-item:hover {
-      background: #f1f5f9;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-    
-    .info-item .icon {
-      color: #4facfe;
-      font-size: 18px;
-    }
-    
-    .info-item .label {
-      color: #6b7280;
-      font-size: 12px;
-      margin-bottom: 4px;
-    }
-    
-    .info-item .value {
-      color: #1f2937;
-      font-weight: 600;
-    }
-    
-    @media (max-width: 768px) {
-      .profile-stats {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-      
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    .author-badge img{width:22px;height:22px;border-radius:50%;object-fit:cover}
+    .author-badge .name{font-size:12px;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+
+    /* 悬停反馈（可选） */
+    .card[role="link"]{ transition: transform .12s ease, box-shadow .12s ease; }
+    .card[role="link"]:hover{ transform: translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.12); }
+
+    #chatFab{ position:fixed; left:16px; bottom:16px; width:48px; height:48px; border-radius:9999px; display:flex; align-items:center; justify-content:center; background:#0f172a; color:#fff; border:1px solid rgba(255,255,255,.15); box-shadow:0 10px 24px rgba(0,0,0,.28); cursor:pointer; user-select:none; z-index:9999; transition: transform .15s, box-shadow .15s, opacity .2s }
+    #chatFab:hover{ transform: translateY(-1px); box-shadow: 0 14px 28px rgba(0,0,0,.32) }
+    #chatFab:active{ transform: translateY(0); box-shadow: 0 8px 18px rgba(0,0,0,.26) }
+    #chatFab .badge{ position:absolute; right:-2px; top:-2px; min-width:18px; height:18px; padding:0 5px; display:none; align-items:center; justify-content:center; background:#ef4444; color:#fff; border-radius:9999px; font-size:11px; line-height:18px; box-shadow:0 2px 6px rgba(0,0,0,.18) }
+    @media (max-width:480px){ #chatFab{ left:12px; bottom:12px; width:44px; height:44px } }
   </style>
 </head>
 <body>
@@ -409,9 +219,19 @@
     </div>
 
     <div class="panel">
-      <div class="profile-header">
-        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face" alt="用户头像" class="profile-avatar">
-        <div class="profile-name">张同学</div>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="搜索个人信息...">
+        <button onclick="doSearch()">搜索</button>
+      </div>
+
+      <div class="panel-header">
+        <h2 class="panel-title">个人主页</h2>
+        <div class="spacer"></div>
+        <a class="btn" href="publish.html" title="去发布">＋ 去发布</a>
+      </div>
+
+      <div class="masonry" id="masonry"></div>
+    </div>
         <div class="profile-email">zhang.student@university.edu</div>
         
         <div class="profile-stats">
@@ -555,441 +375,167 @@
   </div>
 
   <script>
-  // 自动检测API基础URL
-  const BASE_URL = (() => {
-    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-      return 'http://127.0.0.1:3001';
-    }
-    return ''; // 生产环境使用相对路径
-  })();
-  const FALLBACK = 'https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp';
-
-  const $ = sel => document.querySelector(sel);
-  function toAbs(u){ if(!u) return ''; if(/^https?:\/\//i.test(u)) return u; return u.startsWith('/') ? (BASE_URL + u) : (BASE_URL + '/' + u); }
-  function getParam(k){ try{ return new URL(location.href).searchParams.get(k); }catch{ return null; } }
-  function fmt(v, fallback='未填写'){ return (v===0 || v) ? String(v) : fallback; }
-  const norm = s => String(s||'').trim().toLowerCase();
-
-  // tabs 切换工具
-  function activateTab(which){
-    $('#tabMyPosts').classList.toggle('active', which==='posts');
-    $('#tabMyFavs').classList.toggle('active',  which==='favs');
-    $('#postsTitle').textContent = which === 'posts' ? '我的帖子' : '我的收藏';
-  }
-
-  // 左侧账号卡片
-  async function renderSidebarUser(){
-    try{
-      const avatarEl = document.querySelector('.avatar');
-      const nameEl = document.querySelector('.username');
-      
-      // 优先从服务器获取最新用户信息
-      try {
-        const response = await fetch(BASE_URL + '/api/users/me', { 
-          credentials: 'include' 
-        });
-        
-        if (response.ok) {
-          const user = await response.json();
-          const name = user.nickname || user.username || user.displayName || user.name || user.email || '我的账号';
-          let avatar = user.avatarPath || user.avatarUrl || user.avatar || '';
-          if(avatar && !/^https?:\/\//i.test(avatar)) avatar = toAbs(avatar);
-          
-          nameEl.textContent = name;
-          nameEl.title = name;
-          avatarEl.onerror = () => { avatarEl.src = FALLBACK; };
-          avatarEl.src = avatar || FALLBACK;
-          avatarEl.alt = name;
-          
-          // 更新本地存储
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          return;
-        }
-      } catch (e) {
-        console.warn('从服务器获取用户信息失败，使用本地存储:', e);
+    // 自动检测API基础URL
+    const API_BASE = (() => {
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        return 'http://127.0.0.1:3001';
       }
-
-      // 如果服务器获取失败，回退到本地存储
-      const raw = localStorage.getItem('currentUser')
-            || localStorage.getItem('user')
-            || localStorage.getItem('USER')
-            || localStorage.getItem('auth_user');
-      if(!raw){ nameEl.textContent='我的账号'; avatarEl.src=FALLBACK; return; }
-      const u = JSON.parse(raw)||{};
-      const name = u.nickname || u.username || u.displayName || u.name || u.email || '我的账号';
-      let avatar = u.avatarPath || u.avatarUrl || u.avatar || '';
-      if(avatar && !/^https?:\/\//i.test(avatar)) avatar = toAbs(avatar);
-      nameEl.textContent = name;
-      nameEl.title = name;
-      avatarEl.onerror = () => { avatarEl.src = FALLBACK; };
-      avatarEl.src = avatar || FALLBACK;
-      avatarEl.alt = name;
-    }catch(e){
-      console.error('渲染侧边栏用户信息失败:', e);
-      const avatarEl = document.querySelector('.avatar');
-      const nameEl = document.querySelector('.username');
-      if(nameEl) {
-        nameEl.textContent = '我的账号';
-        nameEl.title = '我的账号';
-      }
-      if(avatarEl) {
-        avatarEl.src = FALLBACK;
-        avatarEl.alt = '我的头像';
-      }
-    }
-  }
-
-  // 渲染主卡片
-  function renderUser(u, opts = {}){
-  const isOther = !!opts.isOther;
-
-  const name  = u.nickname || u.username || u.displayName || u.name || u.email || '——';
-  const email = u.email || '——';
-  const area  = u.area;
-  const uid   = u.id || u._id || '';
-  let avatar  = u.avatarPath || u.avatarUrl || u.avatar || '';
-  if(avatar && !/^https?:\/\//i.test(avatar)) avatar = toAbs(avatar);
-
-  $('#profileName').textContent = name;
-  const emailChip = $('#profileEmail');
-  emailChip.textContent = email;
-  emailChip.title = email;
-
-  const img = $('#profileAvatar');
-  img.onerror = () => { img.src = FALLBACK; };
-  img.src = avatar || FALLBACK;
-  img.alt = name;
-
-  $('#profileArea').textContent = fmt(area);
-  $('#profileId').textContent   = fmt(uid,'—');
-
-  const copyBtn = $('#copyIdBtn');
-  copyBtn.onclick = async () => {
-    try{ await navigator.clipboard.writeText(String(uid||'')); toast('ID 已复制'); }
-    catch{ toast('复制失败'); }
-  };
-
-  // ✅ 关键：只有“看自己”时才更新 currentUser / meUser；看别人放到 lastViewedUser
-  try{
-    if (isOther) {
-      localStorage.setItem('lastViewedUser', JSON.stringify(u));
-    } else {
-      localStorage.setItem('meUser', JSON.stringify(u));
-      localStorage.setItem('currentUser', JSON.stringify(u));
-    }
-  }catch{}
-}
-
-  function toast(text){
-    const tip = $('#profile-tip');
-    tip.style.color = '#16a34a';
-    tip.textContent = text;
-    setTimeout(()=>{ tip.textContent=''; tip.style.color='#d33'; }, 1500);
-  }
-
-  function setButtonToLogin(){
-    const btn = $('#logoutBtn');
-    btn.textContent = '登录';
-    btn.title = '点击登录';
-    btn.classList.add('primary');
-    const cloned = btn.cloneNode(true);
-    cloned.addEventListener('click', () => { location.href = 'login.html'; });
-    btn.parentNode.replaceChild(cloned, btn);
-
-    $('#avatar-upload').disabled = true;
-    const lab = document.querySelector('.file-label.btn');
-    if (lab) lab.style.display = 'none';
-    $('#upload-hint').textContent = '请登录后可更换头像';
-  }
-
-  function setButtonToBack(){
-    const btn = $('#logoutBtn');
-    btn.textContent = '返回主页';
-    btn.title = '返回主页';
-    btn.classList.remove('primary');
-    const cloned = btn.cloneNode(true);
-    cloned.addEventListener('click', () => { location.href = 'main page.html'; });
-    btn.parentNode.replaceChild(cloned, btn);
-
-    $('#avatar-upload').disabled = true;
-    const lab = document.querySelector('.file-label.btn');
-    if (lab) lab.style.display = 'none';
-    $('#upload-hint').textContent = '这是对方的个人主页，头像不可由你修改';
-  }
-
-  async function doLogout(){
-    try{ await fetch(BASE_URL + '/api/logout', { method:'POST', credentials:'include' }); }catch{}
-    // 清除所有本地存储的用户信息
-    ['currentUser', 'user', 'USER', 'auth_user', 'tempUser', 'meUser'].forEach(key => {
-      localStorage.removeItem(key);
-    });
-    location.href = 'login.html';
-  }
-
-  /* ====== 帖子卡片渲染 ====== */
-  function extractAuthor(p){
-    const u = p.user || p.author || p.owner || {};
-    let name   = (p.authorName || u.nickname || u.username || u.displayName || u.name || p.username || p.email || '').trim();
-    let avatar = (p.authorAvatar || u.avatarPath || u.avatarUrl || u.avatar || p.avatar || '').trim();
-    if(!name) name='匿名用户';
-    if(avatar && !/^https?:\/\//i.test(avatar)) avatar = toAbs(avatar);
-    return { name, avatar };
-  }
-
-  function renderPosts(list){
-    const box = $('#postList');
-    box.innerHTML = '';
-    (list||[]).forEach(p=>{
-      const card = document.createElement('div');
-      card.className = 'post-card';
-
-      const pid = p._id || p.id;
-      if (pid){
-        card.addEventListener('click', ()=>{ location.href = 'post.html?id='+encodeURIComponent(pid); });
-        card.style.cursor = 'pointer';
-      }
-
-      // 图片 - 只显示第一张
-      if(p.images && p.images.length > 0){
-        const img = document.createElement('img');
-        img.src = toAbs(p.images[0]);
-        img.alt = '';
-        img.onerror = ()=>{ img.remove(); };
-        card.appendChild(img);
-      }
-
-      if(p.desc || p.title){
-        const t = document.createElement('div');
-        t.className = 'post-card-text';
-        t.textContent = p.desc || p.title || '';
-        card.appendChild(t);
-      }
-
-      const {name, avatar} = extractAuthor(p);
-      const badge = document.createElement('div');
-      badge.className = 'post-author-badge';
-      const ava = document.createElement('img');
-      const FALL = 'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="100%" height="100%" fill="#e5e7eb"/><circle cx="32" cy="26" r="12" fill="#cbd5e1"/><rect x="12" y="44" width="40" height="14" rx="7" fill="#cbd5e1"/></svg>');
-      ava.onerror = ()=>{ ava.src = FALL; };
-      ava.src = avatar || FALL;
-      ava.alt = name;
-      const nm = document.createElement('span');
-      nm.className = 'name';
-      nm.textContent = name;
-      badge.appendChild(ava);
-      badge.appendChild(nm);
-      card.appendChild(badge);
-
-      box.appendChild(card);
-    });
-
-    if(!list || list.length===0){
-      const empty=document.createElement('div');
-      empty.className='muted';
-      empty.style.padding='8px 2px';
-      empty.textContent='暂无内容';
-      box.appendChild(empty);
-    }
-  }
-
-  /* ====== 数据加载：我的帖子 / 我的收藏 ====== */
-
-  // 判断帖子属于目标用户
-  function isOwnedByTarget(post, target){
-    const targetEmails = [target?.email].map(norm).filter(Boolean);
-    const targetIds = [target?.id, target?._id, target?.uid].map(norm).filter(Boolean);
-
-    const postEmails = [
-      post.authorEmail, post.email,
-      post.user && post.user.email,
-      post.owner && post.owner.email,
-      post.author && post.author.email
-    ].map(norm).filter(Boolean);
-
-    const postIds = [
-      post.authorId, post.userId, post.uid, post._userId,
-      post.createdBy, post.created_by,
-      post.user && (post.user.id || post.user._id),
-      post.owner && (post.owner.id || post.owner._id),
-      post.author && (post.author.id || post.author._id)
-    ].map(norm).filter(Boolean);
-
-    const emailHit = targetEmails.length && postEmails.some(e => targetEmails.includes(e));
-    const idHit    = targetIds.length && postIds.some(i => targetIds.includes(i));
-    return emailHit || idHit;
-  }
-
-  async function loadAllPosts(){
-    try{
-      const r = await fetch(`${BASE_URL}/api/posts`, { credentials:'include' });
-      const arr = await r.json();
-      return Array.isArray(arr) ? arr : [];
-    }catch{ return []; }
-  }
-
-  async function loadMyPosts(targetUser){
-    let posts = await loadAllPosts();
-    posts = posts.filter(p => isOwnedByTarget(p, targetUser));
-    renderPosts(posts);
-  }
-
-  function meKeyFromUser(u){
-    return norm(u?.email || u?.username || u?.id || u?._id || 'guest');
-  }
-
-  function pickMyFavIds(meKey){
-    const ids = [];
-    for(let i=0;i<localStorage.length;i++){
-      const k = localStorage.key(i);
-      // 收藏键的格式与 post.html 保持一致：faved:${meKey}:${postId}
-      if(k && k.startsWith(`faved:${meKey}:`)){
-        const postId = k.split(':').pop();
-        if(postId) ids.push(postId);
-      }
-    }
-    // 去重
-    return Array.from(new Set(ids));
-  }
-
-  async function loadMyFavorites(meUser){
-    const meKey = meKeyFromUser(meUser);
-    const favIds = pickMyFavIds(meKey);
-    if(favIds.length === 0){ renderPosts([]); return; }
-
-    // 简单办法：拉一遍全量帖子，然后按 id 过滤（方便 & 接口最少）
-    const all = await loadAllPosts();
-    const set = new Set(favIds.map(String));
-    const list = all.filter(p => set.has(String(p._id || p.id || p.postId)));
-    renderPosts(list);
-  }
-
-  // ====== 页面初始化 & tab 逻辑 ======
-  async function getMe(){
-    const tip = $('#profile-tip');
-    try{
-      const res = await fetch(BASE_URL + '/api/users/me', { credentials:'include' });
-      const data = await res.json().catch(()=> ({}));
-      if (!res.ok) {
-        tip.textContent = data.msg || `未登录（${res.status}）`;
-        setButtonToLogin();
-        return;
-      }
-      renderUser(data);
-
-      // 退出按钮
-      const btn = $('#logoutBtn');
-      const cloned = btn.cloneNode(true);
-      cloned.textContent = '退出登录';
-      cloned.title = '退出登录';
-      cloned.addEventListener('click', doLogout);
-      btn.parentNode.replaceChild(cloned, btn);
-
-      // 默认显示“我的帖子”
-      activateTab('posts');
-      loadMyPosts(data);
-
-      // 绑定 tab 切换
-      $('#tabMyPosts').onclick = () => { activateTab('posts'); loadMyPosts(data); };
-      $('#tabMyFavs').onclick  = () => { activateTab('favs');  loadMyFavorites(data); };
-    }catch(e){
-      tip.textContent = '无法连接后端，请确认 3001 端口服务已启动';
-      setButtonToLogin();
-    }
-  }
-
-  async function viewOtherProfile(targetEmail){
-    const tip = $('#profile-tip');
-    try{
-      const res = await fetch(`${BASE_URL}/api/users/by-email?email=${encodeURIComponent(targetEmail)}`, { credentials:'include' });
-      const data = await res.json().catch(()=> ({}));
-      if (!res.ok) {
-        tip.textContent = data.msg || `获取用户失败（${res.status}）`;
-        setButtonToBack();
-        return;
-      }
-      renderUser(data, { isOther: true });
-      setButtonToBack();
-
-      // 浏览他人主页时，“我的收藏”没有意义 → 隐藏收藏 tab
-      document.getElementById('tabMyFavs').style.display = 'none';
-
-      activateTab('posts');
-      loadMyPosts(data);
-      $('#tabMyPosts').onclick = () => { activateTab('posts'); loadMyPosts(data); };
-    }catch(e){
-      tip.textContent = '无法连接后端，请确认 3001 端口服务已启动';
-      setButtonToBack();
-    }
-  }
-
-  async function uploadAvatar(file){
-    const tip = $('#profile-tip');
-    if (!file) return;
-    const fd = new FormData();
-    fd.append('avatar', file);
-    try{
-      const res = await fetch(BASE_URL + '/api/upload/avatar', {
-        method: 'POST', body: fd, credentials: 'include'
-      });
-      const data = await res.json().catch(()=> ({}));
-      if (!res.ok) { tip.textContent = data.msg || `上传失败（${res.status}）`; return; }
-      toast('头像已更新');
-      const meRes = await fetch(BASE_URL + '/api/users/me', { credentials:'include' });
-      if (meRes.ok){
-        const me = await meRes.json();
-        renderUser(me);
-      }
-    }catch(e){
-      tip.textContent = '上传失败：接口不可达';
-    }
-  }
-
-  // 初始化
-  window.addEventListener('DOMContentLoaded', async () => {
-    await renderSidebarUser();
-
-    $('#avatar-upload').addEventListener('change', (e) => {
-      const file = e.target.files && e.target.files[0];
-      uploadAvatar(file);
-    });
-
-    const targetEmail = (getParam('email') || '').trim().toLowerCase();
-    if (targetEmail) {
-      viewOtherProfile(targetEmail);
-    } else {
-      getMe();
-    }
-  });
-
-  // 顶栏“消息”按钮
-  (function(){
-    function addMsgButton(){
-      const header = document.querySelector('.panel-header');
-      const logout = document.getElementById('logoutBtn');
-      if(!header || !logout) return;
-      if(document.getElementById('msgBtn')) return;
-
-      const btn = document.createElement('button');
-      btn.className = 'btn';
-      btn.id = 'msgBtn';
-      btn.textContent = '消息';
-      header.insertBefore(btn, logout);
-
-      const params = new URL(location.href).searchParams;
-      const to = (params.get('email') || '').trim();
-      btn.addEventListener('click', ()=>{
-        const dest = to ? ('messages.html?to=' + encodeURIComponent(to)) : 'messages.html';
-        location.href = dest;
-      });
-    }
+      return ''; // 生产环境使用相对路径
+    })();
     
-    // 延迟添加消息按钮，确保在getMe执行后再添加
-    setTimeout(addMsgButton, 100);
+    const CATEGORY = 'profile';
+    let allPosts = [];
+
+    function toAbs(url){
+      if(!url) return '';
+      if(/^https?:\/\//i.test(url)) return url;
+      return url.startsWith('/') ? (API_BASE + url) : (API_BASE + '/' + url);
+    }
+
+    async function hydrateUser(){
+      try{
+        const avatarEl = document.querySelector('.avatar');
+        const nameEl   = document.querySelector('.username');
+        const FALLBACK = 'https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp';
+        
+        // 添加加载状态
+        if (avatarEl) {
+          avatarEl.style.opacity = '0.7';
+          avatarEl.style.transition = 'opacity 0.3s ease';
+        }
+        
+        // 优先从服务器获取最新用户信息
+        try {
+          const response = await fetch(API_BASE + '/api/users/me', { 
+            credentials: 'include' 
+          });
+          
+          if (response.ok) {
+            const user = await response.json();
+            const displayName = user.nickname||user.username||user.displayName||user.name||user.email||'我的账号';
+            let avatar = user.avatarPath||user.avatarUrl||user.avatar||'';
+            if (avatar && !/^https?:\/\//i.test(avatar)) avatar = avatar.startsWith('/') ? (API_BASE+avatar) : (API_BASE+'/'+avatar);
+            
+            // 平滑更新用户信息
+            nameEl.textContent = displayName; nameEl.title = displayName;
+            
+            // 预加载头像，避免闪烁
+            const img = new Image();
+            img.onload = () => {
+              if (avatarEl) {
+                avatarEl.src = avatar;
+                avatarEl.style.opacity = '1';
+              }
+            };
+            img.onerror = () => {
+              if (avatarEl) {
+                avatarEl.src = FALLBACK;
+                avatarEl.style.opacity = '1';
+              }
+            };
+            img.src = avatar;
+          } else {
+            // 服务器获取失败，使用本地存储
+            const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+            if (localUser.username || localUser.nickname) {
+              nameEl.textContent = localUser.nickname || localUser.username;
+              if (localUser.avatarPath) {
+                avatarEl.src = toAbs(localUser.avatarPath);
+              }
+            }
+          }
+        } catch (error) {
+          console.warn('获取用户信息失败:', error);
+          // 使用本地存储作为后备
+          const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+          if (localUser.username || localUser.nickname) {
+            nameEl.textContent = localUser.nickname || localUser.username;
+            if (localUser.avatarPath) {
+              avatarEl.src = toAbs(localUser.avatarPath);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('用户信息处理失败:', error);
+      }
+    }
+
+    async function loadPosts(){
+      try{
+        const response = await fetch(API_BASE + '/api/posts?category=' + CATEGORY);
+        if(response.ok){
+          allPosts = await response.json();
+          renderPosts();
+        } else {
+          console.error('加载帖子失败:', response.status);
+        }
+      } catch(error){
+        console.error('加载帖子出错:', error);
+      }
+    }
+
+    function renderPosts(){
+      const masonry = document.getElementById('masonry');
+      if(!masonry) return;
+      
+      masonry.innerHTML = allPosts.map(post => `
+        <div class="card" role="link" onclick="viewPost('${post._id}')">
+          <img src="${toAbs(post.imagePath)}" alt="${post.title}" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop'">
+          <div class="card-text">${post.title}</div>
+          <div class="author-badge" onclick="event.stopPropagation(); viewUser('${post.authorId}')">
+            <img src="${toAbs(post.authorAvatar)}" alt="作者" onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=22&h=22&fit=crop&crop=face'">
+            <span class="name">${post.authorName || '匿名用户'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function doSearch(){
+      const query = document.getElementById('searchInput').value.trim();
+      if(!query) {
+        renderPosts();
+        return;
+      }
+      
+      const filtered = allPosts.filter(post => 
+        post.title.toLowerCase().includes(query.toLowerCase()) ||
+        post.content.toLowerCase().includes(query.toLowerCase())
+      );
+      
+      const masonry = document.getElementById('masonry');
+      if(!masonry) return;
+      
+      masonry.innerHTML = filtered.map(post => `
+        <div class="card" role="link" onclick="viewPost('${post._id}')">
+          <img src="${toAbs(post.imagePath)}" alt="${post.title}" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop'">
+          <div class="card-text">${post.title}</div>
+          <div class="author-badge" onclick="event.stopPropagation(); viewUser('${post.authorId}')">
+            <img src="${toAbs(post.authorAvatar)}" alt="作者" onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=22&h=22&fit=crop&crop=face'">
+            <span class="name">${post.authorName || '匿名用户'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function viewPost(postId){
+      window.location.href = 'post.html?id=' + postId;
+    }
+
+    function viewUser(userId){
+      window.location.href = 'profile.html?id=' + userId;
+    }
+
+    // 页面加载完成后执行
     document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(addMsgButton, 100);
+      hydrateUser();
+      loadPosts();
+      
+      // 搜索框回车事件
+      document.getElementById('searchInput').addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') doSearch();
+      });
     });
-  })();
-</script>
+  </script>
 
   <!-- 顶部导航交互JavaScript -->
   <script>

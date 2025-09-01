@@ -24,6 +24,7 @@
     .nav-list a{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);border:1px solid var(--border);background:#fafafa;border-radius:12px;padding:10px 14px;transition:.2s}
     .nav-list a:hover{background:#f3f4f6;transform:translateY(-1px)}
     .nav-icon{width:22px;display:inline-flex;justify-content:center}
+
     .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;color:var(--text);display:flex;flex-direction:column;gap:14px;height:100%;overflow-y:auto}
     .search-box{display:flex;gap:10px;flex-shrink:0}
     .search-box input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:12px;font-size:15px;outline:none}
@@ -35,72 +36,12 @@
     .btn{display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:1px solid var(--border);background:#fff;color:#111827;border-radius:12px;padding:8px 12px;font-weight:700;transition:.2s}
     .btn:hover{background:#f3f4f6}
 
-    /* === Masonry：多列布局，显著减少空白 === */
-    .masonry{
-      column-count: 3;            /* 桌面 3 列 */
-      column-gap: 14px;
-    }
-    @media (max-width: 1200px){ .masonry{ column-count: 2; } } /* 平板 2 列 */
-    @media (max-width: 640px){  .masonry{ column-count: 1; } } /* 手机 1 列 */
+    /* === Masonry：多列布局，减少空白 === */
+    .masonry{ column-count:3; column-gap:14px; }
+    @media (max-width:1200px){ .masonry{ column-count:2; } }
+    @media (max-width:640px){  .masonry{ column-count:1; } }
 
-    /* 卡片在列中像块状元素排列，并给底部徽章留空间 */
-    .card{
-      position: relative;
-      display: inline-block;      /* 关键：列布局里要用 inline-block */
-      width: 100%;
-      margin: 0 0 14px;           /* 列内卡片的下间距 */
-      border: 1px solid var(--border);
-      background: #fff;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 6px 18px rgba(0,0,0,.06);
-      padding-bottom: 46px;       /* 预留徽章空间，避免挡住文字 */
-      break-inside: avoid;
-      -webkit-column-break-inside: avoid;
-      page-break-inside: avoid;
-    }
-    .card img{
-      width: 100%;
-      display: block;
-      /* 统一图片纵横比，减少高度差（不想裁切可删除这两行） */
-      aspect-ratio: 4 / 5;
-      object-fit: cover;
 
-    .card-text{padding:10px 12px;color:#374151;line-height:1.6}
-
-    /* 作者徽章：下移，与内容底基本齐平 */
-    .author-badge{
-      position:absolute; right:10px; bottom:8px;
-      display:flex; align-items:center; gap:8px;
-      background:rgba(255,255,255,.92); border:1px solid var(--border);
-      padding:6px 8px; border-radius:999px; box-shadow:0 4px 12px rgba(0,0,0,.10);
-      max-width:80%;
-    }
-    .author-badge img{width:22px;height:22px;border-radius:50%;object-fit:cover}
-    .author-badge .name{font-size:12px;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
-
-    #chatFab { position: fixed; left: 16px; bottom: calc(var(--mobile-nav-height) + 16px);
-      width: 48px; height: 48px; border-radius: 9999px;
-      display: flex; align-items: center; justify-content: center;
-      background: #0f172a; color: #fff; border: 1px solid rgba(255,255,255,.15);
-      box-shadow: 0 10px 24px rgba(0,0,0,.28);
-      cursor: pointer; user-select: none; z-index: 9999;
-      transition: transform .15s ease, box-shadow .15s ease, opacity .2s ease;
-    }
-    #chatFab:hover{ transform: translateY(-1px); box-shadow: 0 14px 28px rgba(0,0,0,.32); }
-    #chatFab:active{ transform: translateY(0); box-shadow: 0 8px 18px rgba(0,0,0,.26); }
-    #chatFab .badge{
-      position: absolute; right: -2px; top: -2px;
-      min-width: 18px; height: 18px; padding: 0 5px;
-      display: none; align-items: center; justify-content: center;
-      background: #ef4444; color: #fff; border-radius: 9999px;
-      font-size: 11px; line-height: 18px; box-shadow: 0 2px 6px rgba(0,0,0,.18);
-    }
-    @media (max-width: 480px) { #chatFab { left: 12px; bottom: calc(var(--mobile-nav-height) + 12px); width: 44px; height: 44px; }
-    }
-  
-
-    
     /* 左上角导航按键 */
     .top-nav-button{display:none;position:fixed;top:20px;left:20px;z-index:1001;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;box-shadow:var(--shadow);width:48px;height:48px;display:flex;align-items:center;justify-content:center}
     .top-nav-button .nav-icon{font-size:20px;color:var(--text)}
@@ -198,78 +139,36 @@
       }
     }
 
-    /* 入学步骤专用样式 */
-    .step-card {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      border: none;
-      color: white;
-      margin-bottom: 20px;
-      transition: all 0.3s ease;
+    /* 卡片：列内排列 + 预留徽章空间 */
+    .card{
+      position:relative; display:inline-block; width:100%; margin:0 0 14px;
+      border:1px solid var(--border); background:#fff; border-radius:14px; overflow:hidden;
+      box-shadow:0 6px 18px rgba(0,0,0,.06); padding-bottom:46px;
+      break-inside:avoid; -webkit-column-break-inside:avoid; page-break-inside:avoid;
     }
-    .step-card:hover {
-      transform: translateX(8px);
-      box-shadow: 0 15px 30px rgba(240, 147, 251, 0.3);
+    .card img{ width:100%; display:block; aspect-ratio:4/5; object-fit:cover }
+    .card-text{ padding:10px 12px; color:#374151; line-height:1.6 }
+
+    /* 作者徽章：下移，与内容底对齐 */
+    .author-badge{
+      position:absolute; right:10px; bottom:8px;
+      display:flex; align-items:center; gap:8px;
+      background:rgba(255,255,255,.92); border:1px solid var(--border);
+      padding:6px 8px; border-radius:999px; box-shadow:0 4px 12px rgba(0,0,0,.10);
+      max-width:80%; cursor:pointer;
     }
-    
-    .step-number {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      font-weight: 700;
-      margin-right: 12px;
-      backdrop-filter: blur(10px);
-    }
-    
-    .step-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-    }
-    
-    .step-description {
-      font-size: 14px;
-      opacity: 0.9;
-      line-height: 1.6;
-      margin-left: 44px;
-    }
-    
-    .step-timeline {
-      position: relative;
-      padding-left: 20px;
-    }
-    
-    .step-timeline::before {
-      content: '';
-      position: absolute;
-      left: 16px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(to bottom, #f093fb, #f5576c);
-    }
-    
-    .step-item {
-      position: relative;
-      margin-bottom: 24px;
-    }
-    
-    .step-item::before {
-      content: '';
-      position: absolute;
-      left: -20px;
-      top: 8px;
-      width: 12px;
-      height: 12px;
-      background: white;
-      border: 3px solid #f093fb;
-      border-radius: 50%;
-    }
+    .author-badge img{width:22px;height:22px;border-radius:50%;object-fit:cover}
+    .author-badge .name{font-size:12px;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+
+    /* 悬停反馈（可选） */
+    .card[role="link"]{ transition: transform .12s ease, box-shadow .12s ease; }
+    .card[role="link"]:hover{ transform: translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.12); }
+
+    #chatFab{ position:fixed; left:16px; bottom:16px; width:48px; height:48px; border-radius:9999px; display:flex; align-items:center; justify-content:center; background:#0f172a; color:#fff; border:1px solid rgba(255,255,255,.15); box-shadow:0 10px 24px rgba(0,0,0,.28); cursor:pointer; user-select:none; z-index:9999; transition: transform .15s, box-shadow .15s, opacity .2s }
+    #chatFab:hover{ transform: translateY(-1px); box-shadow: 0 14px 28px rgba(0,0,0,.32) }
+    #chatFab:active{ transform: translateY(0); box-shadow: 0 8px 18px rgba(0,0,0,.26) }
+    #chatFab .badge{ position:absolute; right:-2px; top:-2px; min-width:18px; height:18px; padding:0 5px; display:none; align-items:center; justify-content:center; background:#ef4444; color:#fff; border-radius:9999px; font-size:11px; line-height:18px; box-shadow:0 2px 6px rgba(0,0,0,.18) }
+    @media (max-width:480px){ #chatFab{ left:12px; bottom:12px; width:44px; height:44px } }
   </style>
 </head>
 <body>
@@ -320,9 +219,19 @@
     </div>
 
     <div class="panel">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="搜索入学信息...">
+        <button onclick="doSearch()">搜索</button>
+      </div>
+
       <div class="panel-header">
-        <h1 class="panel-title">🎓 海外留学入学步骤指南</h1>
+        <h2 class="panel-title">入学步骤</h2>
         <div class="spacer"></div>
+        <a class="btn" href="publish.html" title="去发布">＋ 去发布</a>
+      </div>
+
+      <div class="masonry" id="masonry"></div>
+    </div>
       </div>
       
       <div class="step-timeline">
@@ -414,14 +323,27 @@
       }
       return ''; // 生产环境使用相对路径
     })();
-    const CATEGORY='enroll';
-    let allPosts=[];
-    function toAbs(u){ if(!u)return''; if(/^https?:\/\//i.test(u))return u; return u.startsWith('/')?API_BASE+u:API_BASE+'/'+u; }
+    
+    const CATEGORY = 'enrollment-steps';
+    let allPosts = [];
+
+    function toAbs(url){
+      if(!url) return '';
+      if(/^https?:\/\//i.test(url)) return url;
+      return url.startsWith('/') ? (API_BASE + url) : (API_BASE + '/' + url);
+    }
 
     async function hydrateUser(){
       try{
-        const avatarEl=document.querySelector('.avatar'), nameEl=document.querySelector('.username');
-        const FALLBACK='https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp';
+        const avatarEl = document.querySelector('.avatar');
+        const nameEl   = document.querySelector('.username');
+        const FALLBACK = 'https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp';
+        
+        // 添加加载状态
+        if (avatarEl) {
+          avatarEl.style.opacity = '0.7';
+          avatarEl.style.transition = 'opacity 0.3s ease';
+        }
         
         // 优先从服务器获取最新用户信息
         try {
@@ -431,369 +353,129 @@
           
           if (response.ok) {
             const user = await response.json();
-            const name = user.nickname||user.username||user.displayName||user.name||user.email||'我的账号';
+            const displayName = user.nickname||user.username||user.displayName||user.name||user.email||'我的账号';
             let avatar = user.avatarPath||user.avatarUrl||user.avatar||'';
-            if(avatar&&!/^https?:\/\//i.test(avatar)) avatar=avatar.startsWith('/')?API_BASE+avatar:API_BASE+'/'+avatar;
+            if (avatar && !/^https?:\/\//i.test(avatar)) avatar = avatar.startsWith('/') ? (API_BASE+avatar) : (API_BASE+'/'+avatar);
             
-            nameEl.textContent=name; avatarEl.onerror=()=>{avatarEl.src=FALLBACK}; avatarEl.src=avatar||FALLBACK; avatarEl.alt=name;
+            // 平滑更新用户信息
+            nameEl.textContent = displayName; nameEl.title = displayName;
             
-            // 更新本地存储
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            return;
+            // 预加载头像，避免闪烁
+            const img = new Image();
+            img.onload = () => {
+              if (avatarEl) {
+                avatarEl.src = avatar;
+                avatarEl.style.opacity = '1';
+              }
+            };
+            img.onerror = () => {
+              if (avatarEl) {
+                avatarEl.src = FALLBACK;
+                avatarEl.style.opacity = '1';
+              }
+            };
+            img.src = avatar;
+          } else {
+            // 服务器获取失败，使用本地存储
+            const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+            if (localUser.username || localUser.nickname) {
+              nameEl.textContent = localUser.nickname || localUser.username;
+              if (localUser.avatarPath) {
+                avatarEl.src = toAbs(localUser.avatarPath);
+              }
+            }
           }
-        } catch (e) {
-          console.warn('从服务器获取用户信息失败，使用本地存储:', e);
+        } catch (error) {
+          console.warn('获取用户信息失败:', error);
+          // 使用本地存储作为后备
+          const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+          if (localUser.username || localUser.nickname) {
+            nameEl.textContent = localUser.nickname || localUser.username;
+            if (localUser.avatarPath) {
+              avatarEl.src = toAbs(localUser.avatarPath);
+            }
+          }
         }
-
-        // 如果服务器获取失败，回退到本地存储
-        const raw=localStorage.getItem('currentUser')||localStorage.getItem('user')||localStorage.getItem('USER')||localStorage.getItem('auth_user');
-        if(!raw){nameEl.textContent='我的账号';avatarEl.src=FALLBACK;return;}
-        const u=JSON.parse(raw)||{}; const name=u.nickname||u.username||u.displayName||u.name||u.email||'我的账号';
-        let avatar=u.avatarPath||u.avatarUrl||u.avatar||''; if(avatar&&!/^https?:\/\//i.test(avatar)) avatar=avatar.startsWith('/')?API_BASE+avatar:API_BASE+'/'+avatar;
-        nameEl.textContent=name; avatarEl.onerror=()=>{avatarEl.src=FALLBACK}; avatarEl.src=avatar||FALLBACK; avatarEl.alt=name;
-      }catch(e){
-        console.error('用户信息渲染失败:', e);
-        const avatarEl=document.querySelector('.avatar'), nameEl=document.querySelector('.username');
-        if(nameEl) nameEl.textContent='我的账号';
-        if(avatarEl) avatarEl.src=FALLBACK;
+      } catch (error) {
+        console.error('用户信息处理失败:', error);
       }
     }
 
-    function extractAuthor(p){
-      const u = p.user || p.author || p.owner || {};
-      let name   = (p.authorName || u.nickname || u.username || u.displayName || u.name || p.username || p.email || '').trim();
-      let avatar = (p.authorAvatar || u.avatarPath || u.avatarUrl || u.avatar || p.avatar || '').trim();
-
-      if (!name || !avatar) {
-        try {
-          const raw = localStorage.getItem('currentUser')
-                  || localStorage.getItem('user')
-                  || localStorage.getItem('USER')
-                  || localStorage.getItem('auth_user');
-          if (raw) {
-            const me = JSON.parse(raw) || {};
-            if (!name)   name   = (me.nickname || me.username || me.displayName || me.name || me.email || '').trim();
-            if (!avatar) avatar = (me.avatarPath || me.avatarUrl || me.avatar || '').trim();
-          }
-        } catch {}
+    async function loadPosts(){
+      try{
+        const response = await fetch(API_BASE + '/api/posts?category=' + CATEGORY);
+        if(response.ok){
+          allPosts = await response.json();
+          renderPosts();
+        } else {
+          console.error('加载帖子失败:', response.status);
+        }
+      } catch(error){
+        console.error('加载帖子出错:', error);
       }
-      if (avatar && !/^https?:\/\//i.test(avatar)) avatar = toAbs(avatar);
-      if (!name) name = '匿名用户';
-      return { name, avatar };
     }
 
-    function renderPosts(list){
-      const box=document.getElementById('masonry'); 
-      box.innerHTML='';
-      (list||[]).forEach(p=>{
-        const card=document.createElement('div'); 
-        card.className='card';
-
-        // 置顶标记
-        if(p.pinned){
-          const pinBadge = document.createElement('div');
-          pinBadge.style.cssText = `
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: #16a34a;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 700;
-            z-index: 10;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-          `;
-          pinBadge.textContent = '📌 置顶';
-          card.appendChild(pinBadge);
-        }
-
-        // — 图片 - 只显示第一张 —
-        if(p.images && p.images.length > 0){
-          const img=document.createElement('img'); 
-          img.src=toAbs(p.images[0]); 
-          card.appendChild(img);
-        }
-
-        // — 文本 —
-                // 只显示标题
-        if(p.title){
-          const title=document.createElement('div');
-          title.className='card-title';
-          title.style.cssText = 'font-weight: 700; font-size: 16px; margin-bottom: 8px; color: #111827; padding: 10px 12px;';
-          title.textContent=p.title;
-          card.appendChild(title);
-        }
-
-        // — 作者徽章 —
-        const {name,avatar}=extractAuthor(p);
-        const badge=document.createElement('div'); 
-        badge.className='author-badge';
-        const img=document.createElement('img');
-        img.alt=name;
-        const FALLBACK='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="100%" height="100%" fill="#e5e7eb"/><circle cx="32" cy="26" r="12" fill="#cbd5e1"/><rect x="12" y="44" width="40" height="14" rx="7" fill="#cbd5e1"/></svg>');
-        img.onerror=()=>{img.src=FALLBACK};
-        img.src=avatar||FALLBACK;
-        const span=document.createElement('span'); 
-        span.className='name'; 
-        span.textContent=name;
-        badge.appendChild(img);
-        badge.appendChild(span);
-        // 避免点徽章时触发整卡跳转
-        badge.addEventListener('click', e=>e.stopPropagation());
-        card.appendChild(badge);
-        // — 作者徽章结束 —
-
-        // === 关键：整卡可点击进入详情 ===
-        const pid = String(p._id || p.id || p.postId || '');
-        if (pid) {
-          const go = ()=> location.href = `post.html?id=${encodeURIComponent(pid)}`;
-          card.style.cursor = 'pointer';
-          card.setAttribute('role','link');
-          card.tabIndex = 0;
-          card.addEventListener('click', go);
-          card.addEventListener('keydown', e=>{ if(e.key==='Enter') go(); });
-        }
-
-        box.appendChild(card);
-      });
+    function renderPosts(){
+      const masonry = document.getElementById('masonry');
+      if(!masonry) return;
+      
+      masonry.innerHTML = allPosts.map(post => `
+        <div class="card" role="link" onclick="viewPost('${post._id}')">
+          <img src="${toAbs(post.imagePath)}" alt="${post.title}" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop'">
+          <div class="card-text">${post.title}</div>
+          <div class="author-badge" onclick="event.stopPropagation(); viewUser('${post.authorId}')">
+            <img src="${toAbs(post.authorAvatar)}" alt="作者" onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=22&h=22&fit=crop&crop=face'">
+            <span class="name">${post.authorName || '匿名用户'}</span>
+          </div>
+        </div>
+      `).join('');
     }
-
-    async function loadPosts(){try{
-      const r=await fetch(`${API_BASE}/api/posts?category=${encodeURIComponent(CATEGORY)}`,{credentials:'include'});
-      allPosts=await r.json(); 
-      
-      // 排序：置顶帖子优先，然后按时间倒序
-      allPosts = (allPosts || []).sort((a, b) => {
-        const aPinned = Boolean(a.pinned);
-        const bPinned = Boolean(b.pinned);
-        if (aPinned !== bPinned) {
-          return bPinned ? 1 : -1; // 置顶的排在前面
-        }
-        // 同置顶状态下，按时间倒序
-        const aTime = new Date(a.createdAt || a.time || 0);
-        const bTime = new Date(b.createdAt || b.time || 0);
-        return bTime - aTime;
-      });
-      
-      renderPosts(allPosts);
-    }catch(e){console.warn(e)}}
 
     function doSearch(){
-      const q=document.getElementById('searchInput').value.trim().toLowerCase();
-      if(!q) return renderPosts(allPosts);
-      renderPosts(allPosts.filter(p=>(p.title&&p.title.toLowerCase().includes(q))||(p.desc&&p.desc.toLowerCase().includes(q))));
+      const query = document.getElementById('searchInput').value.trim();
+      if(!query) {
+        renderPosts();
+        return;
+      }
+      
+      const filtered = allPosts.filter(post => 
+        post.title.toLowerCase().includes(query.toLowerCase()) ||
+        post.content.toLowerCase().includes(query.toLowerCase())
+      );
+      
+      const masonry = document.getElementById('masonry');
+      if(!masonry) return;
+      
+      masonry.innerHTML = filtered.map(post => `
+        <div class="card" role="link" onclick="viewPost('${post._id}')">
+          <img src="${toAbs(post.imagePath)}" alt="${post.title}" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop'">
+          <div class="card-text">${post.title}</div>
+          <div class="author-badge" onclick="event.stopPropagation(); viewUser('${post.authorId}')">
+            <img src="${toAbs(post.authorAvatar)}" alt="作者" onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=22&h=22&fit=crop&crop=face'">
+            <span class="name">${post.authorName || '匿名用户'}</span>
+          </div>
+        </div>
+      `).join('');
     }
 
-    window.onload=async ()=>{
-      await hydrateUser();
+    function viewPost(postId){
+      window.location.href = 'post.html?id=' + postId;
+    }
+
+    function viewUser(userId){
+      window.location.href = 'profile.html?id=' + userId;
+    }
+
+    // 页面加载完成后执行
+    document.addEventListener('DOMContentLoaded', () => {
+      hydrateUser();
       loadPosts();
-      document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
-    };
-
-    (function(){
-      // 自动检测API基础URL
-      const BASE_URL = (() => {
-        if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-          return 'http://127.0.0.1:3001';
-        }
-        return ''; // 生产环境使用相对路径
-      })();
-      const MESSAGES_PATH = '/messages.html';
-
-      let fab = document.getElementById('chatFab');
-      if(!fab){
-        fab = document.createElement('button');
-        fab.id = 'chatFab';
-        fab.setAttribute('aria-label','消息');
-        fab.title = '消息';
-        fab.innerHTML = '💬';
-        const badge = document.createElement('span');
-        badge.className = 'badge';
-        fab.appendChild(badge);
-        fab.addEventListener('click', ()=> location.href = MESSAGES_PATH);
-        document.body.appendChild(fab);
-      }
-      const badgeEl = fab.querySelector('.badge');
-
-      const READ_KEY = (me, peer) => `read:${(me||'').toLowerCase()}::${(peer||'').toLowerCase()}`;
-
-      async function apiMe(){
-        const r = await fetch(BASE_URL + '/api/users/me', { credentials:'include' });
-        if(!r.ok) throw new Error('未登录');
-        return r.json();
-      }
-      async function apiThreads(){
-        const r = await fetch(BASE_URL + '/api/messages/threads', { credentials:'include' });
-        if(!r.ok) throw new Error('threads ' + r.status);
-        return r.json();
-      }
-      async function apiDialog(peer){
-        const r = await fetch(BASE_URL + '/api/messages?peer=' + encodeURIComponent(peer), { credentials:'include' });
-        if(!r.ok) throw new Error('dialog ' + r.status);
-        return r.json();
-      }
-
-      async function computeUnreadTotal(){
-        let me;
-        try { me = await apiMe(); }
-        catch { setBadge(0); return; }
-
-        const meMail = (me.email||'').toLowerCase();
-        let total = 0;
-
-        let threads = [];
-        try { threads = await apiThreads(); }
-        catch { setBadge(0); return; }
-
-        for(const t of threads){
-          const peer = (t.peer||'').trim();
-          try{
-            const msgs = await apiDialog(peer);
-            const lastReadISO = localStorage.getItem(READ_KEY(meMail, peer.toLowerCase())) || '1970-01-01T00:00:00.000Z';
-            const lastRead = new Date(lastReadISO);
-            const unread = msgs.filter(m =>
-              String(m.to||'').toLowerCase() === meMail &&
-              new Date(m.createdAt) > lastRead
-            ).length;
-            total += unread;
-          }catch{}
-        }
-        setBadge(total);
-      }
-
-      function setBadge(n){
-        if(!badgeEl) return;
-        if(n > 0){
-          badgeEl.style.display = 'flex';
-          badgeEl.textContent = n > 99 ? '99+' : String(n);
-        }else{
-          badgeEl.style.display = 'none';
-        }
-      }
-
-      computeUnreadTotal();
-      let timer = setInterval(computeUnreadTotal, 15000);
-      document.addEventListener('visibilitychange', ()=>{
-        if(document.visibilityState === 'visible') computeUnreadTotal();
+      
+      // 搜索框回车事件
+      document.getElementById('searchInput').addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') doSearch();
       });
-      window.addEventListener('beforeunload', ()=> clearInterval(timer));
-    })();
-    /* 生活小贴士页：按作者地区过滤（仅显隐，不改结构/样式）
-   关键点：
-   1) 包装 renderPosts，在每次渲染后记录 __renderedPosts__ 并立即过滤
-   2) 默认“全部”→ 显示所有
-   3) 具体地区→ 以 authorEmail 查询 /api/users/by-email 获取作者 area 来判断
-   4) 没邮箱或查不到地区 → 默认显示（更友好）
-*/
-(function(){
-  // 自动检测API基础URL
-  const API_BASE = (() => {
-    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-      return 'http://127.0.0.1:3001';
-    }
-    return ''; // 生产环境使用相对路径
-  })();
-  const REGION_KEY = 'region';
-  const DEFAULT_REGION = '全部';
-  const ITEM_SELECTOR = '.card';            // 你的卡片类名
-  const LIST = document.getElementById('masonry');
-
-  const norm = s => String(s||'').replace(/\s+/g,'').toLowerCase();
-  const getRegion = () => localStorage.getItem(REGION_KEY) || DEFAULT_REGION;
-
-  // 缓存：email -> area
-  const areaMap = new Map();
-  async function fetchAreaByEmail(email){
-    const key = (email||'').trim().toLowerCase();
-    if(!key) return '';
-    if(areaMap.has(key)) return areaMap.get(key);
-    try{
-      const r = await fetch(`${API_BASE}/api/users/by-email?email=${encodeURIComponent(key)}`, { credentials:'include' });
-      if(!r.ok){ areaMap.set(key, ''); return ''; }
-      const u = await r.json();
-      const area = (u.area || '').trim();
-      areaMap.set(key, area);
-      return area;
-    }catch{
-      areaMap.set(key, ''); return '';
-    }
-  }
-
-  async function preloadAreas(posts){
-    const emails = [...new Set((posts||[]).map(p => (p.authorEmail||'').trim().toLowerCase()).filter(Boolean))];
-    await Promise.all(emails.map(fetchAreaByEmail));
-  }
-
-  async function applyRegionFilter(posts){
-    const region = getRegion();
-    const want = norm(region);
-    const cards = Array.from(document.querySelectorAll(ITEM_SELECTOR));
-    // 用“实际渲染的帖子数组”对齐 DOM，避免索引错位
-    const arr = Array.isArray(posts) ? posts : [];
-    const n = Math.min(cards.length, arr.length);
-    if (n === 0) return;
-
-    // 预取地区
-    await preloadAreas(arr);
-
-    let shown = 0;
-    for (let i=0; i<n; i++){
-      const card = cards[i];
-      const post = arr[i] || {};
-      const email = (post.authorEmail || '').trim().toLowerCase();
-
-      // “全部”→全部显示
-      if (want === norm(DEFAULT_REGION)) {
-        card.style.display = '';
-        card.setAttribute('aria-hidden','false');
-        shown++; continue;
-      }
-
-      // 没邮箱或查不到地区 → 默认显示
-      const area = (email && areaMap.get(email)) || '';
-      if (!email || !area) {
-        card.style.display = '';
-        card.setAttribute('aria-hidden','false');
-        shown++; continue;
-      }
-
-      const hit = norm(area).includes(want);
-      card.style.display = hit ? '' : 'none';
-      card.setAttribute('aria-hidden', hit ? 'false' : 'true');
-      if (hit) shown++;
-    }
-
-    const counter = document.querySelector('#resultCount');
-    if (counter) counter.textContent = String(shown);
-  }
-
-  // —— 包装 renderPosts：渲染后立刻过滤 —— //
-  const _origRenderPosts = window.renderPosts;
-  if (typeof _origRenderPosts === 'function'){
-    window.renderPosts = function(posts){
-      _origRenderPosts(posts);
-      // 记录“实际渲染的帖子”，无论是全量还是搜索后的子集
-      window.__renderedPosts__ = posts || [];
-      // 立刻按地区过滤一次
-      applyRegionFilter(window.__renderedPosts__);
-    };
-  }
-
-  // 初次进入：如果列表已渲染，跑一次；否则等 MutationObserver 触发
-  const firstRun = () => applyRegionFilter(window.__renderedPosts__ || []);
-  if (window.MutationObserver && LIST){
-    const mo = new MutationObserver(()=> firstRun());
-    mo.observe(LIST, { childList:true, subtree:false });
-  }
-  firstRun();
-
-  // 监听“主页切换地区”事件
-  document.addEventListener('regionchange', ()=>{
-    applyRegionFilter(window.__renderedPosts__ || []);
-  });
-  })();
+    });
   </script>
 
   <!-- 移动端底部导航 -->
