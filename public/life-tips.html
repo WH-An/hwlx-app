@@ -61,28 +61,12 @@
     @media (max-width:640px){  .masonry{ column-count:1; } }
 
     
-    /* 左下角导航按键 */
-    .top-nav-button{display:none;position:fixed;bottom:calc(var(--mobile-nav-height) + 20px);left:20px;z-index:1001;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;box-shadow:var(--shadow);width:48px;height:48px;display:flex;align-items:center;justify-content:center}
+    
     .top-nav-button .nav-icon{font-size:20px;color:var(--text)}
     .top-nav-button:hover{transform:translateY(-1px);box-shadow:0 14px 28px rgba(0,0,0,.32)}
     .top-nav-button:active{transform:translateY(0);box-shadow:0 8px 18px rgba(0,0,0,.26)}
 
-    /* 顶部导航菜单 */
-    .top-nav-menu{position:fixed;top:0;left:-320px;width:320px;height:100vh;background:var(--panel);border-right:1px solid var(--border);z-index:1000;transition:.3s ease;overflow-y:auto}
-    .top-nav-menu.active{left:0}
-    .top-nav-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s ease}
-    .top-nav-overlay.active{opacity:1;visibility:visible}
     
-    .nav-header{display:flex;justify-content:space-between;align-items:center;padding:20px;border-bottom:1px solid var(--border)}
-    .nav-title{font-size:18px;font-weight:700;color:var(--text)}
-    .close-btn{background:none;border:none;font-size:24px;color:var(--text);cursor:pointer;padding:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:.2s}
-    .close-btn:hover{background:var(--border)}
-    
-    .top-nav-menu .nav-list{list-style:none;margin:0;padding:20px}
-    .top-nav-menu .nav-list li{margin-bottom:8px}
-    .top-nav-menu .nav-list a{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);padding:12px;border-radius:8px;transition:.2s}
-    .top-nav-menu .nav-list a:hover{background:var(--border)}
-    .top-nav-menu .nav-list .nav-icon{font-size:18px;width:24px;text-align:center}
 
     /* 移动端响应式优化 */
     @media (max-width: 960px) {
@@ -191,33 +175,15 @@
   </style>
 </head>
 <body>
+  <!-- 黑色消息按钮 -->
+  <div id="chatFab">
+    <span>💬</span>
+    <div class="badge">0</div>
+  </div>
   
-  <!-- 左上角导航按键 -->
-  <div class="top-nav-button" id="topNavButton">
-    <span class="nav-icon">💬</span>
-  </div>
+  
 
-  <!-- 顶部导航菜单 -->
-  <div class="top-nav-menu" id="topNavMenu">
-    <div class="nav-header">
-      <span class="nav-title">导航菜单</span>
-      <button class="close-btn" id="closeNavBtn">×</button>
-    </div>
-    <ul class="nav-list">
-      <li><a href="main page.html"><span class="nav-icon">🏠</span><span>主页</span></a></li>
-      <li><a href="life-tips.html"><span class="nav-icon">💡</span><span>生活小贴士</span></a></li>
-      <li><a href="study-guide.html"><span class="nav-icon">📚</span><span>学习指导</span></a></li>
-      <li><a href="profile.html"><span class="nav-icon">👤</span><span>个人主页</span></a></li>
-      <li><a href="enrollment-steps.html"><span class="nav-icon">📝</span><span>入学步骤</span></a></li>
-      <li><a href="share.html"><span class="nav-icon">🔗</span><span>分享</span></a></li>
-      <li><a href="fun.html"><span class="nav-icon">🎉</span><span>娱乐</span></a></li>
-      <li><a href="hospital.html"><span class="nav-icon">🏥</span><span>医院</span></a></li>
-      <li><a href="messages.html"><span class="nav-icon">💬</span><span>消息</span></a></li>
-    </ul>
-  </div>
-
-  <!-- 顶部导航遮罩 -->
-  <div class="top-nav-overlay" id="topNavOverlay"></div>
+  
   <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay"></div>
 
   <div class="container">
