@@ -548,5 +548,78 @@
 })();
 
   </script>
+
+  <!-- 未读消息功能 -->
+  <script>
+    // 自动检测API基础URL
+    const API_BASE = (() => {
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        return 'http://127.0.0.1:3001';
+      }
+      return ''; // 生产环境使用相对路径
+    })();
+
+    // 获取未读消息数量
+    async function getUnreadCount() {
+      try {
+        const res = await fetch(`${API_BASE}/api/messages/unread-count`, { 
+          credentials: 'include',
+          cache: 'no-cache'
+        });
+        
+        if (res.ok) {
+          const data = await res.json();
+          return data.count || 0;
+        }
+      } catch (e) {
+        console.warn('获取未读消息数量失败:', e);
+      }
+      
+      // 回退到本地存储的未读数量
+      try {
+        const cached = localStorage.getItem('unreadCount');
+        return cached ? parseInt(cached) : 0;
+      } catch (e) {
+        return 0;
+      }
+    }
+
+    // 更新未读消息徽章
+    async function updateUnreadBadge() {
+      const chatFab = document.getElementById('chatFab');
+      if (!chatFab) return;
+      
+      const badge = chatFab.querySelector('.badge');
+      if (!badge) return;
+      
+      const unreadCount = await getUnreadCount();
+      
+      if (unreadCount > 0) {
+        badge.textContent = unreadCount > 99 ? '99+' : unreadCount.toString();
+        badge.style.display = 'flex';
+      } else {
+        badge.style.display = 'none';
+      }
+      
+      // 缓存未读数量
+      try {
+        localStorage.setItem('unreadCount', unreadCount.toString());
+      } catch (e) {
+        console.warn('缓存未读数量失败:', e);
+      }
+    }
+
+    // 页面加载完成后更新徽章
+    document.addEventListener('DOMContentLoaded', () => {
+      updateUnreadBadge();
+      
+      // 每30秒更新一次未读数量
+      setInterval(updateUnreadBadge, 30000);
+    });
+
+    // 页面获得焦点时更新徽章
+    document.addEventListener('focus', updateUnreadBadge);
+    window.addEventListener('focus', updateUnreadBadge);
+  </script>
 </body>
 </html>
