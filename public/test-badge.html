@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>徽章测试</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+    }
+    
+    .test-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .test-button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    
+    .test-button:hover {
+      background: #0056b3;
+    }
+    
+    #chatFab{ 
+      position:fixed; 
+      left:16px; 
+      bottom:20px; 
+      width:48px; 
+      height:48px; 
+      border-radius:9999px; 
+      display:flex; 
+      align-items:center; 
+      justify-content:center; 
+      background:#0f172a; 
+      color:#fff; 
+      border:1px solid rgba(255,255,255,.15); 
+      box-shadow:0 10px 24px rgba(0,0,0,.28); 
+      cursor:pointer; 
+      user-select:none; 
+      z-index:9999; 
+      transition: transform .15s, box-shadow .15s, opacity .2s 
+    }
+    
+    #chatFab:hover{ 
+      transform: translateY(-1px); 
+      box-shadow: 0 14px 28px rgba(0,0,0,.32) 
+    }
+    
+    #chatFab:active{ 
+      transform: translateY(0); 
+      box-shadow: 0 8px 18px rgba(0,0,0,.26) 
+    }
+    
+    #chatFab .badge{ 
+      position:absolute; 
+      right:-2px; 
+      top:-2px; 
+      min-width:18px; 
+      height:18px; 
+      padding:0 5px; 
+      display:none; 
+      align-items:center; 
+      justify-content:center; 
+      background:#ef4444; 
+      color:#fff; 
+      border-radius:9999px; 
+      font-size:11px; 
+      line-height:18px; 
+      box-shadow:0 2px 6px rgba(0,0,0,.18);
+      font-weight:bold;
+      z-index:10000;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>徽章测试页面</h1>
+    <p>这个页面用于测试黑色消息按钮的徽章显示功能。</p>
+    
+    <h3>测试功能：</h3>
+    <button class="test-button" onclick="setBadge(0)">隐藏徽章</button>
+    <button class="test-button" onclick="setBadge(1)">显示 1</button>
+    <button class="test-button" onclick="setBadge(5)">显示 5</button>
+    <button class="test-button" onclick="setBadge(99)">显示 99</button>
+    <button class="test-button" onclick="setBadge(100)">显示 99+</button>
+    <button class="test-button" onclick="setBadge(999)">显示 99+</button>
+    
+    <h3>说明：</h3>
+    <ul>
+      <li>徽章应该显示在黑色消息按钮的右上角</li>
+      <li>徽章应该是红色背景，白色文字</li>
+      <li>数字超过99时应该显示为"99+"</li>
+      <li>徽章应该居中显示数字</li>
+    </ul>
+  </div>
+
+  <!-- 黑色消息按钮 -->
+  <div id="chatFab" onclick="alert('点击了消息按钮')">
+    <span>💬</span>
+    <div class="badge">0</div>
+  </div>
+
+  <script>
+    function setBadge(count) {
+      const badge = document.querySelector('#chatFab .badge');
+      if (!badge) return;
+      
+      if (count > 0) {
+        badge.textContent = count > 99 ? '99+' : count.toString();
+        badge.style.display = 'flex';
+        console.log(`徽章显示: ${count}`);
+      } else {
+        badge.style.display = 'none';
+        console.log('徽章隐藏');
+      }
+    }
+    
+    // 页面加载完成后显示徽章
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('页面加载完成，徽章功能已就绪');
+    });
+  </script>
+</body>
+</html>
