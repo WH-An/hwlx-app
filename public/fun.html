@@ -127,6 +127,21 @@
       .panel-title {
         font-size: 18px;
       }
+    }
+
+    /* 移动端底部导航 */
+    .mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--panel);border-top:1px solid var(--border);z-index:1000;padding:8px 0}
+    .mobile-nav-list{display:flex;justify-content:space-around;list-style:none;margin:0;padding:0}
+    .mobile-nav-item{flex:1;text-align:center}
+    .mobile-nav-link{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--text);padding:8px 4px;font-size:12px;transition:.2s color}
+    .mobile-nav-link:hover,.mobile-nav-link.active{color:var(--accent)}
+    .mobile-nav-icon{font-size:20px;margin-bottom:2px}
+
+    @media (max-width: 960px) {
+      .mobile-nav {
+        display: block;
+      }
+    }
       
       .card {
         border-radius: 12px;
@@ -230,14 +245,7 @@
       <div class="masonry" id="masonry"></div>
     </div>
 
-      <div class="panel-header">
-        <h2 class="panel-title">娱乐</h2>
-        <div class="spacer"></div>
-        <a class="btn" href="publish.html" title="去发布">＋ 去发布</a>
-      </div>
 
-      <div class="masonry" id="masonry"></div>
-    </div>
   </div>
 
   <script>
@@ -402,60 +410,6 @@
       });
     });
   </script>
-
-  <!-- 移动端底部导航 -->
-  <nav class="mobile-nav">
-    <ul class="mobile-nav-list">
-      <li class="mobile-nav-item">
-        <a href="main page.html" class="mobile-nav-link">
-          <span class="mobile-nav-icon">🏠</span>
-          <span>主页</span>
-        </a>
-      </li>
-      <li class="mobile-nav-item">
-        <a href="life-tips.html" class="mobile-nav-link">
-          <span class="mobile-nav-icon">💡</span>
-          <span>生活</span>
-        </a>
-      </li>
-      <li class="mobile-nav-item">
-        <a href="study-guide.html" class="mobile-nav-link">
-          <span class="mobile-nav-icon">📚</span>
-          <span>学习</span>
-        </a>
-      </li>
-      <li class="mobile-nav-item">
-        <a href="profile.html" class="mobile-nav-link">
-          <span class="mobile-nav-icon">👤</span>
-          <span>个人</span>
-        </a>
-      </li>
-      <li class="mobile-nav-item">
-        <a href="enrollment-steps.html" class="mobile-nav-link">
-          <span class="mobile-nav-icon">📝</span>
-          <span>入学</span>
-        </a>
-      </li>
-      <li class="mobile-nav-item">
-        <a href="share.html" class="mobile-nav-link">
-          <span class="mobile-nav-icon">🔗</span>
-          <span>分享</span>
-        </a>
-      </li>
-      <li class="mobile-nav-item">
-        <a href="fun.html" class="mobile-nav-link active">
-          <span class="mobile-nav-icon">🎉</span>
-          <span>娱乐</span>
-        </a>
-      </li>
-      <li class="mobile-nav-item">
-        <a href="hospital.html" class="mobile-nav-link">
-          <span class="mobile-nav-icon">🏥</span>
-          <span>医院</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
 
   <!-- 功能JavaScript -->
   <script>
@@ -645,6 +599,60 @@
       });
     });
   </script>
+
+  <!-- 移动端底部导航 -->
+  <nav class="mobile-nav">
+    <ul class="mobile-nav-list">
+      <li class="mobile-nav-item">
+        <a href="main page.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">🏠</span>
+          <span>主页</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="life-tips.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">💡</span>
+          <span>生活</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="study-guide.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">📚</span>
+          <span>学习</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="profile.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">👤</span>
+          <span>个人</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="enrollment-steps.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">📝</span>
+          <span>入学</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="share.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">🔗</span>
+          <span>分享</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="fun.html" class="mobile-nav-link active">
+          <span class="mobile-nav-icon">🎉</span>
+          <span>娱乐</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="hospital.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">🏥</span>
+          <span>医院</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 
   <!-- 移动端交互JavaScript -->
   <script>
