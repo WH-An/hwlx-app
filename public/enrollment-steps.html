@@ -171,7 +171,7 @@
   <div class="container">
     <div class="sidebar">
       <a class="account-info" href="profile.html">
-        <img src="" alt="头像" class="avatar"><span class="username">我的账号</span>
+        <img src="https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp" alt="头像" class="avatar"><span class="username">我的账号</span>
       </a>
       <ul class="nav-list">
         <li><a href="main page.html"><span class="nav-icon">🏠</span><span>主页</span></a></li>
@@ -300,6 +300,101 @@
     }
 
     async function hydrateUser(){
+      try{
+        const avatarEl = document.querySelector('.avatar');
+        const nameEl   = document.querySelector('.username');
+        const FALLBACK = 'https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp';
+        
+        // 设置默认头像
+        if (avatarEl) {
+          avatarEl.src = FALLBACK;
+          avatarEl.style.opacity = '0.7';
+          avatarEl.style.transition = 'opacity 0.3s ease';
+        }
+        
+        // 添加加载状态
+        if (avatarEl) {
+          avatarEl.style.opacity = '0.7';
+          avatarEl.style.transition = 'opacity 0.3s ease';
+        }
+        
+        // 优先从服务器获取最新用户信息
+        try {
+          const response = await fetch(API_BASE + '/api/users/me', { 
+            credentials: 'include' 
+          });
+          
+          if (response.ok) {
+            const user = await response.json();
+            const displayName = user.nickname||user.username||user.displayName||user.name||user.email||'我的账号';
+            let avatar = user.avatarPath||user.avatarUrl||user.avatar||'';
+            if (avatar && !/^https?:\/\//i.test(avatar)) avatar = avatar.startsWith('/') ? (API_BASE+avatar) : (API_BASE+'/'+avatar);
+            
+            // 平滑更新用户信息
+            nameEl.textContent = displayName; nameEl.title = displayName;
+            
+            // 预加载头像，避免闪烁
+            const img = new Image();
+            img.onload = () => {
+              if (avatarEl) {
+                avatarEl.src = avatar;
+                avatarEl.style.opacity = '1';
+              }
+            };
+            img.onerror = () => {
+              if (avatarEl) {
+                avatarEl.src = FALLBACK;
+                avatarEl.style.opacity = '1';
+              }
+            };
+            img.src = avatar;
+          } else {
+            // 服务器获取失败，使用本地存储
+            const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+            if (localUser.username || localUser.nickname) {
+              nameEl.textContent = localUser.nickname || localUser.username;
+              if (localUser.avatarPath) {
+                avatarEl.src = toAbs(localUser.avatarPath);
+              } else {
+                avatarEl.src = FALLBACK;
+              }
+            } else {
+              // 没有本地用户信息，使用默认头像
+              if (avatarEl) {
+                avatarEl.src = FALLBACK;
+                avatarEl.style.opacity = '1';
+              }
+            }
+          }
+        } catch (error) {
+          console.warn('获取用户信息失败:', error);
+          // 使用本地存储作为后备
+          const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+          if (localUser.username || localUser.nickname) {
+            nameEl.textContent = localUser.nickname || localUser.username;
+            if (localUser.avatarPath) {
+              avatarEl.src = toAbs(localUser.avatarPath);
+            } else {
+              avatarEl.src = FALLBACK;
+            }
+          } else {
+            // 没有本地用户信息，使用默认头像
+            if (avatarEl) {
+              avatarEl.src = FALLBACK;
+              avatarEl.style.opacity = '1';
+            }
+          }
+        }
+      } catch (error) {
+        console.error('用户信息处理失败:', error);
+        // 确保显示默认头像
+        const avatarEl = document.querySelector('.avatar');
+        if (avatarEl) {
+          avatarEl.src = FALLBACK;
+          avatarEl.style.opacity = '1';
+        }
+      }
+    }
       try{
         const avatarEl = document.querySelector('.avatar');
         const nameEl   = document.querySelector('.username');
