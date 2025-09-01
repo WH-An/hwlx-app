@@ -1335,6 +1335,7 @@
   }
 
   function pickMyFavIds(meKey){
+    console.log('开始查找收藏的帖子，用户标识:', meKey);
     const ids = [];
     for(let i=0;i<localStorage.length;i++){
       const k = localStorage.key(i);
@@ -1344,20 +1345,41 @@
         if(postId) ids.push(postId);
       }
     }
+    console.log('在localStorage中找到的收藏键:', ids);
     // 去重
-    return Array.from(new Set(ids));
+    const uniqueIds = Array.from(new Set(ids));
+    console.log('去重后的收藏ID:', uniqueIds);
+    return uniqueIds;
   }
 
   async function loadMyFavorites(meUser){
-    const meKey = meKeyFromUser(meUser);
-    const favIds = pickMyFavIds(meKey);
-    if(favIds.length === 0){ renderPosts([]); return; }
+    console.log('开始加载我的收藏，用户:', meUser);
+    try {
+      const meKey = meKeyFromUser(meUser);
+      console.log('用户标识:', meKey);
+      const favIds = pickMyFavIds(meKey);
+      console.log('收藏的帖子ID:', favIds);
+      
+      if(favIds.length === 0){ 
+        console.log('没有收藏的帖子，显示空列表');
+        renderPosts([]); 
+        return; 
+      }
 
-    // 简单办法：拉一遍全量帖子，然后按 id 过滤（方便 & 接口最少）
-    const all = await loadAllPosts();
-    const set = new Set(favIds.map(String));
-    const list = all.filter(p => set.has(String(p._id || p.id || p.postId)));
-    renderPosts(list);
+      // 简单办法：拉一遍全量帖子，然后按 id 过滤（方便 & 接口最少）
+      console.log('开始加载所有帖子...');
+      const all = await loadAllPosts();
+      console.log('获取到所有帖子数量:', all.length);
+      
+      const set = new Set(favIds.map(String));
+      const list = all.filter(p => set.has(String(p._id || p.id || p.postId)));
+      console.log('过滤后的收藏帖子数量:', list.length);
+      
+      renderPosts(list);
+    } catch (error) {
+      console.error('加载我的收藏时出错:', error);
+      renderPosts([]);
+    }
   }
 
   // ====== 页面初始化 & tab 逻辑 ======
