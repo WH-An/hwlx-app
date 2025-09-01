@@ -102,6 +102,10 @@
       border:1px solid var(--border);background:#fff;border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;
     }
     .tab.active{background:#0f172a;color:#fff;border-color:#0f172a}
+    .tab{
+      border:1px solid var(--border);background:#fff;border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;
+    }
+    .tab.active{background:#0f172a;color:#fff;border-color:#0f172a}
 
     /* Masonry 布局与卡片 */
     .posts-masonry{column-count:3; column-gap:14px}
@@ -409,94 +413,56 @@
     </div>
 
     <div class="panel">
-      <div class="profile-header">
-        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face" alt="用户头像" class="profile-avatar">
-        <div class="profile-name">张同学</div>
-        <div class="profile-email">zhang.student@university.edu</div>
-        
-        <div class="profile-stats">
-          <div class="stat-item">
-            <span class="stat-number">12</span>
-            <span class="stat-label">发布帖子</span>
+      <!-- 资料卡 -->
+      <div class="card">
+        <img id="profileAvatar" class="big-avatar" src="" alt="头像">
+        <div>
+          <div class="headline">
+            <span id="profileName" class="name">——</span>
+            <span id="profileEmail" class="email">——</span>
           </div>
-          <div class="stat-item">
-            <span class="stat-number">156</span>
-            <span class="stat-label">获得点赞</span>
+
+          <div class="info-grid" style="margin-top:8px">
+            <div class="info-item">
+              <span class="icon">📍</span>
+              <div>
+                <div class="label">区域</div>
+                <div id="profileArea" class="value">未填写</div>
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="icon">🆔</span>
+              <div>
+                <div class="label">唯一 ID</div>
+                <div class="id-row">
+                  <span id="profileId" class="value">—</span>
+                  <button id="copyIdBtn" class="mini-btn" title="复制ID">复制</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="stat-item">
-            <span class="stat-number">89</span>
-            <span class="stat-label">收藏内容</span>
+
+          <div class="row" style="margin-top:12px">
+            <label class="file-label btn" for="avatar-upload">更换头像</label>
+            <input id="avatar-upload" type="file" accept="image/*" style="display:none">
+            <span id="upload-hint" class="muted">支持 JPG/PNG</span>
           </div>
+
+          <div id="profile-tip" class="tip"></div>
         </div>
       </div>
-      
-      <div class="profile-section">
-        <div class="section-title">📋 基本信息</div>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="icon">🎓</div>
-            <div class="label">就读院校</div>
-            <div class="value">墨尔本大学</div>
-          </div>
-          <div class="info-item">
-            <div class="icon">📚</div>
-            <div class="label">专业方向</div>
-            <div class="value">计算机科学</div>
-          </div>
-          <div class="info-item">
-            <div class="icon">🌍</div>
-            <div class="label">留学国家</div>
-            <div class="value">澳大利亚</div>
-          </div>
-          <div class="info-item">
-            <div class="icon">📅</div>
-            <div class="label">入学时间</div>
-            <div class="value">2024年2月</div>
-          </div>
+
+      <!-- 顶部切换行：我的帖子 / 我的收藏 -->
+      <div class="section-bar">
+        <h3 id="postsTitle" class="section-title">我的帖子</h3>
+        <div class="tabs">
+          <button id="tabMyPosts" class="tab active">我的帖子</button>
+          <button id="tabMyFavs"  class="tab">我的收藏</button>
         </div>
       </div>
-      
-      <div class="profile-section">
-        <div class="section-title">💬 联系方式</div>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="icon">📧</div>
-            <div class="label">邮箱地址</div>
-            <div class="value">zhang.student@university.edu</div>
-          </div>
-          <div class="info-item">
-            <div class="icon">📱</div>
-            <div class="label">手机号码</div>
-            <div class="value">+61 4XX XXX XXX</div>
-          </div>
-          <div class="info-item">
-            <div class="icon">🏠</div>
-            <div class="label">居住地址</div>
-            <div class="value">墨尔本市中心</div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="profile-section">
-        <div class="section-title">🎯 个人标签</div>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="icon">🏃</div>
-            <div class="label">兴趣爱好</div>
-            <div class="value">跑步、摄影、编程</div>
-          </div>
-          <div class="info-item">
-            <div class="icon">🌏</div>
-            <div class="label">语言能力</div>
-            <div class="value">中文、英语、基础日语</div>
-          </div>
-          <div class="info-item">
-            <div class="icon">🎨</div>
-            <div class="label">技能特长</div>
-            <div class="value">Web开发、数据分析</div>
-          </div>
-        </div>
-      </div>
+
+      <!-- 列表容器（共用） -->
+      <div id="postList" class="posts-masonry"></div>
     </div>
         <button id="logoutBtn" class="btn primary">退出登录</button>
       </div>
