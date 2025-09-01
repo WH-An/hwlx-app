@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>海外留学 · 主页面</title>
   
+  <!-- 移动端优化CSS -->
+  <link rel="stylesheet" href="mobile-optimization.css">
+  
   <!-- Open Graph 元标签 - 用于社交媒体分享 -->
   <meta property="og:title" content="海外留学 · 主页面" />
   <meta property="og:description" content="海外留学生活指南，包含学习指导、生活小贴士、入学步骤等实用信息" />
@@ -34,6 +37,7 @@
       --border:#e5e7eb;
       --shadow:0 10px 30px rgba(0,0,0,.18);
       --radius:18px;
+      --mobile-nav-height: 70px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -66,21 +70,59 @@
     .text::before{content:"";position:absolute;inset:0;border-radius:inherit;background:url('https://raw.githubusercontent.com/WH-An/hwlx-app/main/%E8%93%9D%E9%BB%84%E5%B0%8F%E5%B8%86%E8%88%B9.png') center/cover no-repeat;opacity:.18}
     .text>span{position:relative;z-index:1;max-width:70ch}
 
+    /* 移动端底部导航 */
+    .mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--panel);border-top:1px solid var(--border);z-index:1000;padding:8px 0}
+    .mobile-nav-list{display:flex;justify-content:space-around;list-style:none;margin:0;padding:0}
+    .mobile-nav-item{flex:1;text-align:center}
+    .mobile-nav-link{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--text);padding:8px 4px;font-size:12px;transition:.2s color}
+    .mobile-nav-link:hover,.mobile-nav-link.active{color:var(--accent)}
+    .mobile-nav-icon{font-size:20px;margin-bottom:2px}
+
+    /* 汉堡菜单按钮 */
+    .hamburger{display:none;position:fixed;top:20px;left:20px;z-index:1001;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;box-shadow:var(--shadow)}
+    .hamburger span{display:block;width:20px;height:2px;background:var(--text);margin:4px 0;transition:.3s}
+    .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+    .hamburger.active span:nth-child(2){opacity:0}
+    .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(7px,-6px)}
+
+    /* 移动端侧边栏 */
+    .mobile-sidebar{position:fixed;top:0;left:-280px;width:280px;height:100vh;background:var(--panel);border-right:1px solid var(--border);z-index:1000;transition:.3s ease;overflow-y:auto;padding:20px 16px}
+    .mobile-sidebar.active{left:0}
+    .mobile-sidebar-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;visibility:hidden;transition:.3s ease}
+    .mobile-sidebar-overlay.active{opacity:1;visibility:visible}
+
+    /* 响应式设计 */
     @media (max-width: 960px){
-      .container{grid-template-columns: 1fr;grid-template-rows:auto auto 1fr}
-      .sidebar{grid-row:auto}
-      .Welcome{font-size:32px;padding:18px}
-      .dropdown{position:static;justify-self:end}
+      .container{grid-template-columns: 1fr;grid-template-rows:auto auto 1fr;padding:16px;padding-bottom:calc(var(--mobile-nav-height) + 20px)}
+      .sidebar{display:none}
+      .Welcome{font-size:32px;padding:18px;min-height:120px}
+      .dropdown{position:static;justify-self:end;margin-bottom:16px}
+      .text{padding:20px;font-size:18px;min-height:120px}
+      .text>span{max-width:100%}
+      
+      /* 显示移动端导航 */
+      .mobile-nav{display:block}
+      .hamburger{display:block}
+    }
+
+    @media (max-width: 480px){
+      .container{padding:12px;padding-bottom:calc(var(--mobile-nav-height) + 16px)}
+      .Welcome{font-size:28px;padding:16px;min-height:100px}
+      .text{padding:16px;font-size:16px;min-height:100px}
+      .dropdown-btn{padding:6px 12px;font-size:14px}
+      .mobile-nav{height:var(--mobile-nav-height)}
+      .mobile-nav-link{font-size:11px}
+      .mobile-nav-icon{font-size:18px}
     }
 
     #chatFab{
       position: fixed;
-      left: 16px; bottom: 16px;
+      left: 16px; bottom: calc(var(--mobile-nav-height) + 16px);
       width: 48px; height: 48px; border-radius: 9999px;
       display: flex; align-items: center; justify-content: center;
       background: #0f172a; color: #fff; border: 1px solid rgba(255,255,255,.15);
       box-shadow: 0 10px 24px rgba(0,0,0,.28);
-      cursor: pointer; user-select: none; z-index: 9999;
+      cursor: pointer; user-select: none; z-index: 999;
       transition: transform .15s ease, box-shadow .15s ease, opacity .2s ease;
     }
     #chatFab:hover{ transform: translateY(-1px); box-shadow: 0 14px 28px rgba(0,0,0,.32); }
@@ -93,11 +135,38 @@
       font-size: 11px; line-height: 18px; box-shadow: 0 2px 6px rgba(0,0,0,.18);
     }
     @media (max-width: 480px){
-      #chatFab{ left: 12px; bottom: 12px; width: 44px; height: 44px; }
+      #chatFab{ left: 12px; bottom: calc(var(--mobile-nav-height) + 12px); width: 44px; height: 44px; }
     }
   </style>
 </head>
 <body>
+  <!-- 汉堡菜单按钮 -->
+  <div class="hamburger" id="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- 移动端侧边栏 -->
+  <div class="mobile-sidebar" id="mobileSidebar">
+    <a class="account-info" href="profile.html">
+      <img src="https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp" alt="头像" class="avatar">
+      <span class="username">我的账号</span>
+    </a>
+    <ul class="nav-list">
+      <li><a href="main page.html"><span class="nav-icon">🏠</span><span class="nav-text">主页</span></a></li>
+      <li><a href="life-tips.html"><span class="nav-icon">💡</span><span class="nav-text">生活小贴士</span></a></li>
+      <li><a href="study-guide.html"><span class="nav-icon">📚</span><span class="nav-text">学习指导</span></a></li>
+      <li><a href="enrollment-steps.html"><span class="nav-icon">📝</span><span class="nav-text">入学步骤</span></a></li>
+      <li><a href="share.html"><span class="nav-icon">🔗</span><span class="nav-text">分享</span></a></li>
+      <li><a href="fun.html"><span class="nav-icon">🎉</span><span class="nav-text">娱乐</span></a></li>
+      <li><a href="hospital.html"><span class="nav-icon">🏥</span><span class="nav-text">医院</span></a></li>
+    </ul>
+  </div>
+
+  <!-- 移动端侧边栏遮罩 -->
+  <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay"></div>
+
   <div class="container">
     <div class="sidebar">
       <a class="account-info" href="profile.html">
@@ -134,7 +203,131 @@
     </div>
   </div>
 
+  <!-- 移动端底部导航 -->
+  <nav class="mobile-nav">
+    <ul class="mobile-nav-list">
+      <li class="mobile-nav-item">
+        <a href="main page.html" class="mobile-nav-link active">
+          <span class="mobile-nav-icon">🏠</span>
+          <span>主页</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="life-tips.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">💡</span>
+          <span>生活</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="study-guide.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">📚</span>
+          <span>学习</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="enrollment-steps.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">📝</span>
+          <span>入学</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="share.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">🔗</span>
+          <span>分享</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- 移动端优化JavaScript -->
+  <script src="mobile-utils.js"></script>
+
   <script>
+/* 移动端交互功能 */
+(function(){
+  const hamburger = document.getElementById('hamburger');
+  const mobileSidebar = document.getElementById('mobileSidebar');
+  const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
+  const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+  // 汉堡菜单点击事件
+  if(hamburger && mobileSidebar && mobileSidebarOverlay) {
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      mobileSidebar.classList.toggle('active');
+      mobileSidebarOverlay.classList.toggle('active');
+      document.body.style.overflow = mobileSidebar.classList.contains('active') ? 'hidden' : '';
+    });
+
+    // 点击遮罩关闭侧边栏
+    mobileSidebarOverlay.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      mobileSidebar.classList.remove('active');
+      mobileSidebarOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+
+    // ESC键关闭侧边栏
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape' && mobileSidebar.classList.contains('active')) {
+        hamburger.classList.remove('active');
+        mobileSidebar.classList.remove('active');
+        mobileSidebarOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  }
+
+  // 移动端导航链接点击事件
+  mobileNavLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      // 移除所有active类
+      mobileNavLinks.forEach(l => l.classList.remove('active'));
+      // 添加active类到当前点击的链接
+      link.classList.add('active');
+    });
+  });
+
+  // 触摸手势支持
+  let startX = 0;
+  let startY = 0;
+  let currentX = 0;
+  let currentY = 0;
+
+  document.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  });
+
+  document.addEventListener('touchmove', (e) => {
+    currentX = e.touches[0].clientX;
+    currentY = e.touches[0].clientY;
+  });
+
+  document.addEventListener('touchend', () => {
+    const deltaX = currentX - startX;
+    const deltaY = currentY - startY;
+    const minSwipeDistance = 50;
+
+    // 从左向右滑动打开侧边栏
+    if(deltaX > minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && startX < 50) {
+      if(mobileSidebar && !mobileSidebar.classList.contains('active')) {
+        hamburger.classList.add('active');
+        mobileSidebar.classList.add('active');
+        mobileSidebarOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+    // 从右向左滑动关闭侧边栏
+    else if(deltaX < -minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && mobileSidebar && mobileSidebar.classList.contains('active')) {
+      hamburger.classList.remove('active');
+      mobileSidebar.classList.remove('active');
+      mobileSidebarOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+})();
+
 /* 登录后的用户信息渲染（优先从服务器获取最新信息） */
 (async function hydrateUser(){
   try{

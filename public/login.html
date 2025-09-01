@@ -56,7 +56,55 @@
     .links a{ color:#1677ff; text-decoration:none;}
     .divider{ display:flex; align-items:center; gap:10px; color:#94a3b8; font-size:12px;}
     .divider::before,.divider::after{ content:""; flex:1; height:1px; background:linear-gradient(90deg,transparent,#e5e7eb,transparent);}
-    @media (max-width:920px){ .shell{ grid-template-columns:1fr;} .illustration{ display:none;} body{ padding:16px;} .form{ padding:34px 22px;}}
+    
+    /* 移动端优化 */
+    @media (max-width:920px){ 
+      .shell{ grid-template-columns:1fr;} 
+      .illustration{ display:none;} 
+      body{ padding:16px;} 
+      .form{ padding:34px 22px;}
+      .title{ font-size:24px; }
+      .subtitle{ font-size:14px; }
+    }
+    
+    @media (max-width:480px){
+      body{ padding:12px; }
+      .shell{ border-radius:16px; }
+      .form{ padding:24px 16px; gap:18px; }
+      .title{ font-size:22px; }
+      .subtitle{ font-size:13px; }
+      .input{ padding:14px 40px; font-size:16px; } /* 防止iOS缩放 */
+      .btn{ padding:14px; font-size:16px; }
+      .field{ gap:6px; }
+      .label{ font-size:13px; }
+    }
+    
+    @media (max-width:360px){
+      .form{ padding:20px 12px; }
+      .title{ font-size:20px; }
+      .input{ padding:12px 36px; }
+      .btn{ padding:12px; }
+    }
+    
+    /* 触摸优化 */
+    .input, .btn, .links a {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    
+    .btn:active {
+      transform: scale(0.98);
+    }
+    
+    /* 安全区域支持 */
+    @supports (padding: max(0px)) {
+      body {
+        padding-left: max(24px, env(safe-area-inset-left));
+        padding-right: max(24px, env(safe-area-inset-right));
+        padding-top: max(24px, env(safe-area-inset-top));
+        padding-bottom: max(24px, env(safe-area-inset-bottom));
+      }
+    }
   </style>
 </head>
 <body>
@@ -98,32 +146,42 @@
       <div class="field">
         <label class="label" for="email">邮箱</label>
         <div class="input-wrap">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 4h16v16H4z" opacity=".08"/><path d="M4 8l8 6 8-6"/><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
           </svg>
-          <input id="email" class="input" type="email" placeholder="请输入邮箱" autocomplete="email" required />
+          <input type="email" id="email" class="input" placeholder="请输入邮箱地址" autocomplete="email" required>
         </div>
       </div>
 
       <div class="field">
         <label class="label" for="password">密码</label>
         <div class="input-wrap">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <circle cx="12" cy="16" r="1"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
-          <input id="password" class="input" type="password" placeholder="请输入密码" autocomplete="current-password" required />
-          <svg id="toggleEye" class="toggle-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" title="显示/隐藏密码">
-            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z"/><circle cx="12" cy="12" r="3"/>
+          <input type="password" id="password" class="input" placeholder="请输入密码" autocomplete="current-password" required>
+          <svg class="toggle-eye" id="toggleEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
           </svg>
         </div>
       </div>
 
-      <button id="login-btn" class="btn" aria-label="登录">登录</button>
-      <div id="login-tip" class="tip" role="status" aria-live="polite"></div>
-      <div class="divider">或</div>
+      <button type="submit" class="btn" id="loginBtn">登录</button>
+      <div class="tip" id="tip"></div>
+
       <div class="links">
-        <a href="register.html">没有账号？去注册</a>
-        <a href="#" onclick="alert('请联系管理员重置密码');return false;">忘记密码？</a>
+        <a href="register.html">注册新账号</a>
+        <a href="#" id="forgotPassword">忘记密码？</a>
+      </div>
+
+      <div class="divider">或</div>
+      
+      <div class="links">
+        <a href="main page.html">返回主页</a>
       </div>
     </section>
   </main>
@@ -139,8 +197,8 @@
 
   const emailEl = document.getElementById('email');
   const passwordEl = document.getElementById('password');
-  const tipEl = document.getElementById('login-tip');
-  const btn = document.getElementById('login-btn');
+  const tipEl = document.getElementById('tip');
+  const btn = document.getElementById('loginBtn');
   const toggleEye = document.getElementById('toggleEye');
 
   toggleEye.addEventListener('click', () => {
