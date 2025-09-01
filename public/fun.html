@@ -214,7 +214,61 @@
         font-size: 14px;
       }
     }
-</style>
+
+    /* 娱乐卡片增强样式 */
+    .fun-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+      transition: all 0.3s ease;
+      transform: translateY(0);
+    }
+    .fun-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    }
+    .fun-card .card-text {
+      color: white;
+      padding: 16px;
+    }
+    .fun-card .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .fun-card .card-description {
+      font-size: 14px;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+    
+    /* 娱乐分类标签 */
+    .fun-category {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-bottom: 12px;
+      backdrop-filter: blur(10px);
+    }
+    
+    /* 娱乐页面特殊布局 */
+    .fun-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      .fun-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+  </style>
 </head>
 <body>
   

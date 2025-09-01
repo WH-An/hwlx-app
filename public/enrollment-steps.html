@@ -197,7 +197,80 @@
         font-size: 14px;
       }
     }
-</style>
+
+    /* 入学步骤专用样式 */
+    .step-card {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      border: none;
+      color: white;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+    .step-card:hover {
+      transform: translateX(8px);
+      box-shadow: 0 15px 30px rgba(240, 147, 251, 0.3);
+    }
+    
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      font-weight: 700;
+      margin-right: 12px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .step-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .step-description {
+      font-size: 14px;
+      opacity: 0.9;
+      line-height: 1.6;
+      margin-left: 44px;
+    }
+    
+    .step-timeline {
+      position: relative;
+      padding-left: 20px;
+    }
+    
+    .step-timeline::before {
+      content: '';
+      position: absolute;
+      left: 16px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #f093fb, #f5576c);
+    }
+    
+    .step-item {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    
+    .step-item::before {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: 8px;
+      width: 12px;
+      height: 12px;
+      background: white;
+      border: 3px solid #f093fb;
+      border-radius: 50%;
+    }
+  </style>
 </head>
 <body>
   
@@ -247,9 +320,83 @@
     </div>
 
     <div class="panel">
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="搜索入学步骤..."><button onclick="doSearch()">搜索</button>
+      <div class="panel-header">
+        <h1 class="panel-title">🎓 海外留学入学步骤指南</h1>
+        <div class="spacer"></div>
       </div>
+      
+      <div class="step-timeline">
+        <div class="step-item">
+          <div class="step-title">
+            <span class="step-number">1</span>
+            选择学校和专业
+          </div>
+          <div class="step-description">
+            根据个人兴趣、职业规划和预算，选择合适的海外院校和专业方向。考虑学校排名、地理位置、学费等因素。
+          </div>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-title">
+            <span class="step-number">2</span>
+            准备申请材料
+          </div>
+          <div class="step-description">
+            准备成绩单、推荐信、个人陈述、语言成绩等申请材料。确保所有文件都符合学校要求。
+          </div>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-title">
+            <span class="step-number">3</span>
+            提交申请
+          </div>
+          <div class="step-description">
+            通过学校官网或申请平台提交申请，注意申请截止日期和申请费用。
+          </div>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-title">
+            <span class="step-number">4</span>
+            等待录取通知
+          </div>
+          <div class="step-description">
+            耐心等待学校的录取决定，期间可以准备签证申请材料。
+          </div>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-title">
+            <span class="step-number">5</span>
+            申请学生签证
+          </div>
+          <div class="step-description">
+            获得录取通知后，立即开始申请学生签证，准备面试和所需材料。
+          </div>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-title">
+            <span class="step-number">6</span>
+            安排住宿和交通
+          </div>
+          <div class="step-description">
+            确认住宿安排，预订机票，了解当地交通情况。
+          </div>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-title">
+            <span class="step-number">7</span>
+            出发前准备
+          </div>
+          <div class="step-description">
+            购买保险，准备生活用品，了解当地文化和生活习惯。
+          </div>
+        </div>
+      </div>
+    </div>
       <div class="panel-header">
         <h2 class="panel-title">入学步骤</h2>
         <div class="spacer"></div>
