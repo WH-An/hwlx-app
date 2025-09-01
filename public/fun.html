@@ -218,34 +218,17 @@
       </ul>
     </div>
 
-          <div class="panel">
-        <div class="panel-header">
-          <h2 class="panel-title">🎉 娱乐活动</h2>
-          <div class="spacer"></div>
-        </div>
-        
-        <div class="masonry">
-          <div class="card">
-            <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop" alt="娱乐活动">
-            <div class="card-text">留学生活娱乐指南</div>
-          </div>
-          
-          <div class="card">
-            <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop" alt="文化活动">
-            <div class="card-text">当地文化体验</div>
-          </div>
-          
-          <div class="card">
-            <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop" alt="户外活动">
-            <div class="card-text">户外探险活动</div>
-          </div>
-          
-          <div class="card">
-            <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop" alt="社交活动">
-            <div class="card-text">留学生社交圈</div>
-          </div>
-        </div>
+    <div class="panel">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="搜索娱乐内容..."><button onclick="doSearch()">搜索</button>
       </div>
+      <div class="panel-header">
+        <h2 class="panel-title">🎉 娱乐活动</h2>
+        <div class="spacer"></div>
+        <a class="btn" href="publish.html" title="去发布">＋ 去发布</a>
+      </div>
+      <div class="masonry" id="masonry"></div>
+    </div>
 
       <div class="panel-header">
         <h2 class="panel-title">娱乐</h2>
@@ -474,154 +457,289 @@
     </ul>
   </nav>
 
+  <!-- 功能JavaScript -->
+  <script>
+    // 自动检测API基础URL
+    const API_BASE = (() => {
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        return 'http://127.0.0.1:3001';
+      }
+      return ''; // 生产环境使用相对路径
+    })();
+    const CATEGORY='fun';
+    let allPosts=[];
+
+    const FALLBACK_AVA='https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp';
+
+    function toAbs(u){ if(!u)return''; if(/^https?:\/\//i.test(u))return u; return u.startsWith('/')?API_BASE+u:API_BASE+'/'+u; }
+    function getPostId(p){ return String(p._id || p.id || p.postId || p.slug || p.uuid || ''); }
+
+    async function hydrateUser(){
+      try{
+        const avatarEl=document.querySelector('.avatar'), nameEl=document.querySelector('.username');
+        const FALLBACK='https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp';
+        
+        // 强制从服务器获取最新用户信息
+        try{
+          const res = await fetch(`${API_BASE}/api/users/me`, { 
+            credentials:'include',
+            cache: 'no-cache' // 禁用缓存，确保获取最新数据
+          });
+          if(res.ok){
+            const u = await res.json();
+            const name = u.nickname || u.username || u.displayName || u.name || u.email || '我的账号';
+            let avatar = u.avatarPath || u.avatarUrl || u.avatar || '';
+            if(avatar && !/^https?:\/\//i.test(avatar)) {
+              avatar = avatar.startsWith('/') ? API_BASE + avatar : API_BASE + '/' + avatar;
+            }
+            nameEl.textContent = name;
+            nameEl.title = name;
+            avatarEl.onerror = () => { avatarEl.src = FALLBACK };
+            avatarEl.src = avatar || FALLBACK;
+            avatarEl.alt = name;
+            
+            // 更新localStorage
+            localStorage.setItem('currentUser', JSON.stringify(u));
+            return;
+          }
+        }catch(e){
+          console.warn('获取用户信息失败:', e);
+        }
+        
+        // 回退到localStorage
+        const cached = localStorage.getItem('currentUser');
+        if(cached){
+          try{
+            const u = JSON.parse(cached);
+            const name = u.nickname || u.username || u.displayName || u.name || u.email || '我的账号';
+            let avatar = u.avatarPath || u.avatarUrl || u.avatar || '';
+            if(avatar && !/^https?:\/\//i.test(avatar)) {
+              avatar = avatar.startsWith('/') ? API_BASE + avatar : API_BASE + '/' + avatar;
+            }
+            nameEl.textContent = name;
+            nameEl.title = name;
+            avatarEl.onerror = () => { avatarEl.src = FALLBACK };
+            avatarEl.src = avatar || FALLBACK;
+            avatarEl.alt = name;
+          }catch(e){
+            console.warn('解析缓存用户信息失败:', e);
+            nameEl.textContent = '我的账号';
+            avatarEl.src = FALLBACK;
+          }
+        }else{
+          nameEl.textContent = '我的账号';
+          avatarEl.src = FALLBACK;
+        }
+      }catch(e){
+        console.error('hydrateUser失败:', e);
+      }
+    }
+
+    async function loadPosts(){
+      try{
+        const res = await fetch(`${API_BASE}/api/posts?category=${CATEGORY}`, { credentials:'include' });
+        if(res.ok){
+          allPosts = await res.json();
+          renderPosts(allPosts);
+        }else{
+          console.warn('加载帖子失败:', res.status);
+          // 显示默认内容
+          renderDefaultContent();
+        }
+      }catch(e){
+        console.warn('加载帖子出错:', e);
+        // 显示默认内容
+        renderDefaultContent();
+      }
+    }
+
+    function renderDefaultContent(){
+      const masonry = document.getElementById('masonry');
+      if(!masonry) return;
+      
+      const defaultPosts = [
+        {
+          title: '留学生活娱乐指南',
+          content: '探索留学生活中的各种娱乐活动和文化体验',
+          imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop',
+          author: { nickname: '娱乐达人', avatar: FALLBACK_AVA }
+        },
+        {
+          title: '当地文化体验',
+          content: '深入了解当地文化，参与传统节日和活动',
+          imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop',
+          author: { nickname: '文化探索者', avatar: FALLBACK_AVA }
+        },
+        {
+          title: '户外探险活动',
+          content: '参与户外运动，探索自然风光和城市景观',
+          imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop',
+          author: { nickname: '户外爱好者', avatar: FALLBACK_AVA }
+        },
+        {
+          title: '留学生社交圈',
+          content: '建立国际友谊，参与社交活动和聚会',
+          imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop',
+          author: { nickname: '社交达人', avatar: FALLBACK_AVA }
+        }
+      ];
+      
+      renderPosts(defaultPosts);
+    }
+
+    function renderPosts(posts){
+      const masonry = document.getElementById('masonry');
+      if(!masonry) return;
+      
+      masonry.innerHTML = posts.map(post => `
+        <div class="card" role="link" onclick="viewPost('${getPostId(post)}')">
+          <img src="${toAbs(post.imageUrl || post.image || '')}" alt="${post.title || '娱乐内容'}" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop'">
+          <div class="card-text">
+            <div style="font-weight:700;margin-bottom:4px">${post.title || '娱乐活动'}</div>
+            <div style="color:#6b7280;font-size:14px">${post.content || '精彩娱乐内容'}</div>
+          </div>
+          <div class="author-badge" onclick="event.stopPropagation();viewUser('${post.author?._id || post.authorId || ''}')">
+            <img src="${toAbs(post.author?.avatar || '')}" alt="${post.author?.nickname || '用户'}" onerror="this.src='${FALLBACK_AVA}'">
+            <span class="name">${post.author?.nickname || post.author?.username || '用户'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function doSearch(){
+      const query = document.getElementById('searchInput').value.trim().toLowerCase();
+      if(!query){
+        renderPosts(allPosts);
+        return;
+      }
+      
+      const filtered = allPosts.filter(post => 
+        (post.title && post.title.toLowerCase().includes(query)) ||
+        (post.content && post.content.toLowerCase().includes(query)) ||
+        (post.author?.nickname && post.author.nickname.toLowerCase().includes(query))
+      );
+      
+      renderPosts(filtered);
+    }
+
+    function viewPost(postId){
+      if(postId && postId !== 'undefined' && postId !== 'null'){
+        window.location.href = `post.html?id=${postId}`;
+      }
+    }
+
+    function viewUser(userId){
+      if(userId && userId !== 'undefined' && userId !== 'null'){
+        window.location.href = `profile.html?id=${userId}`;
+      }
+    }
+
+    // 页面加载完成后执行
+    document.addEventListener('DOMContentLoaded', () => {
+      hydrateUser();
+      loadPosts();
+      
+      // 搜索框回车键支持
+      document.getElementById('searchInput').addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') doSearch();
+      });
+    });
+  </script>
+
   <!-- 移动端交互JavaScript -->
   <script>
-  /* 移动端交互功能 */
-  (function(){
-    
-  /* 顶部导航交互功能 */
-  (function(){
-    const topNavButton = document.getElementById('topNavButton');
-    const topNavMenu = document.getElementById('topNavMenu');
-    const topNavOverlay = document.getElementById('topNavOverlay');
-    const closeNavBtn = document.getElementById('closeNavBtn');
-    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+    // 顶部导航交互功能
+    (function(){
+      const topNavButton = document.getElementById('topNavButton');
+      const topNavMenu = document.getElementById('topNavMenu');
+      const topNavOverlay = document.getElementById('topNavOverlay');
+      const closeNavBtn = document.getElementById('closeNavBtn');
+      const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
 
-    // 顶部导航按键点击事件
-    if(topNavButton && topNavMenu && topNavOverlay) {
-      topNavButton.addEventListener('click', () => {
-        console.log('顶部导航按键被点击'); // 调试日志
-        topNavMenu.classList.add('active');
-        topNavOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-      });
+      // 顶部导航按键点击事件
+      if(topNavButton && topNavMenu && topNavOverlay) {
+        topNavButton.addEventListener('click', () => {
+          console.log('顶部导航按键被点击'); // 调试日志
+          topNavMenu.classList.add('active');
+          topNavOverlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
 
-      // 关闭按钮点击事件
-      if(closeNavBtn) {
-        closeNavBtn.addEventListener('click', () => {
+        // 关闭按钮点击事件
+        if(closeNavBtn) {
+          closeNavBtn.addEventListener('click', () => {
+            topNavMenu.classList.remove('active');
+            topNavOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+          });
+        }
+
+        // 点击遮罩关闭导航菜单
+        topNavOverlay.addEventListener('click', () => {
           topNavMenu.classList.remove('active');
           topNavOverlay.classList.remove('active');
           document.body.style.overflow = '';
         });
+
+        // ESC键关闭导航菜单
+        document.addEventListener('keydown', (e) => {
+          if(e.key === 'Escape' && topNavMenu.classList.contains('active')) {
+            topNavMenu.classList.remove('active');
+            topNavOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+          }
+        });
+      } else {
+        console.warn('顶部导航元素未找到:', { topNavButton, topNavMenu, topNavOverlay });
       }
 
-      // 点击遮罩关闭导航菜单
-      topNavOverlay.addEventListener('click', () => {
-        topNavMenu.classList.remove('active');
-        topNavOverlay.classList.remove('active');
-        document.body.style.overflow = '';
+      // 移动端导航链接点击事件
+      mobileNavLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          // 移除所有active类
+          mobileNavLinks.forEach(l => l.classList.remove('active'));
+          // 添加active类到当前点击的链接
+          link.classList.add('active');
+        });
       });
 
-      // ESC键关闭导航菜单
-      document.addEventListener('keydown', (e) => {
-        if(e.key === 'Escape' && topNavMenu.classList.contains('active')) {
+      // 触摸手势支持
+      let startX = 0;
+      let startY = 0;
+      let currentX = 0;
+      let currentY = 0;
+
+      document.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      });
+
+      document.addEventListener('touchmove', (e) => {
+        currentX = e.touches[0].clientX;
+        currentY = e.touches[0].clientY;
+      });
+
+      document.addEventListener('touchend', () => {
+        const deltaX = currentX - startX;
+        const deltaY = currentY - startY;
+        const minSwipeDistance = 50;
+
+        // 从左向右滑动打开导航菜单
+        if(deltaX > minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && startX < 50) {
+          if(topNavMenu && !topNavMenu.classList.contains('active')) {
+            topNavMenu.classList.add('active');
+            topNavOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+          }
+        }
+        // 从右向左滑动关闭导航菜单
+        else if(deltaX < -minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && topNavMenu && topNavMenu.classList.contains('active')) {
           topNavMenu.classList.remove('active');
           topNavOverlay.classList.remove('active');
           document.body.style.overflow = '';
         }
       });
-    } else {
-      console.warn('顶部导航元素未找到:', { topNavButton, topNavMenu, topNavOverlay });
-    }
-
-    // 移动端导航链接点击事件
-    mobileNavLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        // 移除所有active类
-        mobileNavLinks.forEach(l => l.classList.remove('active'));
-        // 添加active类到当前点击的链接
-        link.classList.add('active');
-      });
-    });
-
-    // 触摸手势支持
-    let startX = 0;
-    let startY = 0;
-    let currentX = 0;
-    let currentY = 0;
-
-    document.addEventListener('touchstart', (e) => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-    });
-
-    document.addEventListener('touchmove', (e) => {
-      currentX = e.touches[0].clientX;
-      currentY = e.touches[0].clientY;
-    });
-
-    document.addEventListener('touchend', () => {
-      const deltaX = currentX - startX;
-      const deltaY = currentY - startY;
-      const minSwipeDistance = 50;
-
-      // 从左向右滑动打开导航菜单
-      if(deltaX > minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && startX < 50) {
-        if(topNavMenu && !topNavMenu.classList.contains('active')) {
-          topNavMenu.classList.add('active');
-          topNavOverlay.classList.add('active');
-          document.body.style.overflow = 'hidden';
-        }
-      }
-      // 从右向左滑动关闭导航菜单
-      else if(deltaX < -minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && topNavMenu && topNavMenu.classList.contains('active')) {
-        topNavMenu.classList.remove('active');
-        topNavOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-    });
-  })();
-    }
-
-    // 移动端导航链接点击事件
-    mobileNavLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        // 移除所有active类
-        mobileNavLinks.forEach(l => l.classList.remove('active'));
-        // 添加active类到当前点击的链接
-        link.classList.add('active');
-      });
-    });
-
-    // 触摸手势支持
-    let startX = 0;
-    let startY = 0;
-    let currentX = 0;
-    let currentY = 0;
-
-    document.addEventListener('touchstart', (e) => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-    });
-
-    document.addEventListener('touchmove', (e) => {
-      currentX = e.touches[0].clientX;
-      currentY = e.touches[0].clientY;
-    });
-
-    document.addEventListener('touchend', () => {
-      const deltaX = currentX - startX;
-      const deltaY = currentY - startY;
-      const minSwipeDistance = 50;
-
-      // 从左向右滑动打开侧边栏
-      if(deltaX > minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && startX < 50) {
-        if(mobileSidebar && !mobileSidebar.classList.contains('active')) {
-          
-          topNavMenu.classList.add('active');
-          topNavOverlay.classList.add('active');
-          document.body.style.overflow = 'hidden';
-        }
-      }
-      // 从右向左滑动关闭侧边栏
-      else if(deltaX < -minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && mobileSidebar && mobileSidebar.classList.contains('active')) {
-        
-        topNavMenu.classList.remove('active');
-        topNavOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-    });
-  })();
+    })();
   </script>
 </body>
 </html>
