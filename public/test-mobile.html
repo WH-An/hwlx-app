@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>移动端导航测试</title>
+  <link rel="stylesheet" href="mobile-optimization.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+    }
+    
+    .test-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 100px;
+    }
+    
+    .test-button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 汉堡菜单按钮 -->
+  <div class="hamburger" id="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- 移动端侧边栏 -->
+  <div class="mobile-sidebar" id="mobileSidebar">
+    <h3>测试侧边栏</h3>
+    <ul>
+      <li><a href="#">菜单项 1</a></li>
+      <li><a href="#">菜单项 2</a></li>
+      <li><a href="#">菜单项 3</a></li>
+    </ul>
+  </div>
+
+  <!-- 移动端侧边栏遮罩 -->
+  <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay"></div>
+
+  <div class="test-content">
+    <h1>移动端导航测试页面</h1>
+    <p>点击左上角的汉堡菜单按钮来测试侧边栏功能。</p>
+    <button class="test-button" onclick="toggleSidebar()">JavaScript 切换侧边栏</button>
+    <button class="test-button" onclick="checkElements()">检查元素</button>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      const hamburger = document.getElementById('hamburger');
+      const mobileSidebar = document.getElementById('mobileSidebar');
+      const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
+      
+      hamburger.classList.toggle('active');
+      mobileSidebar.classList.toggle('active');
+      mobileSidebarOverlay.classList.toggle('active');
+      
+      console.log('侧边栏状态:', {
+        hamburger: hamburger.classList.contains('active'),
+        sidebar: mobileSidebar.classList.contains('active'),
+        overlay: mobileSidebarOverlay.classList.contains('active')
+      });
+    }
+    
+    function checkElements() {
+      const hamburger = document.getElementById('hamburger');
+      const mobileSidebar = document.getElementById('mobileSidebar');
+      const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
+      
+      console.log('元素检查:', {
+        hamburger: hamburger,
+        mobileSidebar: mobileSidebar,
+        mobileSidebarOverlay: mobileSidebarOverlay
+      });
+      
+      console.log('汉堡菜单样式:', window.getComputedStyle(hamburger));
+      console.log('侧边栏样式:', window.getComputedStyle(mobileSidebar));
+    }
+    
+    // 移动端交互功能
+    (function(){
+      const hamburger = document.getElementById('hamburger');
+      const mobileSidebar = document.getElementById('mobileSidebar');
+      const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
+
+      console.log('初始化移动端导航...');
+      console.log('找到的元素:', { hamburger, mobileSidebar, mobileSidebarOverlay });
+
+      // 汉堡菜单点击事件
+      if(hamburger && mobileSidebar && mobileSidebarOverlay) {
+        hamburger.addEventListener('click', (e) => {
+          console.log('汉堡菜单被点击!', e);
+          hamburger.classList.toggle('active');
+          mobileSidebar.classList.toggle('active');
+          mobileSidebarOverlay.classList.toggle('active');
+          document.body.style.overflow = mobileSidebar.classList.contains('active') ? 'hidden' : '';
+        });
+
+        // 点击遮罩关闭侧边栏
+        mobileSidebarOverlay.addEventListener('click', () => {
+          console.log('遮罩被点击，关闭侧边栏');
+          hamburger.classList.remove('active');
+          mobileSidebar.classList.remove('active');
+          mobileSidebarOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+
+        console.log('事件监听器已绑定');
+      } else {
+        console.error('移动端导航元素未找到!');
+      }
+    })();
+  </script>
+</body>
+</html>

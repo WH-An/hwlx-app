@@ -672,7 +672,96 @@
     </ul>
   </nav>
 
-  <!-- 移动端优化JavaScript -->
-  <script src="mobile-utils.js"></script>
+  <!-- 移动端优化JavaScript - 已集成到页面代码中 -->
+  
+  <script>
+  /* 移动端交互功能 */
+  (function(){
+    const hamburger = document.getElementById('hamburger');
+    const mobileSidebar = document.getElementById('mobileSidebar');
+    const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+    // 汉堡菜单点击事件
+    if(hamburger && mobileSidebar && mobileSidebarOverlay) {
+      hamburger.addEventListener('click', () => {
+        console.log('汉堡菜单被点击'); // 调试日志
+        hamburger.classList.toggle('active');
+        mobileSidebar.classList.toggle('active');
+        mobileSidebarOverlay.classList.toggle('active');
+        document.body.style.overflow = mobileSidebar.classList.contains('active') ? 'hidden' : '';
+      });
+
+      // 点击遮罩关闭侧边栏
+      mobileSidebarOverlay.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        mobileSidebar.classList.remove('active');
+        mobileSidebarOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+
+      // ESC键关闭侧边栏
+      document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && mobileSidebar.classList.contains('active')) {
+          hamburger.classList.remove('active');
+          mobileSidebar.classList.remove('active');
+          mobileSidebarOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+    } else {
+      console.warn('移动端导航元素未找到:', { hamburger, mobileSidebar, mobileSidebarOverlay });
+    }
+
+    // 移动端导航链接点击事件
+    mobileNavLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        // 移除所有active类
+        mobileNavLinks.forEach(l => l.classList.remove('active'));
+        // 添加active类到当前点击的链接
+        link.classList.add('active');
+      });
+    });
+
+    // 触摸手势支持
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
+
+    document.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    });
+
+    document.addEventListener('touchmove', (e) => {
+      currentX = e.touches[0].clientX;
+      currentY = e.touches[0].clientY;
+    });
+
+    document.addEventListener('touchend', () => {
+      const deltaX = currentX - startX;
+      const deltaY = currentY - startY;
+      const minSwipeDistance = 50;
+
+      // 从左向右滑动打开侧边栏
+      if(deltaX > minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && startX < 50) {
+        if(mobileSidebar && !mobileSidebar.classList.contains('active')) {
+          hamburger.classList.add('active');
+          mobileSidebar.classList.add('active');
+          mobileSidebarOverlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      }
+      // 从右向左滑动关闭侧边栏
+      else if(deltaX < -minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && mobileSidebar && mobileSidebar.classList.contains('active')) {
+        hamburger.classList.remove('active');
+        mobileSidebar.classList.remove('active');
+        mobileSidebarOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  })();
+  </script>
 </body>
 </html>

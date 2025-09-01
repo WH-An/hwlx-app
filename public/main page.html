@@ -239,11 +239,10 @@
     </ul>
   </nav>
 
-  <!-- 移动端优化JavaScript -->
-  <script src="mobile-utils.js"></script>
+  <!-- 移动端优化JavaScript - 已集成到主页代码中 -->
 
   <script>
-/* 移动端交互功能 */
+/* 移动端交互功能 - 主页专用版本 */
 (function(){
   const hamburger = document.getElementById('hamburger');
   const mobileSidebar = document.getElementById('mobileSidebar');
@@ -253,6 +252,7 @@
   // 汉堡菜单点击事件
   if(hamburger && mobileSidebar && mobileSidebarOverlay) {
     hamburger.addEventListener('click', () => {
+      console.log('汉堡菜单被点击'); // 调试日志
       hamburger.classList.toggle('active');
       mobileSidebar.classList.toggle('active');
       mobileSidebarOverlay.classList.toggle('active');
@@ -276,6 +276,8 @@
         document.body.style.overflow = '';
       }
     });
+  } else {
+    console.warn('移动端导航元素未找到:', { hamburger, mobileSidebar, mobileSidebarOverlay });
   }
 
   // 移动端导航链接点击事件
