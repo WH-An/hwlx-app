@@ -11,7 +11,7 @@ const emailConfig = {
 };
 
 // 创建邮件传输器
-const transporter = nodemailer.createTransporter(emailConfig);
+const transporter = nodemailer.createTransport(emailConfig);
 
 // 发送验证码邮件
 async function sendVerificationEmail(toEmail, verificationCode) {
