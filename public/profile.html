@@ -420,6 +420,34 @@
       background-clip: text;
     }
     
+    @media (max-width: 960px) {
+      .section-bar {
+        margin-top: 16px;
+        padding: 16px;
+        border-radius: 14px;
+        gap: 12px;
+      }
+      
+      .section-title {
+        font-size: 18px;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .section-bar {
+        margin-top: 12px;
+        padding: 12px;
+        border-radius: 12px;
+        gap: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .section-title {
+        font-size: 16px;
+      }
+    }
+    
     .tabs{
       display:flex;
       gap:8px;
@@ -449,6 +477,31 @@
       color:#fff;
       border-color: var(--accent);
     }
+    
+    @media (max-width: 960px) {
+      .tabs {
+        gap: 6px;
+        margin-bottom: 16px;
+      }
+      
+      .tab {
+        padding: 8px 16px;
+        font-size: 13px;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .tabs {
+        gap: 4px;
+        margin-bottom: 12px;
+      }
+      
+      .tab {
+        padding: 6px 12px;
+        font-size: 12px;
+        border-radius: 6px;
+      }
+    }
 
     /* Masonry 布局与卡片 */
     .posts-masonry{
@@ -461,8 +514,20 @@
       .posts-masonry{ column-count:2 } 
     }
     
+    @media (max-width:960px){ 
+      .posts-masonry{ 
+        column-count:1;
+        column-gap: 16px;
+        margin-top: 16px;
+      } 
+    }
+    
     @media (max-width:640px){  
-      .posts-masonry{ column-count:1 } 
+      .posts-masonry{ 
+        column-count:1;
+        column-gap: 12px;
+        margin-top: 12px;
+      } 
     }
 
     .post-card{
@@ -483,6 +548,22 @@
       transition: var(--transition);
     }
     
+    @media (max-width: 960px) {
+      .post-card {
+        margin: 0 0 16px;
+        border-radius: 16px;
+        padding-bottom: 50px;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .post-card {
+        margin: 0 0 12px;
+        border-radius: 12px;
+        padding-bottom: 45px;
+      }
+    }
+    
     .post-card:hover {
       transform: translateY(-4px);
       box-shadow: var(--shadow-hover);
@@ -497,8 +578,92 @@
       transition: var(--transition);
     }
     
+    @media (max-width: 960px) {
+      .post-card img {
+        aspect-ratio: 3/4;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .post-card img {
+        aspect-ratio: 1/1;
+      }
+    }
+    
     .post-card:hover img {
       transform: scale(1.05);
+    }
+    
+    /* 移动端触摸优化 */
+    @media (hover: none) and (pointer: coarse) {
+      .post-card:hover {
+        transform: none;
+        box-shadow: var(--shadow-card);
+        border-color: var(--border);
+      }
+      
+      .post-card:hover img {
+        transform: none;
+      }
+      
+      .post-card:active {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-color: var(--accent);
+      }
+      
+      .post-card:active img {
+        transform: scale(1.02);
+      }
+    }
+    
+    /* 空状态移动端优化 */
+    .empty-state-mobile {
+      transition: all 0.3s ease;
+    }
+    
+    @media (max-width: 960px) {
+      .empty-state-mobile {
+        padding: 32px 16px !important;
+        margin: 16px 0 !important;
+        border-radius: 10px !important;
+      }
+      
+      .empty-state-mobile > div:first-child {
+        font-size: 40px !important;
+        margin-bottom: 12px !important;
+      }
+      
+      .empty-state-mobile > div:nth-child(2) {
+        font-size: 15px !important;
+        margin-bottom: 6px !important;
+      }
+      
+      .empty-state-mobile > div:nth-child(3) {
+        font-size: 12px !important;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .empty-state-mobile {
+        padding: 24px 12px !important;
+        margin: 12px 0 !important;
+        border-radius: 8px !important;
+      }
+      
+      .empty-state-mobile > div:first-child {
+        font-size: 36px !important;
+        margin-bottom: 10px !important;
+      }
+      
+      .empty-state-mobile > div:nth-child(2) {
+        font-size: 14px !important;
+        margin-bottom: 5px !important;
+      }
+      
+      .empty-state-mobile > div:nth-child(3) {
+        font-size: 11px !important;
+      }
     }
     
     .post-card-text{ 
@@ -507,6 +672,22 @@
       line-height:1.6;
       font-size: 15px;
       font-weight: 500;
+    }
+    
+    @media (max-width: 960px) {
+      .post-card-text {
+        padding: 14px 16px;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .post-card-text {
+        padding: 12px 14px;
+        font-size: 13px;
+        line-height: 1.4;
+      }
     }
 
     .post-author-badge{
@@ -525,6 +706,26 @@
       backdrop-filter: blur(10px);
     }
     
+    @media (max-width: 960px) {
+      .post-author-badge {
+        right: 12px;
+        bottom: 12px;
+        padding: 8px 10px;
+        gap: 8px;
+        max-width: 85%;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .post-author-badge {
+        right: 10px;
+        bottom: 10px;
+        padding: 6px 8px;
+        gap: 6px;
+        max-width: 90%;
+      }
+    }
+    
     .post-author-badge img{ 
       width:24px; 
       height:24px; 
@@ -541,6 +742,32 @@
       text-overflow:ellipsis; 
       max-width:150px;
       font-weight: 600;
+    }
+    
+    @media (max-width: 960px) {
+      .post-author-badge img {
+        width: 22px;
+        height: 22px;
+        border-width: 1.5px;
+      }
+      
+      .post-author-badge .name {
+        font-size: 12px;
+        max-width: 120px;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .post-author-badge img {
+        width: 20px;
+        height: 20px;
+        border-width: 1px;
+      }
+      
+      .post-author-badge .name {
+        font-size: 11px;
+        max-width: 100px;
+      }
     }
 
     /* 左上角导航按键 */
@@ -1339,9 +1566,22 @@
 
     if(!list || list.length===0){
       const empty=document.createElement('div');
-      empty.className='muted';
-      empty.style.padding='8px 2px';
-      empty.textContent='暂无内容';
+      empty.className='empty-state-mobile';
+      empty.style.cssText=`
+        padding: 40px 20px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 14px;
+        background: #f8fafc;
+        border-radius: 12px;
+        margin: 20px 0;
+        border: 1px dashed var(--border);
+      `;
+      empty.innerHTML=`
+        <div style="font-size: 48px; margin-bottom: 16px;">📝</div>
+        <div style="font-weight: 600; margin-bottom: 8px; color: var(--text);">暂无内容</div>
+        <div style="font-size: 13px;">您还没有发布任何帖子或收藏任何内容</div>
+      `;
       box.appendChild(empty);
     }
   }
