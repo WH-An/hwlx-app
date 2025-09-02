@@ -10,7 +10,18 @@
   <link rel="preload" href="mobile-optimization.css" as="style">
   
   <style>
-    :root{ --bg:#0b0f14; --panel:#ffffff; --text:#0f172a; --muted:#64748b; --accent:#16a34a; --border:#e5e7eb; --shadow:0 10px 30px rgba(0,0,0,.18); --radius:18px; }
+    :root{ 
+      --bg:#0b0f14; 
+      --panel:#ffffff; 
+      --text:#0f172a; 
+      --muted:#64748b; 
+      --accent:#16a34a; 
+      --border:#e5e7eb; 
+      --shadow:0 10px 30px rgba(0,0,0,.18); 
+      --radius:18px;
+      --mobile-nav-height: 70px;
+      --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+    }
     *{box-sizing:border-box} html,body{height:100%}
     body{
       margin:0;font-family:'Microsoft YaHei',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'PingFang SC',sans-serif;
@@ -138,36 +149,50 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: var(--panel);
-      border-top: 1px solid var(--border);
-      padding: 8px 0;
+      background: #ffffff;
+      border-top: 1px solid #e5e7eb;
       z-index: 1000;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      padding: 8px 0;
+      padding-bottom: calc(8px + var(--safe-area-inset-bottom, 0px));
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     }
 
-    .mobile-nav .nav-item {
+    .mobile-nav-list {
+      display: flex;
+      justify-content: space-around;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .mobile-nav-item {
+      flex: 1;
+      text-align: center;
+    }
+
+    .mobile-nav-link {
       display: flex;
       flex-direction: column;
       align-items: center;
+      gap: 4px;
       text-decoration: none;
-      color: var(--muted);
-      font-size: 12px;
+      color: #374151;
       padding: 8px 4px;
+      font-size: 12px;
+      transition: color 0.2s ease;
       border-radius: 8px;
-      transition: 0.2s;
+      margin: 0 4px;
     }
 
-    .mobile-nav .nav-item.active {
-      color: var(--accent);
+    .mobile-nav-link:hover,
+    .mobile-nav-link.active {
+      color: #16a34a;
+      background: rgba(22, 163, 74, 0.1);
     }
 
-    .mobile-nav .nav-icon {
+    .mobile-nav-icon {
       font-size: 20px;
-      margin-bottom: 4px;
-    }
-
-    .mobile-nav .nav-text {
-      font-weight: 500;
+      margin-bottom: 2px;
     }
 
     /* 消息按键样式 */
@@ -873,26 +898,56 @@
 
     <!-- 移动端底部导航 -->
     <nav class="mobile-nav">
-      <a href="main page.html" class="nav-item">
-        <span class="nav-icon">🏠</span>
-        <span class="nav-text">主页</span>
-      </a>
-      <a href="life-tips.html" class="nav-item">
-        <span class="nav-icon">💡</span>
-        <span class="nav-text">生活</span>
-      </a>
-      <a href="profile.html" class="nav-item active">
-        <span class="nav-icon">👤</span>
-        <span class="nav-text">个人</span>
-      </a>
-      <a href="hospital.html" class="nav-item">
-        <span class="nav-icon">🏥</span>
-        <span class="nav-text">医院</span>
-      </a>
-      <a href="messages.html" class="nav-item">
-        <span class="nav-icon">💬</span>
-        <span class="nav-text">消息</span>
-      </a>
+      <ul class="mobile-nav-list">
+        <li class="mobile-nav-item">
+          <a href="main page.html" class="mobile-nav-link">
+            <span class="mobile-nav-icon">🏠</span>
+            <span>主页</span>
+          </a>
+        </li>
+        <li class="mobile-nav-item">
+          <a href="life-tips.html" class="mobile-nav-link">
+            <span class="mobile-nav-icon">💡</span>
+            <span>生活</span>
+          </a>
+        </li>
+        <li class="mobile-nav-item">
+          <a href="study-guide.html" class="mobile-nav-link">
+            <span class="mobile-nav-icon">📚</span>
+            <span>学习</span>
+          </a>
+        </li>
+        <li class="mobile-nav-item">
+          <a href="profile.html" class="mobile-nav-link active">
+            <span class="mobile-nav-icon">👤</span>
+            <span>个人</span>
+          </a>
+        </li>
+        <li class="mobile-nav-item">
+          <a href="enrollment-steps.html" class="mobile-nav-link">
+            <span class="mobile-nav-icon">📝</span>
+            <span>入学</span>
+          </a>
+        </li>
+        <li class="mobile-nav-item">
+          <a href="share.html" class="mobile-nav-link">
+            <span class="mobile-nav-icon">🔗</span>
+            <span>分享</span>
+          </a>
+        </li>
+        <li class="mobile-nav-item">
+          <a href="fun.html" class="mobile-nav-link">
+            <span class="mobile-nav-icon">🎉</span>
+            <span>娱乐</span>
+          </a>
+        </li>
+        <li class="mobile-nav-item">
+          <a href="hospital.html" class="mobile-nav-link">
+            <span class="mobile-nav-icon">🏥</span>
+            <span>医院</span>
+          </a>
+        </li>
+      </ul>
     </nav>
 
     <!-- 消息按键 -->
