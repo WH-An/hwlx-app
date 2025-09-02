@@ -112,7 +112,27 @@
     #lbPrev{ left:20px; top:calc(50% - 20px); }
     #lbNext{ right:20px; top:calc(50% - 20px); }
     .lb-btn:hover{ background:rgba(255,255,255,.25); }
-    @media (max-width: 900px){ .shell{grid-template-columns:1fr} .threads{display:none} }
+    @media (max-width: 900px){ 
+      .shell{
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 16px;
+      } 
+      .threads{
+        display: block;
+        margin-bottom: 16px;
+        border-radius: var(--radius);
+        background: var(--panel);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+      }
+      .chat{
+        border-radius: var(--radius);
+        background: var(--panel);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+      }
+    }
   
 
     
@@ -125,75 +145,118 @@
 
     /* 移动端响应式优化 */
     @media (max-width: 960px) {
-      .container {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
+      .shell {
         padding: 16px;
         padding-bottom: calc(var(--mobile-nav-height) + 20px);
       }
       
-      .sidebar {
-        display: none;
+      .threads {
+        margin-bottom: 16px;
       }
       
-      .panel {
+      .threads .search input {
+        padding: 12px 16px;
+        font-size: 16px;
+        border-radius: 12px;
+      }
+      
+      .item {
         padding: 16px;
-        border-radius: 16px;
+        border-radius: 8px;
+        margin: 0 8px 8px 8px;
+        background: #fafafa;
+        border: 1px solid var(--border);
       }
       
-      .search-box {
-        flex-direction: column;
-        gap: 12px;
+      .item:hover {
+        background: #f3f4f6;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       }
       
-      .search-box input {
-        padding: 14px 16px;
+      .chat-box {
+        padding: 16px;
+      }
+      
+      .composer {
+        padding: 16px;
+        border-radius: 0 0 var(--radius) var(--radius);
+      }
+      
+      .composer input[type="text"] {
+        padding: 12px 16px;
         font-size: 16px;
-      }
-      
-      .search-box button {
-        padding: 14px 16px;
-        font-size: 16px;
-      }
-      
-      .panel-title {
-        font-size: 20px;
+        border-radius: 12px;
       }
     }
 
+    @media (max-width: 960px) {
+      .mobile-nav {
+        display: flex;
+        justify-content: space-around;
+      }
+    }
+    
     @media (max-width: 480px) {
-      .container {
+      .shell {
         padding: 12px;
         padding-bottom: calc(var(--mobile-nav-height) + 16px);
+        gap: 8px;
       }
       
-      .panel {
-        padding: 12px;
-        border-radius: 12px;
-      }
-      
-      .search-box input {
-        padding: 16px;
-        font-size: 16px;
-      }
-      
-      .search-box button {
-        padding: 16px;
-        font-size: 16px;
-      }
-      
-      .panel-title {
-        font-size: 18px;
-      }
-      
-      .card {
-        border-radius: 12px;
+      .threads {
         margin-bottom: 12px;
       }
       
-      .card-text {
+      .threads .search input {
+        padding: 14px 12px;
+        font-size: 16px;
+        border-radius: 10px;
+      }
+      
+      .item {
         padding: 12px;
+        border-radius: 6px;
+        margin: 0 4px 6px 4px;
+      }
+      
+      .item .peer {
+        font-size: 15px;
+      }
+      
+      .item .last {
+        font-size: 11px;
+      }
+      
+      .chat-box {
+        padding: 12px;
+      }
+      
+      .composer {
+        padding: 12px;
+      }
+      
+      .composer input[type="text"] {
+        padding: 10px 12px;
+        font-size: 16px;
+        border-radius: 10px;
+      }
+      
+      .msg {
+        max-width: 85%;
+        padding: 8px 10px;
+        border-radius: 12px;
         font-size: 14px;
+      }
+      
+      .avatar {
+        width: 24px;
+        height: 24px;
+      }
+      
+      .msgrow .avatar {
+        width: 24px;
+        height: 24px;
       }
     }
 
@@ -260,6 +323,60 @@
     <img id="lbImg" src="" alt="preview"/>
     <button id="lbNext" class="lb-btn">›</button>
   </div>
+
+  <!-- 移动端底部导航 -->
+  <nav class="mobile-nav">
+    <ul class="mobile-nav-list">
+      <li class="mobile-nav-item">
+        <a href="main page.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">🏠</span>
+          <span>主页</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="life-tips.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">💡</span>
+          <span>生活</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="study-guide.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">📚</span>
+          <span>学习</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="profile.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">👤</span>
+          <span>个人</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="enrollment-steps.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">📝</span>
+          <span>入学</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="share.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">🔗</span>
+          <span>分享</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="fun.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">🎉</span>
+          <span>娱乐</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="hospital.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">🏥</span>
+          <span>医院</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 
   <script>
     // 自动检测API基础URL
