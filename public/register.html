@@ -78,6 +78,57 @@ button:hover {
 }
 .hint { text-align:center; font-size:12px; color:#666; margin-top:-10px; }
 
+/* 验证码容器样式 */
+.verification-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.verification-container input {
+  flex: 1;
+}
+
+.send-code-btn {
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: #fff;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-width: 100px;
+}
+
+.send-code-btn:hover {
+  background: linear-gradient(135deg, #15803d, #16a34a);
+  transform: translateY(-1px);
+}
+
+.send-code-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.send-code-btn.countdown {
+  background: #6b7280;
+  cursor: not-allowed;
+}
+
+.verification-hint {
+  color: #16a34a;
+  font-weight: 500;
+  margin-top: 5px;
+  padding: 8px 12px;
+  background: rgba(22, 163, 74, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(22, 163, 74, 0.2);
+}
+
 
     
     
@@ -89,16 +140,39 @@ button:hover {
 
     /* 移动端响应式优化 */
     @media (max-width: 960px) {
-      .container {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
-        padding: 16px;
-        padding-bottom: calc(var(--mobile-nav-height) + 20px);
+      .register-container {
+        width: 90%;
+        max-width: 400px;
+        padding: 35px 25px;
       }
       
-      .sidebar {
-        display: none;
+      .verification-container {
+        flex-direction: column;
+        gap: 8px;
       }
+      
+      .send-code-btn {
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 15px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .register-container {
+        width: 95%;
+        padding: 30px 20px;
+      }
+      
+      .register-title {
+        font-size: 24px;
+      }
+      
+      input, select {
+        padding: 14px 16px;
+        font-size: 16px;
+      }
+    }
       
       .panel {
         padding: 16px;
@@ -186,6 +260,13 @@ button:hover {
   <div class="register-title">用户注册</div>
   <input type="text" id="nickname" placeholder="用户名">
   <input type="email" id="email" placeholder="邮箱">
+  
+  <!-- 邮箱验证码 -->
+  <div class="verification-container">
+    <input type="text" id="verification-code" placeholder="验证码" maxlength="6">
+    <button type="button" id="send-code-btn" class="send-code-btn">发送验证码</button>
+  </div>
+  
   <input type="password" id="password" placeholder="密码">
   <input type="password" id="confirm" placeholder="确认密码">
   <select id="area">
@@ -206,6 +287,10 @@ button:hover {
   <input type="file" id="avatar" accept="image/*">
   <img id="avatar-preview" alt="头像预览">
   <div class="hint">头像将在注册成功并登录后到个人页上传</div>
+  
+  <div class="hint verification-hint">
+    💡 验证码将发送到您的邮箱，用于验证邮箱真实性
+  </div>
 
   <button id="register-btn">注册</button>
   <div id="register-tip"></div>
@@ -230,6 +315,8 @@ button:hover {
   const avatarEl = $('#avatar');
   const avatarPreview = $('#avatar-preview');
   const tipEl = $('#register-tip');
+  const verificationCodeEl = $('#verification-code');
+  const sendCodeBtn = $('#send-code-btn');
 
   // 头像本地预览
   avatarEl.addEventListener('change', e => {
@@ -240,9 +327,82 @@ button:hover {
     reader.readAsDataURL(file);
   });
 
+  // 发送验证码
+  sendCodeBtn.addEventListener('click', async () => {
+    const email = emailEl.value.trim();
+    
+    if (!email) {
+      tipEl.style.color = 'red';
+      tipEl.textContent = '请先输入邮箱地址';
+      return;
+    }
+    
+    if (!isValidEmail(email)) {
+      tipEl.style.color = 'red';
+      tipEl.textContent = '请输入有效的邮箱地址';
+      return;
+    }
+    
+    try {
+      sendCodeBtn.disabled = true;
+      sendCodeBtn.textContent = '发送中...';
+      
+      const res = await fetch(`${API_BASE}/send-verification-code`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email })
+      });
+      
+      const data = await res.json().catch(() => ({}));
+      
+      if (res.ok) {
+        tipEl.style.color = 'green';
+        tipEl.textContent = '验证码已发送，请查收邮箱';
+        startCountdown();
+      } else {
+        tipEl.style.color = 'red';
+        tipEl.textContent = data.msg || '发送失败，请稍后重试';
+        sendCodeBtn.disabled = false;
+        sendCodeBtn.textContent = '发送验证码';
+      }
+    } catch (err) {
+      tipEl.style.color = 'red';
+      tipEl.textContent = '网络错误，请稍后重试';
+      sendCodeBtn.disabled = false;
+      sendCodeBtn.textContent = '发送验证码';
+    }
+  });
+
+  // 邮箱格式验证
+  function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  // 倒计时功能
+  function startCountdown() {
+    let countdown = 60;
+    sendCodeBtn.textContent = `${countdown}秒后重试`;
+    sendCodeBtn.classList.add('countdown');
+    
+    const timer = setInterval(() => {
+      countdown--;
+      if (countdown <= 0) {
+        clearInterval(timer);
+        sendCodeBtn.disabled = false;
+        sendCodeBtn.textContent = '发送验证码';
+        sendCodeBtn.classList.remove('countdown');
+      } else {
+        sendCodeBtn.textContent = `${countdown}秒后重试`;
+      }
+    }, 1000);
+  }
+
   async function doRegister(){
     const nickname = nicknameEl.value.trim();
     const email = emailEl.value.trim();
+    const verificationCode = verificationCodeEl.value.trim();
     const password = passwordEl.value.trim();
     const confirm = confirmEl.value.trim();
     const area = areaEl.value;
@@ -251,10 +411,21 @@ button:hover {
     tipEl.style.color='red';
     tipEl.textContent = '';
 
-    if(!nickname || !email || !password || !confirm){
+    if(!nickname || !email || !verificationCode || !password || !confirm){
       tipEl.textContent = '请完整填写信息';
       return;
     }
+    
+    if(!isValidEmail(email)){
+      tipEl.textContent = '请输入有效的邮箱地址';
+      return;
+    }
+    
+    if(verificationCode.length !== 6){
+      tipEl.textContent = '请输入6位验证码';
+      return;
+    }
+    
     if(password !== confirm){
       tipEl.textContent = '两次输入密码不一致';
       return;
@@ -265,7 +436,14 @@ button:hover {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ nickname, email, password, area, degree })
+        body: JSON.stringify({ 
+          nickname, 
+          email, 
+          verificationCode, 
+          password, 
+          area, 
+          degree 
+        })
       });
       const data = await res.json().catch(()=> ({}));
 
