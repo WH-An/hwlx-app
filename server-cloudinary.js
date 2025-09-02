@@ -176,12 +176,26 @@ app.get('/api/test-cloudinary', async (req, res) => {
 // 注册
 app.post('/api/register', async (req, res) => {
   try {
-    let { nickname, email, password, area = '', degree = '', isAdmin = false } = req.body || {};
+    let { nickname, email, verificationCode, password, area = '', degree = '', isAdmin = false } = req.body || {};
     email = normalizeEmail(email);
     
-    if (!email || !password) {
-      return res.status(400).json({ msg: '邮箱与密码必填' });
+    if (!email || !password || !verificationCode) {
+      return res.status(400).json({ msg: '邮箱、密码和验证码必填' });
     }
+
+    // 验证验证码
+    const codeRecord = await VerificationCode.findValidCode(email, 'register');
+    if (!codeRecord) {
+      return res.status(400).json({ msg: '验证码不存在或已过期，请重新发送' });
+    }
+    
+    const codeResult = codeRecord.verify(verificationCode);
+    if (!codeResult.valid) {
+      return res.status(400).json({ msg: codeResult.reason });
+    }
+    
+    // 保存验证码使用状态
+    await codeRecord.save();
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -1074,16 +1088,107 @@ app.delete('/api/posts/:id/comments/:cid', async (req, res) => {
   }
 });
 
+// ====== 验证码相关API ======
+
+// 导入验证码模型和邮件功能
+const VerificationCode = require('./models/VerificationCode');
+const { sendVerificationEmail, verifyEmailConfig } = require('./config/email');
+
+// 发送验证码
+app.post('/api/send-verification-code', async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    if (!email) {
+      return res.status(400).json({ msg: '请提供邮箱地址' });
+    }
+    
+    // 验证邮箱格式
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ msg: '邮箱格式不正确' });
+    }
+    
+    // 检查是否已有未过期的验证码
+    const existingCode = await VerificationCode.findValidCode(email, 'register');
+    if (existingCode) {
+      const timeLeft = Math.ceil((existingCode.expiresAt - new Date()) / 1000 / 60);
+      return res.status(429).json({ 
+        msg: `请等待${timeLeft}分钟后再发送验证码`,
+        timeLeft 
+      });
+    }
+    
+    // 创建新的验证码
+    const verificationCode = await VerificationCode.createCode(email, 'register');
+    
+    // 发送验证码邮件
+    const emailResult = await sendVerificationEmail(email, verificationCode.code);
+    
+    if (emailResult.success) {
+      res.json({ 
+        msg: '验证码已发送到您的邮箱，请注意查收',
+        expiresIn: '5分钟'
+      });
+    } else {
+      // 邮件发送失败，删除验证码记录
+      await VerificationCode.findByIdAndDelete(verificationCode._id);
+      res.status(500).json({ msg: '邮件发送失败，请稍后重试' });
+    }
+  } catch (error) {
+    console.error('发送验证码失败:', error);
+    res.status(500).json({ msg: '发送验证码失败，请稍后重试' });
+  }
+});
+
+// 验证验证码
+app.post('/api/verify-code', async (req, res) => {
+  try {
+    const { email, code } = req.body;
+    
+    if (!email || !code) {
+      return res.status(400).json({ msg: '请提供邮箱和验证码' });
+    }
+    
+    const verificationCode = await VerificationCode.findValidCode(email, 'register');
+    
+    if (!verificationCode) {
+      return res.status(400).json({ msg: '验证码不存在或已过期' });
+    }
+    
+    const result = verificationCode.verify(code);
+    
+    if (result.valid) {
+      await verificationCode.save(); // 保存使用状态
+      res.json({ msg: '验证码验证成功' });
+    } else {
+      res.status(400).json({ msg: result.reason });
+    }
+  } catch (error) {
+    console.error('验证验证码失败:', error);
+    res.status(500).json({ msg: '验证验证码失败，请稍后重试' });
+  }
+});
+
 // 启动服务器
 async function startServer() {
   try {
     await connectDB();
     console.log('✅ MongoDB连接成功');
     
+    // 验证邮件配置
+    const emailConfigValid = await verifyEmailConfig();
+    if (emailConfigValid) {
+      console.log('✅ 邮件服务配置成功');
+    } else {
+      console.log('⚠️ 邮件服务配置失败，验证码功能可能无法正常工作');
+    }
+    
     app.listen(PORT, () => {
       console.log(`🚀 Cloudinary服务器运行在端口 ${PORT}`);
       console.log(`📱 本地访问: http://localhost:${PORT}`);
       console.log(`☁️ 使用Cloudinary存储文件`);
+      console.log(`📧 邮件服务: ${emailConfigValid ? '已启用' : '未配置'}`);
     });
   } catch (error) {
     console.error('❌ 服务器启动失败:', error);
