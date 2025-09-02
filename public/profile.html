@@ -1297,33 +1297,7 @@
         <!-- 内容将在这里动态加载 -->
       </div>
       
-      <!-- 调试信息 -->
-      <div id="debugInfo" style="
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        background: rgba(0,0,0,0.8);
-        color: white;
-        padding: 10px;
-        border-radius: 8px;
-        font-size: 12px;
-        z-index: 10000;
-        display: none;
-      ">
-        <div>屏幕宽度: <span id="screenWidth"></span>px</div>
-        <div>列数: <span id="columnCount"></span></div>
-        <div>列间距: <span id="columnGap"></span>px</div>
-        <button onclick="forceMobileLayout()" style="
-          margin-top: 8px;
-          padding: 4px 8px;
-          background: #16a34a;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 11px;
-        ">强制移动端布局</button>
-      </div>
+      
     </div>
   </div>
 
@@ -1923,84 +1897,12 @@
       // 每30秒更新一次未读数量
       setInterval(updateUnreadBadge, 30000);
       
-      // 显示调试信息
-      showDebugInfo();
-      
-      // 监听窗口大小变化
-      window.addEventListener('resize', showDebugInfo);
-      
-      // 立即应用移动端布局
-      setTimeout(() => {
-        showDebugInfo();
-      }, 100);
-      
-      // 确保在DOM完全加载后应用布局
-      setTimeout(() => {
-        showDebugInfo();
-      }, 500);
+
     });
     
     // 强制应用移动端布局
-    function forceMobileLayout() {
-      const postsMasonry = document.querySelector('.posts-masonry');
-      if (postsMasonry) {
-        postsMasonry.style.columnCount = '2';
-        postsMasonry.style.columnGap = '8px';
-        postsMasonry.style.marginTop = '12px';
-        console.log('强制应用移动端布局：2列，间距8px');
-        
-        // 更新调试信息
-        const columnCount = document.getElementById('columnCount');
-        const columnGap = document.getElementById('columnGap');
-        if (columnCount) columnCount.textContent = '2';
-        if (columnGap) columnGap.textContent = '8px';
-      }
-    }
     
     // 显示调试信息并强制应用移动端布局
-    function showDebugInfo() {
-      const debugInfo = document.getElementById('debugInfo');
-      const screenWidth = document.getElementById('screenWidth');
-      const columnCount = document.getElementById('columnCount');
-      const columnGap = document.getElementById('columnCount');
-      
-      if (debugInfo && screenWidth && columnCount && columnGap) {
-        const width = window.innerWidth;
-        const postsMasonry = document.querySelector('.posts-masonry');
-        
-        screenWidth.textContent = width;
-        
-        if (postsMasonry) {
-          // 强制应用移动端布局
-          if (width <= 960) {
-            postsMasonry.style.columnCount = '2';
-            postsMasonry.style.columnGap = width <= 640 ? '8px' : '12px';
-            postsMasonry.style.marginTop = width <= 640 ? '12px' : '16px';
-            
-            // 更新调试信息
-            columnCount.textContent = '2';
-            columnGap.textContent = width <= 640 ? '8px' : '12px';
-          } else if (width <= 1200) {
-            postsMasonry.style.columnCount = '2';
-            postsMasonry.style.columnGap = '20px';
-            postsMasonry.style.marginTop = '20px';
-            
-            columnCount.textContent = '2';
-            columnGap.textContent = '20px';
-          } else {
-            postsMasonry.style.columnCount = '3';
-            postsMasonry.style.columnGap = '20px';
-            postsMasonry.style.marginTop = '20px';
-            
-            columnCount.textContent = '3';
-            columnGap.textContent = '20px';
-          }
-          
-          // 显示调试信息
-          debugInfo.style.display = 'block';
-        }
-      }
-    }
 
     // 页面获得焦点时更新徽章
     document.addEventListener('focus', updateUnreadBadge);
