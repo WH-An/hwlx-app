@@ -85,6 +85,36 @@
     .thumb img{display:block; width:100%; height:100px; object-fit:cover}
     .msg{min-height:20px; color:#d33; font-size:14px}
 
+    /* 删除按钮样式 */
+    .delete-btn{
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 24px;
+      height: 24px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .delete-btn:hover{
+      background: rgba(239, 68, 68, 1);
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .delete-btn:active{
+      transform: scale(0.95);
+    }
+
     /* 按钮行：两端对齐，左取消右发布 */
     .row {
       display: flex;
@@ -110,7 +140,7 @@
     /* 作者徽章（头像 + 用户名，右下角） */
     .author-badge{
       position:absolute;
-      right:8px; bottom:8px;
+      left:8px; bottom:8px;
       display:inline-flex; align-items:center; gap:6px;
       background:rgba(255,255,255,0.96);
       border:1px solid var(--border);
@@ -399,33 +429,101 @@
     return badge;
   }
 
-  // 预览：选图后为每张缩略图右下角加徽章
+  // 预览：选图后为每张缩略图添加删除按钮和作者徽章
   function bindPreviewAuthorBadge(){
     const fileInput = document.getElementById('images');
     const preview = document.getElementById('preview');
     if (!fileInput || !preview) return;
 
+    // 存储当前选中的文件
+    let currentFiles = [];
+
     fileInput.addEventListener('change', () => {
       const u = getLocalUser();
       preview.innerHTML = '';
-      const files = Array.from(fileInput.files || []);
-      files.forEach(f => {
+      currentFiles = Array.from(fileInput.files || []);
+      
+      currentFiles.forEach((file, index) => {
         const reader = new FileReader();
         reader.onload = e => {
           const wrap = document.createElement('div');
           wrap.className = 'thumb';
+          wrap.dataset.fileIndex = index;
 
           const img = document.createElement('img');
           img.src = e.target.result;
-          img.alt = f.name;
+          img.alt = file.name;
+
+          // 添加删除按钮
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'delete-btn';
+          deleteBtn.innerHTML = '×';
+          deleteBtn.title = '删除此图片';
+          deleteBtn.onclick = (e) => {
+            e.stopPropagation();
+            deleteImage(index);
+          };
+
+          // 添加作者徽章
+          const authorBadge = createAuthorBadge(u);
 
           wrap.appendChild(img);
-          wrap.appendChild(createAuthorBadge(u));
+          wrap.appendChild(deleteBtn);
+          wrap.appendChild(authorBadge);
           preview.appendChild(wrap);
         };
-        reader.readAsDataURL(f);
+        reader.readAsDataURL(file);
       });
     });
+
+    // 删除指定索引的图片
+    function deleteImage(index) {
+      if (index < 0 || index >= currentFiles.length) return;
+      
+      // 从数组中移除文件
+      currentFiles.splice(index, 1);
+      
+      // 重新创建FileList对象（因为FileList是只读的）
+      const dt = new DataTransfer();
+      currentFiles.forEach(file => dt.items.add(file));
+      fileInput.files = dt.files;
+      
+      // 重新渲染预览
+      const u = getLocalUser();
+      preview.innerHTML = '';
+      
+      currentFiles.forEach((file, newIndex) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const wrap = document.createElement('div');
+          wrap.className = 'thumb';
+          wrap.dataset.fileIndex = newIndex;
+
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.alt = file.name;
+
+          // 添加删除按钮
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'delete-btn';
+          deleteBtn.innerHTML = '×';
+          deleteBtn.title = '删除此图片';
+          deleteBtn.onclick = (e) => {
+            e.stopPropagation();
+            deleteImage(newIndex);
+          };
+
+          // 添加作者徽章
+          const authorBadge = createAuthorBadge(u);
+
+          wrap.appendChild(img);
+          wrap.appendChild(deleteBtn);
+          wrap.appendChild(authorBadge);
+          preview.appendChild(wrap);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
   }
 
   // 取消：先确认再跳转
