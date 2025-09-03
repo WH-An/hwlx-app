@@ -316,7 +316,7 @@
       return ''; // 生产环境使用相对路径
     })();
     
-    const CATEGORY = 'enrollment-steps';
+    const CATEGORY = 'enroll';
     let allPosts = [];
 
     function toAbs(url){
@@ -490,21 +490,33 @@
 
     async function loadPosts(){
       try{
+        console.log('🔍 正在加载分类为 "' + CATEGORY + '" 的帖子...');
         const response = await fetch(API_BASE + '/api/posts?category=' + CATEGORY);
         if(response.ok){
           allPosts = await response.json();
+          console.log('📊 加载到 ' + allPosts.length + ' 个帖子:', allPosts);
           renderPosts();
         } else {
-          console.error('加载帖子失败:', response.status);
+          console.error('❌ 加载帖子失败:', response.status);
         }
       } catch(error){
-        console.error('加载帖子出错:', error);
+        console.error('❌ 加载帖子出错:', error);
       }
     }
 
     function renderPosts(){
       const masonry = document.getElementById('masonry');
-      if(!masonry) return;
+      if(!masonry) {
+        console.error('❌ 找不到masonry元素');
+        return;
+      }
+      
+      console.log('🎨 开始渲染 ' + allPosts.length + ' 个帖子到masonry');
+      
+      if(allPosts.length === 0) {
+        masonry.innerHTML = '<div style="text-align: center; padding: 40px; color: #6b7280;">暂无帖子，快来发布第一个入学步骤信息吧！</div>';
+        return;
+      }
       
       masonry.innerHTML = allPosts.map(post => `
         <div class="card" role="link" onclick="viewPost('${post._id}')">
@@ -516,6 +528,8 @@
           </div>
         </div>
       `).join('');
+      
+      console.log('✅ 帖子渲染完成');
     }
 
     function doSearch(){
