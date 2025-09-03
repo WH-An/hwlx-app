@@ -404,10 +404,19 @@
         return;
       }
       
-      masonry.innerHTML = allPosts.map(post => `
+      masonry.innerHTML = allPosts.map(post => {
+        console.log('📝 处理帖子:', {
+          id: post._id,
+          title: post.title,
+          imagePath: post.imagePath,
+          images: post.images,
+          hasImage: !!(post.imagePath && post.imagePath.trim()) || (post.images && post.images.length > 0 && post.images[0] && post.images[0].trim())
+        });
+        
+        return `
         <div class="card" role="link" onclick="viewPost('${post._id}')">
-          ${post.imagePath || post.images ? 
-            `<img src="${toAbs(post.imagePath || (post.images && post.images[0]))}" alt="${post.title}" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop'">` : 
+          ${(post.imagePath && post.imagePath.trim()) || (post.images && post.images.length > 0 && post.images[0] && post.images[0].trim()) ? 
+            `<img src="${toAbs(post.imagePath || post.images[0])}" alt="${post.title}" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop'">` : 
             '<div style="height: 200px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 14px;">📝 纯文字帖子</div>'
           }
           <div class="card-text">${post.title}</div>
@@ -416,7 +425,8 @@
             <span class="name">${post.authorName || '匿名用户'}</span>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
       
       console.log('✅ 帖子渲染完成');
     }
@@ -443,8 +453,8 @@
       
       masonry.innerHTML = filtered.map(post => `
         <div class="card" role="link" onclick="viewPost('${post._id}')">
-          ${post.imagePath || post.images ? 
-            `<img src="${toAbs(post.imagePath || (post.images && post.images[0]))}" alt="${post.title}" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop'">` : 
+          ${(post.imagePath && post.imagePath.trim()) || (post.images && post.images.length > 0 && post.images[0] && post.images[0].trim()) ? 
+            `<img src="${toAbs(post.imagePath || post.images[0])}" alt="${post.title}" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop'">` : 
             '<div style="height: 200px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 14px;">📝 纯文字帖子</div>'
           }
           <div class="card-text">${post.title}</div>
