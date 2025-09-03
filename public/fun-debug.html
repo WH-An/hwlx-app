@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>娱乐页面调试版</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .debug-info { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; }
+    .error { background: #ffebee; color: #c62828; }
+    .success { background: #e8f5e8; color: #2e7d32; }
+    .card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>🎉 娱乐页面调试版</h1>
+  
+  <div class="debug-info">
+    <h3>🔍 调试信息</h3>
+    <p><strong>当前时间:</strong> <span id="currentTime"></span></p>
+    <p><strong>API基础URL:</strong> <span id="apiBase"></span></p>
+    <p><strong>分类:</strong> <span id="category"></span></p>
+  </div>
+
+  <div class="debug-info">
+    <h3>📡 API测试</h3>
+    <button onclick="testAPI()">测试API连接</button>
+    <button onclick="testPostsAPI()">测试帖子API</button>
+    <button onclick="testUserAPI()">测试用户API</button>
+  </div>
+
+  <div id="apiResults" class="debug-info"></div>
+
+  <div id="postsContainer"></div>
+
+  <script>
+    // 自动检测API基础URL
+    const API_BASE = (() => {
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        return 'http://127.0.0.1:3001';
+      }
+      return ''; // 生产环境使用相对路径
+    })();
+    
+    const CATEGORY = 'fun';
+    
+    // 显示基本信息
+    document.getElementById('currentTime').textContent = new Date().toLocaleString();
+    document.getElementById('apiBase').textContent = API_BASE || '相对路径';
+    document.getElementById('category').textContent = CATEGORY;
+
+    // 测试API连接
+    async function testAPI() {
+      const resultsDiv = document.getElementById('apiResults');
+      resultsDiv.innerHTML = '<div class="debug-info">🔄 正在测试API连接...</div>';
+      
+      try {
+        const response = await fetch(API_BASE + '/api/posts?category=' + CATEGORY, {
+          credentials: 'include'
+        });
+        
+        resultsDiv.innerHTML = `
+          <div class="debug-info ${response.ok ? 'success' : 'error'}">
+            <h4>API连接测试结果:</h4>
+            <p><strong>状态码:</strong> ${response.status}</p>
+            <p><strong>状态文本:</strong> ${response.statusText}</p>
+            <p><strong>响应头:</strong></p>
+            <pre>${JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2)}</pre>
+          </div>
+        `;
+      } catch (error) {
+        resultsDiv.innerHTML = `
+          <div class="debug-info error">
+            <h4>API连接失败:</h4>
+            <p><strong>错误类型:</strong> ${error.name}</p>
+            <p><strong>错误信息:</strong> ${error.message}</p>
+            <p><strong>完整错误:</strong></p>
+            <pre>${error.stack}</pre>
+          </div>
+        `;
+      }
+    }
+
+    // 测试帖子API
+    async function testPostsAPI() {
+      const resultsDiv = document.getElementById('apiResults');
+      resultsDiv.innerHTML = '<div class="debug-info">🔄 正在测试帖子API...</div>';
+      
+      try {
+        const response = await fetch(API_BASE + '/api/posts?category=' + CATEGORY, {
+          credentials: 'include'
+        });
+        
+        if (response.ok) {
+          const posts = await response.json();
+          resultsDiv.innerHTML = `
+            <div class="debug-info success">
+              <h4>帖子API测试成功:</h4>
+              <p><strong>状态码:</strong> ${response.status}</p>
+              <p><strong>帖子数量:</strong> ${posts.length}</p>
+              <p><strong>帖子数据:</strong></p>
+              <pre>${JSON.stringify(posts, null, 2)}</pre>
+            </div>
+          `;
+          
+          // 显示帖子
+          displayPosts(posts);
+        } else {
+          const errorText = await response.text();
+          resultsDiv.innerHTML = `
+            <div class="debug-info error">
+              <h4>帖子API测试失败:</h4>
+              <p><strong>状态码:</strong> ${response.status}</p>
+              <p><strong>错误信息:</strong> ${errorText}</p>
+            </div>
+          `;
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = `
+          <div class="debug-info error">
+            <h4>帖子API测试异常:</h4>
+            <p><strong>错误类型:</strong> ${error.name}</p>
+            <p><strong>错误信息:</strong> ${error.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    // 测试用户API
+    async function testUserAPI() {
+      const resultsDiv = document.getElementById('apiResults');
+      resultsDiv.innerHTML = '<div class="debug-info">🔄 正在测试用户API...</div>';
+      
+      try {
+        const response = await fetch(API_BASE + '/api/users/me', {
+          credentials: 'include'
+        });
+        
+        if (response.ok) {
+          const user = await response.json();
+          resultsDiv.innerHTML = `
+            <div class="debug-info success">
+              <h4>用户API测试成功:</h4>
+              <p><strong>状态码:</strong> ${response.status}</p>
+              <p><strong>用户信息:</strong></p>
+              <pre>${JSON.stringify(user, null, 2)}</pre>
+            </div>
+          `;
+        } else {
+          const errorText = await response.text();
+          resultsDiv.innerHTML = `
+            <div class="debug-info error">
+              <h4>用户API测试失败:</h4>
+              <p><strong>状态码:</strong> ${response.status}</p>
+              <p><strong>错误信息:</strong> ${errorText}</p>
+            </div>
+          `;
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = `
+          <div class="debug-info error">
+            <h4>用户API测试异常:</h4>
+            <p><strong>错误类型:</strong> ${error.name}</p>
+            <p><strong>错误信息:</strong> ${error.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    // 显示帖子
+    function displayPosts(posts) {
+      const container = document.getElementById('postsContainer');
+      if (posts.length === 0) {
+        container.innerHTML = '<div class="card">暂无帖子</div>';
+        return;
+      }
+      
+      container.innerHTML = posts.map(post => `
+        <div class="card">
+          <h3>${post.title || '无标题'}</h3>
+          <p><strong>内容:</strong> ${post.content || '无内容'}</p>
+          <p><strong>分类:</strong> ${post.category || '无分类'}</p>
+          <p><strong>作者:</strong> ${post.authorName || '匿名用户'}</p>
+          <p><strong>创建时间:</strong> ${new Date(post.createdAt).toLocaleString()}</p>
+          <p><strong>图片:</strong> ${post.images && post.images.length > 0 ? post.images.join(', ') : '无图片'}</p>
+        </div>
+      `).join('');
+    }
+
+    // 页面加载完成后自动测试
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('🔍 调试页面加载完成');
+      console.log('API_BASE:', API_BASE);
+      console.log('CATEGORY:', CATEGORY);
+    });
+  </script>
+</body>
+</html>

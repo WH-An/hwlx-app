@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>管理员 · 数据显示</title>
+  <!-- 移动端优化CSS -->
+  <link rel="stylesheet" href="mobile-optimization.css">
+  
+
+  <style>
+    :root{--bg:#0b0f14;--panel:#ffffff;--text:#0f172a;--muted:#64748b;--accent:#16a34a;--danger:#ef4444;--border:#e5e7eb;--shadow:0 10px 30px rgba(0,0,0,.18);--radius:18px}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:'Microsoft YaHei',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'PingFang SC',sans-serif;background:radial-gradient(1200px 600px at 10% -10%,#1f8db8 18%, transparent 60%),radial-gradient(900px 500px at 110% 110%,#2bb8d6 12%, transparent 60%),var(--bg);color:#fff}
+    .layout{display:grid;grid-template-columns:220px 1fr;gap:18px;height:100vh;padding:24px;overflow:visible}
+    .sidebar{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 16px;display:flex;flex-direction:column;gap:16px}
+    .account-info{display:flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none;color:inherit;border:1px dashed #eef2ff;border-radius:14px;padding:14px;background:#fff}
+    .avatar{width:72px;height:72px;border-radius:50%;object-fit:cover}
+    .username{font-weight:700}
+    .nav-list{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+    .nav-list a{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);border:1px solid var(--border);background:#fafafa;border-radius:12px;padding:10px 14px;transition:.2s}
+    .nav-list a:hover{background:#f3f4f6;transform:translateY(-1px)}
+    .nav-list a.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .nav-icon{width:22px;display:inline-flex;justify-content:center}
+
+    .main{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;gap:14px;height:100%;overflow:auto}
+    h1{font-size:18px;margin:0;display:flex;align-items:center;gap:10px}
+    .badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;border:1px solid var(--border);border-radius:999px;padding:4px 8px;background:#fff}
+    .badge.admin{border-color:#bbf7d0;background:#f0fdf4;color:#166534}
+
+    /* 统计卡片样式 */
+    .stats-grid{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card{
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .stat-card:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    }
+    .stat-card .number{
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .stat-card .label{
+      font-size: 14px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stat-card .trend{
+      font-size: 12px;
+      margin-top: 8px;
+      padding: 4px 8px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+    .stat-card .trend.up{
+      background: #dcfce7;
+      color: #166534;
+    }
+    .stat-card .trend.down{
+      background: #fef2f2;
+      color: #dc2626;
+    }
+
+    /* 图表容器 */
+    .chart-container{
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    }
+    .chart-container h3{
+      margin: 0 0 16px 0;
+      font-size: 16px;
+      color: var(--text);
+    }
+    .chart-placeholder{
+      height: 300px;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 14px;
+      border: 2px dashed var(--border);
+    }
+
+    /* 时间选择器 */
+    .time-selector{
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .time-btn{
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+    .time-btn:hover{
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .time-btn.active{
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+      }
+      .sidebar {
+        display: none;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 600px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .time-selector {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- 左侧导航栏 -->
+    <aside class="sidebar">
+      <a class="account-info" href="admin-profile.html">
+        <img src="" alt="头像" class="avatar" id="sidebarAvatar">
+        <span class="username" id="sidebarName">管理员</span>
+      </a>
+      <ul class="nav-list">
+        <li><a href="admin-all.html"><span class="nav-icon">⚙️</span><span>后台管理</span></a></li>
+        <li><a href="admin-publish.html"><span class="nav-icon">📝</span><span>发布内容</span></a></li>
+        <li><a href="admin-posts.html"><span class="nav-icon">📋</span><span>帖子管理</span></a></li>
+        <li><a href="admin-analytics.html" class="active"><span class="nav-icon">📊</span><span>数据显示</span></a></li>
+      </ul>
+    </aside>
+
+    <!-- 主要内容区域 -->
+    <main class="main">
+      <h1>📊 数据显示 <span class="badge admin">管理员</span></h1>
+
+      <!-- 时间选择器 -->
+      <div class="time-selector">
+        <button class="time-btn active" data-period="day">今日</button>
+        <button class="time-btn" data-period="week">本周</button>
+        <button class="time-btn" data-period="month">本月</button>
+        <button class="time-btn" data-period="year">本年</button>
+      </div>
+
+      <!-- 统计卡片 -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="number" id="visitsCount">0</div>
+          <div class="label">访问量</div>
+          <div class="trend up" id="visitsTrend">+12.5%</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="usersCount">0</div>
+          <div class="label">用户数</div>
+          <div class="trend up" id="usersTrend">+5.2%</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="postsCount">0</div>
+          <div class="label">帖子数</div>
+          <div class="trend up" id="postsTrend">+8.7%</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="commentsCount">0</div>
+          <div class="label">评论数</div>
+          <div class="trend down" id="commentsTrend">-2.1%</div>
+        </div>
+      </div>
+
+      <!-- 访问量趋势图 -->
+      <div class="chart-container">
+        <h3>📈 访问量趋势</h3>
+        <div class="chart-placeholder" id="visitsChart">
+          <div style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 16px;">📊</div>
+            <div>访问量趋势图表</div>
+            <div style="font-size: 12px; margin-top: 8px; color: #94a3b8;">点击上方时间按钮查看不同时期数据</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 用户活跃度 -->
+      <div class="chart-container">
+        <h3>👥 用户活跃度分析</h3>
+        <div class="chart-placeholder" id="usersChart">
+          <div style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 16px;">👥</div>
+            <div>用户活跃度图表</div>
+            <div style="font-size: 12px; margin-top: 8px; color: #94a3b8;">显示用户注册、登录、发帖等行为数据</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // 自动检测API基础URL
+    const API_BASE = (() => {
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        return 'http://127.0.0.1:3001';
+      }
+      return ''; // 生产环境使用相对路径
+    })();
+
+    // 模拟数据（实际项目中应该从后端API获取）
+    const mockData = {
+      day: {
+        visits: 1247,
+        users: 89,
+        posts: 23,
+        comments: 156,
+        visitsTrend: '+12.5%',
+        usersTrend: '+5.2%',
+        postsTrend: '+8.7%',
+        commentsTrend: '-2.1%'
+      },
+      week: {
+        visits: 8923,
+        users: 456,
+        posts: 167,
+        comments: 1247,
+        visitsTrend: '+18.3%',
+        usersTrend: '+12.7%',
+        postsTrend: '+15.4%',
+        commentsTrend: '+8.9%'
+      },
+      month: {
+        visits: 45678,
+        users: 2345,
+        posts: 892,
+        comments: 6789,
+        visitsTrend: '+25.6%',
+        usersTrend: '+22.1%',
+        postsTrend: '+28.7%',
+        commentsTrend: '+19.3%'
+      },
+      year: {
+        visits: 456789,
+        users: 23456,
+        posts: 8923,
+        comments: 67890,
+        visitsTrend: '+45.2%',
+        usersTrend: '+38.7%',
+        postsTrend: '+52.1%',
+        commentsTrend: '+41.8%'
+      }
+    };
+
+    // 当前选中的时间周期
+    let currentPeriod = 'day';
+
+    // 更新统计数据
+    function updateStats(period) {
+      const data = mockData[period];
+      if (!data) return;
+
+      document.getElementById('visitsCount').textContent = data.visits.toLocaleString();
+      document.getElementById('usersCount').textContent = data.users.toLocaleString();
+      document.getElementById('postsCount').textContent = data.posts.toLocaleString();
+      document.getElementById('commentsCount').textContent = data.comments.toLocaleString();
+
+      // 更新趋势
+      document.getElementById('visitsTrend').textContent = data.visitsTrend;
+      document.getElementById('usersTrend').textContent = data.usersTrend;
+      document.getElementById('postsTrend').textContent = data.postsTrend;
+      document.getElementById('commentsTrend').textContent = data.commentsTrend;
+
+      // 更新趋势样式
+      document.getElementById('visitsTrend').className = `trend ${data.visitsTrend.startsWith('+') ? 'up' : 'down'}`;
+      document.getElementById('usersTrend').className = `trend ${data.usersTrend.startsWith('+') ? 'up' : 'down'}`;
+      document.getElementById('postsTrend').className = `trend ${data.postsTrend.startsWith('+') ? 'up' : 'down'}`;
+      document.getElementById('commentsTrend').className = `trend ${data.commentsTrend.startsWith('+') ? 'down' : 'up'}`;
+    }
+
+    // 时间选择器事件
+    function initTimeSelector() {
+      const timeBtns = document.querySelectorAll('.time-btn');
+      timeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          // 移除所有active类
+          timeBtns.forEach(b => b.classList.remove('active'));
+          // 添加active类到当前按钮
+          btn.classList.add('active');
+          
+          // 获取时间周期
+          const period = btn.dataset.period;
+          currentPeriod = period;
+          
+          // 更新统计数据
+          updateStats(period);
+          
+          // 这里可以添加加载对应时期图表的逻辑
+          console.log(`切换到${period}数据`);
+        });
+      });
+    }
+
+    // 加载用户信息
+    async function loadUserInfo() {
+      try {
+        const response = await fetch(API_BASE + '/api/users/me', { 
+          credentials: 'include' 
+        });
+        
+        if (response.ok) {
+          const user = await response.json();
+          const displayName = user.nickname || user.username || user.displayName || user.name || user.email || '管理员';
+          
+          document.getElementById('sidebarName').textContent = displayName;
+          
+          if (user.avatarPath) {
+            const avatarUrl = user.avatarPath.startsWith('http') ? user.avatarPath : API_BASE + user.avatarPath;
+            document.getElementById('sidebarAvatar').src = avatarUrl;
+          }
+        }
+      } catch (error) {
+        console.warn('加载用户信息失败:', error);
+      }
+    }
+
+    // 页面加载完成后执行
+    document.addEventListener('DOMContentLoaded', () => {
+      loadUserInfo();
+      initTimeSelector();
+      updateStats(currentPeriod);
+    });
+  </script>
+</body>
+</html>
