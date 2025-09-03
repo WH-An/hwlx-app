@@ -241,58 +241,68 @@
       return ''; // 生产环境使用相对路径
     })();
 
-    // 模拟数据（实际项目中应该从后端API获取）
-    const mockData = {
-      day: {
-        visits: 1247,
-        users: 89,
-        posts: 23,
-        comments: 156,
-        visitsTrend: '+12.5%',
-        usersTrend: '+5.2%',
-        postsTrend: '+8.7%',
-        commentsTrend: '-2.1%'
-      },
-      week: {
-        visits: 8923,
-        users: 456,
-        posts: 167,
-        comments: 1247,
-        visitsTrend: '+18.3%',
-        usersTrend: '+12.7%',
-        postsTrend: '+15.4%',
-        commentsTrend: '+8.9%'
-      },
-      month: {
-        visits: 45678,
-        users: 2345,
-        posts: 892,
-        comments: 6789,
-        visitsTrend: '+25.6%',
-        usersTrend: '+22.1%',
-        postsTrend: '+28.7%',
-        commentsTrend: '+19.3%'
-      },
-      year: {
-        visits: 456789,
-        users: 23456,
-        posts: 8923,
-        comments: 67890,
-        visitsTrend: '+45.2%',
-        usersTrend: '+38.7%',
-        postsTrend: '+52.1%',
-        commentsTrend: '+41.8%'
-      }
+    // 真实数据缓存
+    const dataCache = {
+      day: null,
+      week: null,
+      month: null,
+      year: null
     };
 
     // 当前选中的时间周期
     let currentPeriod = 'day';
 
-    // 更新统计数据
-    function updateStats(period) {
-      const data = mockData[period];
-      if (!data) return;
+    // 从后端API获取真实数据
+    async function fetchRealData(period) {
+      try {
+        const response = await fetch(`${API_BASE}/api/analytics?period=${period}`, {
+          credentials: 'include',
+          cache: 'no-cache'
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          // 缓存数据
+          dataCache[period] = data;
+          return data;
+        } else {
+          throw new Error(`HTTP ${response.status}`);
+        }
+      } catch (error) {
+        console.error(`获取${period}数据失败:`, error);
+        // 如果有缓存数据，使用缓存
+        if (dataCache[period]) {
+          return dataCache[period];
+        }
+        return null;
+      }
+    }
 
+    // 更新统计数据
+    async function updateStats(period) {
+      // 显示加载状态
+      const loadingText = '加载中...';
+      document.getElementById('visitsCount').textContent = loadingText;
+      document.getElementById('visitsTrend').textContent = '...';
+      document.getElementById('usersCount').textContent = loadingText;
+      document.getElementById('usersTrend').textContent = '...';
+      document.getElementById('postsCount').textContent = loadingText;
+      document.getElementById('postsTrend').textContent = '...';
+      document.getElementById('commentsCount').textContent = loadingText;
+      document.getElementById('commentsTrend').textContent = '...';
+      
+      // 获取真实数据
+      const data = await fetchRealData(period);
+      if (!data) {
+        // 如果获取失败，显示错误状态
+        document.getElementById('visitsCount').textContent = '获取失败';
+        document.getElementById('usersCount').textContent = '获取失败';
+        document.getElementById('postsCount').textContent = '获取失败';
+        document.getElementById('commentsCount').textContent = '获取失败';
+        return;
+      }
+
+      // 更新访问量
       document.getElementById('visitsCount').textContent = data.visits.toLocaleString();
       document.getElementById('usersCount').textContent = data.users.toLocaleString();
       document.getElementById('postsCount').textContent = data.posts.toLocaleString();
@@ -306,9 +316,9 @@
 
       // 更新趋势样式
       document.getElementById('visitsTrend').className = `trend ${data.visitsTrend.startsWith('+') ? 'up' : 'down'}`;
-      document.getElementById('usersTrend').className = `trend ${data.usersTrend.startsWith('+') ? 'up' : 'down'}`;
+      document.getElementById('usersTrend').className = `trend ${data.visitsTrend.startsWith('+') ? 'up' : 'down'}`;
       document.getElementById('postsTrend').className = `trend ${data.postsTrend.startsWith('+') ? 'up' : 'down'}`;
-      document.getElementById('commentsTrend').className = `trend ${data.commentsTrend.startsWith('+') ? 'down' : 'up'}`;
+      document.getElementById('commentsTrend').className = `trend ${data.commentsTrend.startsWith('+') ? 'up' : 'down'}`;
     }
 
     // 时间选择器事件
@@ -362,6 +372,15 @@
       loadUserInfo();
       initTimeSelector();
       updateStats(currentPeriod);
+      
+      // 每5分钟自动刷新数据
+      setInterval(() => {
+        updateStats(currentPeriod);
+      }, 5 * 60 * 1000);
+      
+      // 页面获得焦点时刷新数据
+      document.addEventListener('focus', () => updateStats(currentPeriod));
+      window.addEventListener('focus', () => updateStats(currentPeriod));
     });
   </script>
 </body>

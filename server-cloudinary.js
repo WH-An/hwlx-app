@@ -1194,6 +1194,126 @@ app.post('/api/verify-code', async (req, res) => {
   }
 });
 
+// 数据统计相关变量
+let visitStats = {
+  total: 0,
+  daily: {},
+  weekly: {},
+  monthly: {},
+  yearly: {}
+};
+
+// 访问量统计中间件
+app.use((req, res, next) => {
+  // 跳过静态文件和API请求的统计
+  if (req.path.startsWith('/api/') || req.path.includes('.')) {
+    return next();
+  }
+  
+  // 统计页面访问
+  const today = new Date().toISOString().split('T')[0];
+  const now = new Date();
+  const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+  const weekKey = weekStart.toISOString().split('T')[0];
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  const yearKey = now.getFullYear().toString();
+  
+  // 更新总访问量
+  visitStats.total++;
+  
+  // 更新日访问量
+  if (!visitStats.daily[today]) visitStats.daily[today] = 0;
+  visitStats.daily[today]++;
+  
+  // 更新周访问量
+  if (!visitStats.weekly[weekKey]) visitStats.weekly[weekKey] = 0;
+  visitStats.weekly[weekKey]++;
+  
+  // 更新月访问量
+  if (!visitStats.monthly[monthKey]) visitStats.monthly[monthKey] = 0;
+  visitStats.monthly[monthKey]++;
+  
+  // 更新年访问量
+  if (!visitStats.yearly[yearKey]) visitStats.yearly[yearKey] = 0;
+  visitStats.yearly[yearKey]++;
+  
+  next();
+});
+
+// 数据统计API
+app.get('/api/analytics', async (req, res) => {
+  try {
+    const { period = 'day' } = req.query;
+    const now = new Date();
+    
+    let visits = 0;
+    let users = 0;
+    let posts = 0;
+    let comments = 0;
+    
+    // 根据时间周期获取数据
+    switch (period) {
+      case 'day':
+        const today = now.toISOString().split('T')[0];
+        visits = visitStats.daily[today] || 0;
+        break;
+      case 'week':
+        const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+        const weekKey = weekStart.toISOString().split('T')[0];
+        visits = visitStats.weekly[weekKey] || 0;
+        break;
+      case 'month':
+        const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        visits = visitStats.monthly[monthKey] || 0;
+        break;
+      case 'year':
+        const yearKey = now.getFullYear().toString();
+        visits = visitStats.yearly[yearKey] || 0;
+        break;
+    }
+    
+    // 获取用户、帖子、评论数量
+    try {
+      users = await User.countDocuments();
+      posts = await Post.countDocuments();
+      comments = await Comment.countDocuments();
+    } catch (error) {
+      console.warn('获取统计数据失败:', error);
+    }
+    
+    // 计算趋势（简单实现，实际项目中应该有更复杂的算法）
+    const trends = calculateTrends(period, visits, users, posts, comments);
+    
+    res.json({
+      visits,
+      users,
+      posts,
+      comments,
+      ...trends
+    });
+  } catch (error) {
+    console.error('获取统计数据失败:', error);
+    res.status(500).json({ msg: '获取统计数据失败' });
+  }
+});
+
+// 计算趋势的函数
+function calculateTrends(period, visits, users, posts, comments) {
+  // 这里可以实现更复杂的趋势计算逻辑
+  // 目前使用简单的随机趋势作为示例
+  const getRandomTrend = () => {
+    const change = Math.random() * 20 - 10; // -10% 到 +10%
+    return change > 0 ? `+${change.toFixed(1)}%` : `${change.toFixed(1)}%`;
+  };
+  
+  return {
+    visitsTrend: getRandomTrend(),
+    usersTrend: getRandomTrend(),
+    postsTrend: getRandomTrend(),
+    commentsTrend: getRandomTrend()
+  };
+}
+
 // 启动服务器
 async function startServer() {
   try {
