@@ -147,7 +147,30 @@
       .card-text {
         padding: 12px;
         font-size: 14px;
-      }
+      
+  max-height: 80px;
+  overflow-y: auto;
+  word-wrap: break-word;
+}
+
+/* 自定义滚动条样式 */
+.card-text::-webkit-scrollbar {
+  width: 4px;
+}
+
+.card-text::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+
+.card-text::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+.card-text::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
     }
 
     #chatFab{ position:fixed; left:16px; bottom:calc(var(--mobile-nav-height) + 16px); width:48px; height:48px; border-radius:9999px; display:flex; align-items:center; justify-content:center; background:#0f172a; color:#fff; border:1px solid rgba(255,255,255,.15); box-shadow:0 10px 24px rgba(0,0,0,.28); cursor:pointer; user-select:none; z-index:9999; transition: transform .15s, box-shadow .15s, opacity .2s }

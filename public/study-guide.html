@@ -160,7 +160,33 @@
     .card[role="link"]:hover{ transform: translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.12); }
 
     .card img{ width:100%; display:block; aspect-ratio: 4 / 5; object-fit: cover; }
-    .card-text{padding:10px 12px;color:#374151;line-height:1.6}
+    .card-text{
+  padding:10px 12px;
+  color:#374151;
+  line-height:1.6;
+  max-height:80px;
+  overflow-y:auto;
+  word-wrap:break-word;
+}
+
+/* 自定义滚动条样式 */
+.card-text::-webkit-scrollbar {
+  width:4px;
+}
+
+.card-text::-webkit-scrollbar-track {
+  background:#f1f1f1;
+  border-radius:2px;
+}
+
+.card-text::-webkit-scrollbar-thumb {
+  background:#c1c1c1;
+  border-radius:2px;
+}
+
+.card-text::-webkit-scrollbar-thumb:hover {
+  background:#a8a8a8;
+}
 
     /* 作者徽章：下移，与内容底基本齐平 */
     .author-badge{
