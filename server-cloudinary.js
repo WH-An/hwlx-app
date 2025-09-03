@@ -599,6 +599,28 @@ app.patch('/api/posts/:id', async (req, res) => {
   }
 });
 
+// 获取未读消息数量
+app.get('/api/messages/unread-count', async (req, res) => {
+  try {
+    const { email } = await getCurrentUser(req);
+    if (!email) {
+      return res.json({ unreadCount: 0 });
+    }
+
+    // 简单计算：发给当前用户且未读的消息数量
+    const unreadCount = await Message.countDocuments({
+      to: email,
+      isRead: { $ne: true }
+    });
+
+    console.log(`📧 用户 ${email} 的未读消息数量: ${unreadCount}`);
+    res.json({ unreadCount });
+  } catch (error) {
+    console.error('获取未读消息数量失败:', error);
+    res.json({ unreadCount: 0 });
+  }
+});
+
 // 获取消息列表
 app.get('/api/messages', async (req, res) => {
   try {
