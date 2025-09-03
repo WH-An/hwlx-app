@@ -456,7 +456,24 @@
     const msgEl = document.getElementById('msg');
     if (!btn) return;
 
+    // 防重复点击状态
+    let isSubmitting = false;
+
     btn.addEventListener('click', async () => {
+      // 防止重复点击
+      if (isSubmitting) {
+        console.log('正在发送中，请勿重复点击');
+        return;
+      }
+
+      // 设置发送状态
+      isSubmitting = true;
+      const originalText = btn.textContent;
+      btn.textContent = '正在发送中...';
+      btn.disabled = true;
+      btn.style.opacity = '0.6';
+      btn.style.cursor = 'not-allowed';
+
       msgEl.style.color = '#d33';
       msgEl.textContent = '';
 
@@ -467,6 +484,8 @@
 
       if(!desc.trim() && (!files || files.length === 0)){
         msgEl.textContent = '请至少填写正文或选择一张图片再发布。';
+        // 恢复按钮状态
+        resetButtonState();
         return;
       }
 
@@ -497,6 +516,8 @@
         const data = await res.json().catch(()=> ({}));
         if (!res.ok) {
           msgEl.textContent = data.msg || `发布失败（${res.status}）`;
+          // 恢复按钮状态
+          resetButtonState();
           return;
         }
         // 成功提示并跳转
@@ -505,6 +526,17 @@
         location.href = pageOfCategory(category);
       }catch(e){
         msgEl.textContent = '发布失败：无法连接后端服务。';
+        // 恢复按钮状态
+        resetButtonState();
+      }
+
+      // 恢复按钮状态的函数
+      function resetButtonState() {
+        isSubmitting = false;
+        btn.textContent = originalText;
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
       }
     });
   }
