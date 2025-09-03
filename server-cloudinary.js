@@ -238,9 +238,10 @@ app.post('/api/login', async (req, res) => {
     if (isFixedAdmin(email)) {
       if (password === 'admin123') {
         res.cookie('admin_email', email, { 
-          httpOnly: true, 
+          httpOnly: false, 
           secure: process.env.NODE_ENV === 'production',
-          maxAge: 7 * 24 * 60 * 60 * 1000 
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+          sameSite: 'Lax'
         });
         return res.json({ 
           msg: '管理员登录成功',
@@ -265,9 +266,10 @@ app.post('/api/login', async (req, res) => {
     }
 
     res.cookie('email', email, { 
-      httpOnly: true, 
+      httpOnly: false, 
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000 
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: 'Lax'
     });
 
     const userResponse = user.toObject();
@@ -282,8 +284,8 @@ app.post('/api/login', async (req, res) => {
 
 // 登出
 app.post('/api/logout', (req, res) => {
-  res.clearCookie('email');
-  res.clearCookie('admin_email');
+  res.clearCookie('email', { sameSite: 'Lax' });
+  res.clearCookie('admin_email', { sameSite: 'Lax' });
   res.json({ msg: '登出成功' });
 });
 

@@ -491,13 +491,23 @@
     async function loadPosts(){
       try{
         console.log('🔍 正在加载分类为 "' + CATEGORY + '" 的帖子...');
-        const response = await fetch(API_BASE + '/api/posts?category=' + CATEGORY);
+        console.log('🍪 当前Cookie:', document.cookie);
+        
+        const response = await fetch(API_BASE + '/api/posts?category=' + CATEGORY, {
+          credentials: 'include'
+        });
+        
+        console.log('📡 API响应状态:', response.status);
+        console.log('📡 API响应头:', Object.fromEntries(response.headers.entries()));
+        
         if(response.ok){
           allPosts = await response.json();
           console.log('📊 加载到 ' + allPosts.length + ' 个帖子:', allPosts);
           renderPosts();
         } else {
           console.error('❌ 加载帖子失败:', response.status);
+          const errorText = await response.text();
+          console.error('❌ 错误详情:', errorText);
         }
       } catch(error){
         console.error('❌ 加载帖子出错:', error);
