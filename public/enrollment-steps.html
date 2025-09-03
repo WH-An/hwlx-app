@@ -41,13 +41,63 @@
     @media (max-width:1200px){ .masonry{ column-count:2; } }
     @media (max-width:640px){  .masonry{ column-count:1; } }
 
+    /* 卡片样式 */
+    .card{
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      margin: 0 0 14px;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(0,0,0,.06);
+      padding-bottom: 46px;
+      break-inside: avoid; -webkit-column-break-inside: avoid; page-break-inside: avoid;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .card[role="link"]{ cursor:pointer; }
+    .card[role="link"]:hover{ transform: translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.12); }
 
-    
-    .top-nav-button .nav-icon{font-size:20px;color:var(--text)}
-    .top-nav-button:hover{transform:translateY(-1px);box-shadow:0 14px 28px rgba(0,0,0,.32)}
-    .top-nav-button:active{transform:translateY(0);box-shadow:0 8px 18px rgba(0,0,0,.26)}
+    .card img{ width:100%; display:block; aspect-ratio:4/5; object-fit:cover }
+    .card-text{ 
+      padding:10px 12px; 
+      color:#374151; 
+      line-height:1.6;
+      max-height:80px;
+      overflow-y:auto;
+      word-wrap:break-word;
+    }
 
+    /* 自定义滚动条样式 */
+    .card-text::-webkit-scrollbar {
+      width:4px;
+    }
     
+    .card-text::-webkit-scrollbar-track {
+      background:#f1f1f1;
+      border-radius:2px;
+    }
+    
+    .card-text::-webkit-scrollbar-thumb {
+      background:#c1c1c1;
+      border-radius:2px;
+    }
+    
+    .card-text::-webkit-scrollbar-thumb:hover {
+      background:#a8a8a8;
+    }
+
+    /* 作者徽章：下移，与内容底对齐 */
+    .author-badge{
+      position:absolute; right:10px; bottom:8px;
+      display:flex; align-items:center; gap:8px;
+      background:rgba(255,255,255,.92); border:1px solid var(--border);
+      padding:6px 8px; border-radius:999px; box-shadow:0 4px 12px rgba(0,0,0,.10);
+      max-width:80%; cursor:pointer;
+    }
+    .author-badge img{width:22px;height:22px;border-radius:50%;object-fit:cover}
+    .author-badge .name{font-size:12px;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
 
     /* 移动端响应式优化 */
     @media (max-width: 960px) {
@@ -107,72 +157,7 @@
         padding: 16px;
         font-size: 16px;
       }
-      
-      .panel-title {
-        font-size: 18px;
-      }
-      
-      .card {
-        border-radius: 12px;
-        margin-bottom: 12px;
-      }
-      
-      .card-text {
-        padding: 12px;
-        font-size: 14px;
-      }
     }
-
-    /* 卡片：列内排列 + 预留徽章空间 */
-    .card{
-      position:relative; display:inline-block; width:100%; margin:0 0 14px;
-      border:1px solid var(--border); background:#fff; border-radius:14px; overflow:hidden;
-      box-shadow:0 6px 18px rgba(0,0,0,.06); padding-bottom:46px;
-      break-inside:avoid; -webkit-column-break-inside:avoid; page-break-inside:avoid;
-    }
-    .card img{ width:100%; display:block; aspect-ratio:4/5; object-fit:cover }
-    .card-text{ 
-  padding:10px 12px; 
-  color:#374151; 
-  line-height:1.6;
-  max-height:80px;
-  overflow-y:auto;
-  word-wrap:break-word;
-}
-
-/* 自定义滚动条样式 */
-.card-text::-webkit-scrollbar {
-  width:4px;
-}
-
-.card-text::-webkit-scrollbar-track {
-  background:#f1f1f1;
-  border-radius:2px;
-}
-
-.card-text::-webkit-scrollbar-thumb {
-  background:#c1c1c1;
-  border-radius:2px;
-}
-
-.card-text::-webkit-scrollbar-thumb:hover {
-  background:#a8a8a8;
-}
-
-    /* 作者徽章：下移，与内容底对齐 */
-    .author-badge{
-      position:absolute; right:10px; bottom:8px;
-      display:flex; align-items:center; gap:8px;
-      background:rgba(255,255,255,.92); border:1px solid var(--border);
-      padding:6px 8px; border-radius:999px; box-shadow:0 4px 12px rgba(0,0,0,.10);
-      max-width:80%; cursor:pointer;
-    }
-    .author-badge img{width:22px;height:22px;border-radius:50%;object-fit:cover}
-    .author-badge .name{font-size:12px;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
-
-    /* 悬停反馈（可选） */
-    .card[role="link"]{ transition: transform .12s ease, box-shadow .12s ease; }
-    .card[role="link"]:hover{ transform: translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.12); }
 
     #chatFab{ position:fixed; left:16px; bottom:calc(var(--mobile-nav-height) + 16px); width:48px; height:48px; border-radius:9999px; display:flex; align-items:center; justify-content:center; background:#0f172a; color:#fff; border:1px solid rgba(255,255,255,.15); box-shadow:0 10px 24px rgba(0,0,0,.28); cursor:pointer; user-select:none; z-index:9999; transition: transform .15s, box-shadow .15s, opacity .2s }
     #chatFab:hover{ transform: translateY(-1px); box-shadow: 0 14px 28px rgba(0,0,0,.32) }
@@ -188,11 +173,7 @@
     <div class="badge">0</div>
   </div>
   
-  
-
-  
   <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay"></div>
-
 
   <div class="container">
     <div class="sidebar">
@@ -224,88 +205,61 @@
 
       <div class="masonry" id="masonry"></div>
     </div>
-      </div>
-      
-      <div class="step-timeline">
-        <div class="step-item">
-          <div class="step-title">
-            <span class="step-number">1</span>
-            选择学校和专业
-          </div>
-          <div class="step-description">
-            根据个人兴趣、职业规划和预算，选择合适的海外院校和专业方向。考虑学校排名、地理位置、学费等因素。
-          </div>
-        </div>
-        
-        <div class="step-item">
-          <div class="step-title">
-            <span class="step-number">2</span>
-            准备申请材料
-          </div>
-          <div class="step-description">
-            准备成绩单、推荐信、个人陈述、语言成绩等申请材料。确保所有文件都符合学校要求。
-          </div>
-        </div>
-        
-        <div class="step-item">
-          <div class="step-title">
-            <span class="step-number">3</span>
-            提交申请
-          </div>
-          <div class="step-description">
-            通过学校官网或申请平台提交申请，注意申请截止日期和申请费用。
-          </div>
-        </div>
-        
-        <div class="step-item">
-          <div class="step-title">
-            <span class="step-number">4</span>
-            等待录取通知
-          </div>
-          <div class="step-description">
-            耐心等待学校的录取决定，期间可以准备签证申请材料。
-          </div>
-        </div>
-        
-        <div class="step-item">
-          <div class="step-title">
-            <span class="step-number">5</span>
-            申请学生签证
-          </div>
-          <div class="step-description">
-            获得录取通知后，立即开始申请学生签证，准备面试和所需材料。
-          </div>
-        </div>
-        
-        <div class="step-item">
-          <div class="step-title">
-            <span class="step-number">6</span>
-            安排住宿和交通
-          </div>
-          <div class="step-description">
-            确认住宿安排，预订机票，了解当地交通情况。
-          </div>
-        </div>
-        
-        <div class="step-item">
-          <div class="step-title">
-            <span class="step-number">7</span>
-            出发前准备
-          </div>
-          <div class="step-description">
-            购买保险，准备生活用品，了解当地文化和生活习惯。
-          </div>
-        </div>
-      </div>
-    </div>
-      <div class="panel-header">
-        <h2 class="panel-title">入学步骤</h2>
-        <div class="spacer"></div>
-        <a class="btn" href="publish.html" title="去发布">＋ 去发布</a>
-      </div>
-      <div class="masonry" id="masonry"></div>
-    </div>
   </div>
+
+  <!-- 移动端底部导航 -->
+  <nav class="mobile-nav">
+    <ul class="mobile-nav-list">
+      <li class="mobile-nav-item">
+        <a href="main page.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">🏠</span>
+          <span>主页</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="life-tips.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">💡</span>
+          <span>生活</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="study-guide.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">📚</span>
+          <span>学习</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="profile.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">👤</span>
+          <span>个人</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="enrollment-steps.html" class="mobile-nav-link active">
+          <span class="mobile-nav-icon">📝</span>
+          <span>入学</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="share.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">🔗</span>
+          <span>分享</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="fun.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">🎉</span>
+          <span>娱乐</span>
+        </a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="hospital.html" class="mobile-nav-link">
+          <span class="mobile-nav-icon">🏥</span>
+          <span>医院</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 
   <script>
     // 自动检测API基础URL
@@ -334,12 +288,6 @@
         // 设置默认头像
         if (avatarEl) {
           avatarEl.src = FALLBACK;
-          avatarEl.style.opacity = '0.7';
-          avatarEl.style.transition = 'opacity 0.3s ease';
-        }
-        
-        // 添加加载状态
-        if (avatarEl) {
           avatarEl.style.opacity = '0.7';
           avatarEl.style.transition = 'opacity 0.3s ease';
         }
@@ -412,79 +360,7 @@
           }
         }
       } catch (error) {
-        console.error('用户信息处理失败:', error);
-        // 确保显示默认头像
-        const avatarEl = document.querySelector('.avatar');
-        if (avatarEl) {
-          avatarEl.src = FALLBACK;
-          avatarEl.style.opacity = '1';
-        }
-      }
-    }
-      try{
-        const avatarEl = document.querySelector('.avatar');
-        const nameEl   = document.querySelector('.username');
-        const FALLBACK = 'https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp';
-        
-        // 添加加载状态
-        if (avatarEl) {
-          avatarEl.style.opacity = '0.7';
-          avatarEl.style.transition = 'opacity 0.3s ease';
-        }
-        
-        // 优先从服务器获取最新用户信息
-        try {
-          const response = await fetch(API_BASE + '/api/users/me', { 
-            credentials: 'include' 
-          });
-          
-          if (response.ok) {
-            const user = await response.json();
-            const displayName = user.nickname||user.username||user.displayName||user.name||user.email||'我的账号';
-            let avatar = user.avatarPath||user.avatarUrl||user.avatar||'';
-            if (avatar && !/^https?:\/\//i.test(avatar)) avatar = avatar.startsWith('/') ? (API_BASE+avatar) : (API_BASE+'/'+avatar);
-            
-            // 平滑更新用户信息
-            nameEl.textContent = displayName; nameEl.title = displayName;
-            
-            // 预加载头像，避免闪烁
-            const img = new Image();
-            img.onload = () => {
-              if (avatarEl) {
-                avatarEl.src = avatar;
-                avatarEl.style.opacity = '1';
-              }
-            };
-            img.onerror = () => {
-              if (avatarEl) {
-                avatarEl.src = FALLBACK;
-                avatarEl.style.opacity = '1';
-              }
-            };
-            img.src = avatar;
-          } else {
-            // 服务器获取失败，使用本地存储
-            const localUser = JSON.parse(localStorage.getItem('user') || '{}');
-            if (localUser.username || localUser.nickname) {
-              nameEl.textContent = localUser.nickname || localUser.username;
-              if (localUser.avatarPath) {
-                avatarEl.src = toAbs(localUser.avatarPath);
-              }
-            }
-          }
-        } catch (error) {
-          console.warn('获取用户信息失败:', error);
-          // 使用本地存储作为后备
-          const localUser = JSON.parse(localStorage.getItem('user') || '{}');
-          if (localUser.username || localUser.nickname) {
-            nameEl.textContent = localUser.nickname || localUser.username;
-            if (localUser.avatarPath) {
-              avatarEl.src = toAbs(localUser.avatarPath);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('用户信息处理失败:', error);
+        console.error('hydrateUser error:', error);
       }
     }
 
@@ -557,6 +433,11 @@
       const masonry = document.getElementById('masonry');
       if(!masonry) return;
       
+      if(filtered.length === 0) {
+        masonry.innerHTML = '<div style="text-align: center; padding: 40px; color: #6b7280;">没有找到相关结果</div>';
+        return;
+      }
+      
       masonry.innerHTML = filtered.map(post => `
         <div class="card" role="link" onclick="viewPost('${post._id}')">
           <img src="${toAbs(post.imagePath)}" alt="${post.title}" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=500&fit=crop'">
@@ -577,323 +458,44 @@
       window.location.href = 'profile.html?id=' + userId;
     }
 
+    // 获取未读消息数量
+    async function updateUnreadBadge() {
+      try {
+        const response = await fetch(API_BASE + '/api/messages/unread-count', {
+          credentials: 'include'
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          const badge = document.querySelector('#chatFab .badge');
+          if (badge) {
+            if (data.unreadCount > 0) {
+              badge.textContent = data.unreadCount;
+              badge.style.display = 'flex';
+            } else {
+              badge.style.display = 'none';
+            }
+          }
+        }
+      } catch (error) {
+        console.warn('获取未读消息数量失败:', error);
+      }
+    }
+
     // 页面加载完成后执行
     document.addEventListener('DOMContentLoaded', () => {
       hydrateUser();
       loadPosts();
+      updateUnreadBadge();
       
       // 搜索框回车事件
       document.getElementById('searchInput').addEventListener('keypress', (e) => {
         if(e.key === 'Enter') doSearch();
       });
-    });
-  </script>
-
-  <!-- 移动端底部导航 -->
-  <nav class="mobile-nav">
-    <ul class="mobile-nav-list">
-      <li class="mobile-nav-item">
-        <a href="main page.html" class="mobile-nav-link">
-          <span class="mobile-nav-icon">🏠</span>
-          <span>主页</span>
-        </a>
-      </li>
-      <li class="mobile-nav-item">
-        <a href="life-tips.html" class="mobile-nav-link">
-          <span class="mobile-nav-icon">💡</span>
-          <span>生活</span>
-        </a>
-      </li>
-      <li class="mobile-nav-item">
-        <a href="study-guide.html" class="mobile-nav-link">
-          <span class="mobile-nav-icon">📚</span>
-          <span>学习</span>
-        </a>
-      </li>
-      <li class="mobile-nav-item">
-        <a href="profile.html" class="mobile-nav-link">
-          <span class="mobile-nav-icon">👤</span>
-          <span>个人</span>
-        </a>
-      </li>
-      <li class="mobile-nav-item">
-        <a href="enrollment-steps.html" class="mobile-nav-link active">
-          <span class="mobile-nav-icon">📝</span>
-          <span>入学</span>
-        </a>
-      </li>
-      <li class="mobile-nav-item">
-        <a href="share.html" class="mobile-nav-link">
-          <span class="mobile-nav-icon">🔗</span>
-          <span>分享</span>
-        </a>
-      </li>
-      <li class="mobile-nav-item">
-        <a href="fun.html" class="mobile-nav-link">
-          <span class="mobile-nav-icon">🎉</span>
-          <span>娱乐</span>
-        </a>
-      </li>
-      <li class="mobile-nav-item">
-        <a href="hospital.html" class="mobile-nav-link">
-          <span class="mobile-nav-icon">🏥</span>
-          <span>医院</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
-
-  <!-- 移动端交互JavaScript -->
-  <script>
-  /* 移动端交互功能 */
-  (function(){
-    
-  /* 顶部导航交互功能 */
-  (function(){
-    const topNavButton = document.getElementById('topNavButton');
-    const topNavMenu = document.getElementById('topNavMenu');
-    const topNavOverlay = document.getElementById('topNavOverlay');
-    const closeNavBtn = document.getElementById('closeNavBtn');
-    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-
-    // 顶部导航按键点击事件
-    if(topNavButton && topNavMenu && topNavOverlay) {
-      topNavButton.addEventListener('click', () => {
-        console.log('顶部导航按键被点击'); // 调试日志
-        topNavMenu.classList.add('active');
-        topNavOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-      });
-
-      // 关闭按钮点击事件
-      if(closeNavBtn) {
-        closeNavBtn.addEventListener('click', () => {
-          topNavMenu.classList.remove('active');
-          topNavOverlay.classList.remove('active');
-          document.body.style.overflow = '';
-        });
-      }
-
-      // 点击遮罩关闭导航菜单
-      topNavOverlay.addEventListener('click', () => {
-        topNavMenu.classList.remove('active');
-        topNavOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-      });
-
-      // ESC键关闭导航菜单
-      document.addEventListener('keydown', (e) => {
-        if(e.key === 'Escape' && topNavMenu.classList.contains('active')) {
-          topNavMenu.classList.remove('active');
-          topNavOverlay.classList.remove('active');
-          document.body.style.overflow = '';
-        }
-      });
-    } else {
-      console.warn('顶部导航元素未找到:', { topNavButton, topNavMenu, topNavOverlay });
-    }
-
-    // 移动端导航链接点击事件
-    mobileNavLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        // 移除所有active类
-        mobileNavLinks.forEach(l => l.classList.remove('active'));
-        // 添加active类到当前点击的链接
-        link.classList.add('active');
-      });
-    });
-
-    // 触摸手势支持
-    let startX = 0;
-    let startY = 0;
-    let currentX = 0;
-    let currentY = 0;
-
-    document.addEventListener('touchstart', (e) => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-    });
-
-    document.addEventListener('touchmove', (e) => {
-      currentX = e.touches[0].clientX;
-      currentY = e.touches[0].clientY;
-    });
-
-    document.addEventListener('touchend', () => {
-      const deltaX = currentX - startX;
-      const deltaY = currentY - startY;
-      const minSwipeDistance = 50;
-
-      // 从左向右滑动打开导航菜单
-      if(deltaX > minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && startX < 50) {
-        if(topNavMenu && !topNavMenu.classList.contains('active')) {
-          topNavMenu.classList.add('active');
-          topNavOverlay.classList.add('active');
-          document.body.style.overflow = 'hidden';
-        }
-      }
-      // 从右向左滑动关闭导航菜单
-      else if(deltaX < -minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && topNavMenu && topNavMenu.classList.contains('active')) {
-        topNavMenu.classList.remove('active');
-        topNavOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-    });
-  })();
-    }
-
-    // 移动端导航链接点击事件
-    mobileNavLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        // 移除所有active类
-        mobileNavLinks.forEach(l => l.classList.remove('active'));
-        // 添加active类到当前点击的链接
-        link.classList.add('active');
-      });
-    });
-
-    // 触摸手势支持
-    let startX = 0;
-    let startY = 0;
-    let currentX = 0;
-    let currentY = 0;
-
-    document.addEventListener('touchstart', (e) => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-    });
-
-    document.addEventListener('touchmove', (e) => {
-      currentX = e.touches[0].clientX;
-      currentY = e.touches[0].clientY;
-    });
-
-    document.addEventListener('touchend', () => {
-      const deltaX = currentX - startX;
-      const deltaY = currentY - startY;
-      const minSwipeDistance = 50;
-
-      // 从左向右滑动打开侧边栏
-      if(deltaX > minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && startX < 50) {
-        if(mobileSidebar && !mobileSidebar.classList.contains('active')) {
-          
-          topNavMenu.classList.add('active');
-          topNavOverlay.classList.add('active');
-          document.body.style.overflow = 'hidden';
-        }
-      }
-      // 从右向左滑动关闭侧边栏
-      else if(deltaX < -minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) && mobileSidebar && mobileSidebar.classList.contains('active')) {
-        
-        topNavMenu.classList.remove('active');
-        topNavOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-    });
-  })();
-  </script>
-
-  <!-- 未读消息功能 -->
-  <script>
-    // 自动检测API基础URL
-    const API_BASE = (() => {
-      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-        return 'http://127.0.0.1:3001';
-      }
-      return ''; // 生产环境使用相对路径
-    })();
-
-    // 获取未读消息数量
-    async function getUnreadCount() {
-      try {
-        const res = await fetch(`${API_BASE}/api/messages/unread-count`, { 
-          credentials: 'include',
-          cache: 'no-cache'
-        });
-        
-        if (res.ok) {
-          const data = await res.json();
-          return data.count || 0;
-        }
-      } catch (e) {
-        console.warn('获取未读消息数量失败:', e);
-      }
       
-      // 回退到本地存储的未读数量
-      try {
-        const cached = localStorage.getItem('unreadCount');
-        return cached ? parseInt(cached) : 0;
-      } catch (e) {
-        return 0;
-      }
-    }
-
-    
-    // 更新未读消息徽章
-    async function updateUnreadBadge() {
-      const chatFab = document.getElementById('chatFab');
-      if (!chatFab) return;
-      
-      const badge = chatFab.querySelector('.badge');
-      if (!badge) return;
-      
-      try {
-        const unreadCount = await getUnreadCount();
-        console.log('获取到未读消息数量:', unreadCount);
-        
-        if (unreadCount > 0) {
-          badge.textContent = unreadCount > 99 ? '99+' : unreadCount.toString();
-          badge.style.display = 'flex';
-          console.log('徽章显示:', badge.textContent);
-        } else {
-          badge.style.display = 'none';
-          console.log('徽章隐藏');
-        }
-        
-        // 缓存未读数量
-        try {
-          localStorage.setItem('unreadCount', unreadCount.toString());
-        } catch (e) {
-          console.warn('缓存未读数量失败:', e);
-        }
-      } catch (error) {
-        console.error('更新徽章时出错:', error);
-        // 出错时隐藏徽章
-        badge.style.display = 'none';
-      }
-    }
-
-    // 页面加载完成后更新徽章
-    document.addEventListener('DOMContentLoaded', () => {
-      updateUnreadBadge();
-      
-      // 每30秒更新一次未读数量
-      setInterval(updateUnreadBadge, 30000);
+      // 定期更新未读消息数量
+      setInterval(updateUnreadBadge, 30000); // 每30秒更新一次
     });
-
-    // 页面获得焦点时更新徽章
-    document.addEventListener('focus', updateUnreadBadge);
-    window.addEventListener('focus', updateUnreadBadge);
-    
-    // 添加测试功能 - 在控制台调用 testBadge(number) 来测试徽章
-    window.testBadge = function(count) {
-      const badge = document.querySelector('#chatFab .badge');
-      if (!badge) {
-        console.log('未找到徽章元素');
-        return;
-      }
-      
-      if (count > 0) {
-        badge.textContent = count > 99 ? '99+' : count.toString();
-        badge.style.display = 'flex';
-        console.log(`测试徽章显示: ${badge.textContent}`);
-      } else {
-        badge.style.display = 'none';
-        console.log('测试徽章隐藏');
-      }
-    };
-    
-    console.log('徽章测试功能已加载，使用 testBadge(number) 来测试');
   </script>
 </body>
 </html>
