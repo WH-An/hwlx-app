@@ -36,25 +36,24 @@
     .btn{display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:1px solid var(--border);background:#fff;color:#111827;border-radius:12px;padding:8px 12px;font-weight:700;transition:.2s}
     .btn:hover{background:#f3f4f6}
 
-    /* === Masonry：多列布局，减少空白 === */
+    /* === 网格布局：更稳定的帖子排列 === */
     .masonry{ 
-      column-count: 3; 
-      column-gap: 14px; 
-      column-fill: balance;
-      /* 确保列布局稳定 */
-      orphans: 1;
-      widows: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      padding: 8px;
     }
     @media (max-width:1200px){ 
       .masonry{ 
-        column-count: 2; 
-        column-gap: 12px;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 14px;
       } 
     }
     @media (max-width:640px){  
       .masonry{ 
-        column-count: 1; 
-        column-gap: 0;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 4px;
       } 
     }
 
@@ -162,32 +161,39 @@
       }
     }
 
-    /* 卡片：列内排列 + 预留徽章空间 */
+    /* 卡片：网格布局中的帖子卡片 */
     .card{
       position: relative; 
-      display: block; 
+      display: flex; 
+      flex-direction: column;
       width: 100%; 
-      margin: 0 0 14px;
+      height: fit-content;
       border: 1px solid var(--border); 
       background: #fff; 
       border-radius: 14px; 
       overflow: hidden;
       box-shadow: 0 6px 18px rgba(0,0,0,.06); 
-      padding-bottom: 46px;
-      break-inside: avoid; 
-      -webkit-column-break-inside: avoid; 
-      page-break-inside: avoid;
-      /* 确保卡片在列布局中正确显示 */
+      /* 确保卡片内容正确排列 */
       box-sizing: border-box;
     }
-    .card img{ width:100%; display:block; aspect-ratio:4/5; object-fit:cover }
+    .card img{ 
+      width: 100%; 
+      display: block; 
+      aspect-ratio: 4/5; 
+      object-fit: cover;
+      flex-shrink: 0;
+    }
     .card-text{ 
-      padding: 10px 12px; 
+      padding: 12px 16px; 
       color: #374151; 
       line-height: 1.6;
       max-height: 80px;
       overflow-y: auto;
       word-wrap: break-word;
+      flex: 1;
+      /* 确保文字在图片正下方 */
+      margin: 0;
+      background: #fff;
     }
 
     /* 自定义滚动条样式 */
