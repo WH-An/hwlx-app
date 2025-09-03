@@ -37,9 +37,26 @@
     .btn:hover{background:#f3f4f6}
 
     /* === Masonry：多列布局，减少空白 === */
-    .masonry{ column-count:3; column-gap:14px; }
-    @media (max-width:1200px){ .masonry{ column-count:2; } }
-    @media (max-width:640px){  .masonry{ column-count:1; } }
+    .masonry{ 
+      column-count: 3; 
+      column-gap: 14px; 
+      column-fill: balance;
+      /* 确保列布局稳定 */
+      orphans: 1;
+      widows: 1;
+    }
+    @media (max-width:1200px){ 
+      .masonry{ 
+        column-count: 2; 
+        column-gap: 12px;
+      } 
+    }
+    @media (max-width:640px){  
+      .masonry{ 
+        column-count: 1; 
+        column-gap: 0;
+      } 
+    }
 
 
 
@@ -127,20 +144,41 @@
       .card {
         border-radius: 12px;
         margin-bottom: 12px;
+        /* 移动端优化 */
+        margin-bottom: 16px;
       }
       
       .card-text {
         padding: 12px;
         font-size: 14px;
+        /* 移动端文字优化 */
+        max-height: 100px;
+        font-size: 15px;
+      }
+      
+      .card img {
+        /* 移动端图片优化 */
+        aspect-ratio: 3/4;
       }
     }
 
     /* 卡片：列内排列 + 预留徽章空间 */
     .card{
-      position:relative; display:inline-block; width:100%; margin:0 0 14px;
-      border:1px solid var(--border); background:#fff; border-radius:14px; overflow:hidden;
-      box-shadow:0 6px 18px rgba(0,0,0,.06); padding-bottom:46px;
-      break-inside:avoid; -webkit-column-break-inside:avoid; page-break-inside:avoid;
+      position: relative; 
+      display: block; 
+      width: 100%; 
+      margin: 0 0 14px;
+      border: 1px solid var(--border); 
+      background: #fff; 
+      border-radius: 14px; 
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(0,0,0,.06); 
+      padding-bottom: 46px;
+      break-inside: avoid; 
+      -webkit-column-break-inside: avoid; 
+      page-break-inside: avoid;
+      /* 确保卡片在列布局中正确显示 */
+      box-sizing: border-box;
     }
     .card img{ width:100%; display:block; aspect-ratio:4/5; object-fit:cover }
     .card-text{ 
