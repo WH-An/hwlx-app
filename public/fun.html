@@ -39,20 +39,33 @@
     /* === 网格布局：更稳定的帖子排列 === */
     .masonry{ 
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(4, 1fr); /* 电脑端：4列 */
       gap: 16px;
       padding: 8px;
     }
     @media (max-width:1200px){ 
       .masonry{ 
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        grid-template-columns: repeat(3, 1fr); /* 中等屏幕：3列 */
         gap: 14px;
+      } 
+    }
+    @media (max-width:960px){ 
+      .masonry{ 
+        grid-template-columns: repeat(2, 1fr); /* 平板：2列 */
+        gap: 12px;
       } 
     }
     @media (max-width:640px){  
       .masonry{ 
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr); /* 移动端：2列 */
         gap: 12px;
+        padding: 4px;
+      } 
+    }
+    @media (max-width:480px){  
+      .masonry{ 
+        grid-template-columns: repeat(2, 1fr); /* 小屏幕：2列 */
+        gap: 8px;
         padding: 4px;
       } 
     }

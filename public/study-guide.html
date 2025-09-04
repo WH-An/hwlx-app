@@ -52,10 +52,39 @@
     .btn{display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:1px solid var(--border);background:#fff;color:#111827;border-radius:12px;padding:8px 12px;font-weight:700;transition:.2s}
     .btn:hover{background:#f3f4f6}
 
-    /* === Masonry：多列布局，显著减少空白 === */
-    .masonry{ column-count: 3; column-gap: 14px; }
-    @media (max-width: 1200px){ .masonry{ column-count: 2; } }
-    @media (max-width: 640px){  .masonry{ column-count: 1; } }
+    /* === 网格布局：响应式帖子排列 === */
+    .masonry{ 
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 电脑端：4列 */
+      gap: 16px;
+      padding: 8px;
+    }
+    @media (max-width:1200px){ 
+      .masonry{ 
+        grid-template-columns: repeat(3, 1fr); /* 中等屏幕：3列 */
+        gap: 14px;
+      } 
+    }
+    @media (max-width:960px){ 
+      .masonry{ 
+        grid-template-columns: repeat(2, 1fr); /* 平板：2列 */
+        gap: 12px;
+      } 
+    }
+    @media (max-width:640px){  
+      .masonry{ 
+        grid-template-columns: repeat(2, 1fr); /* 移动端：2列 */
+        gap: 12px;
+        padding: 4px;
+      } 
+    }
+    @media (max-width:480px){  
+      .masonry{ 
+        grid-template-columns: repeat(2, 1fr); /* 小屏幕：2列 */
+        gap: 8px;
+        padding: 4px;
+      } 
+    }
 
     
     
