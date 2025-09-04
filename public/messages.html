@@ -12,7 +12,7 @@
     :root{
       --bg:#0b0f14; --panel:#ffffff; --text:#0f172a; --muted:#64748b;
       --accent:#16a34a; --border:#e5e7eb; --shadow:0 10px 30px rgba(0,0,0,.18); --radius:18px;
-      --danger:#ef4444;
+      --danger:#ef4444; --mobile-nav-height: 70px;
     }
     *{box-sizing:border-box}
     /* 关键：整页禁用滚动，只让内部容器滚动 */
@@ -190,10 +190,17 @@
       }
     }
 
+    /* 移动端底部导航 */
+    .mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--panel);border-top:1px solid var(--border);z-index:1000;padding:8px 0}
+    .mobile-nav-list{display:flex;justify-content:space-around;list-style:none;margin:0;padding:0}
+    .mobile-nav-item{flex:1;text-align:center}
+    .mobile-nav-link{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--text);padding:8px 4px;font-size:12px;transition:.2s color}
+    .mobile-nav-link:hover,.mobile-nav-link.active{color:var(--accent)}
+    .mobile-nav-icon{font-size:20px;margin-bottom:2px}
+
     @media (max-width: 960px) {
       .mobile-nav {
-        display: flex;
-        justify-content: space-around;
+        display: block;
       }
     }
     
@@ -257,6 +264,21 @@
       .msgrow .avatar {
         width: 24px;
         height: 24px;
+      }
+      
+      /* 小屏幕导航栏优化 */
+      .mobile-nav {
+        height: var(--mobile-nav-height);
+      }
+      
+      .mobile-nav-link {
+        font-size: 11px;
+        padding: 6px 2px;
+      }
+      
+      .mobile-nav-icon {
+        font-size: 18px;
+        margin-bottom: 1px;
       }
     }
 
