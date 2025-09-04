@@ -882,9 +882,11 @@
     };
     
     console.log('徽章测试功能已加载，使用 testBadge(number) 来测试');
-    
-    // 测试多文件选择功能
-    window.testMultipleFiles = function() {
+  </script>
+  
+  <script>
+    // 测试多文件选择功能 - 全局函数
+    function testMultipleFiles() {
       const fileInput = document.getElementById('images');
       if (!fileInput) {
         alert('找不到文件输入框');
@@ -907,7 +909,7 @@
       // 模拟文件选择
       console.log('请手动选择多张图片来测试...');
       fileInput.click();
-    };
+    }
     
     console.log('多文件测试功能已加载，点击"测试多文件选择"按钮来诊断问题');
   </script>
