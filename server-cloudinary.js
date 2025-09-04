@@ -8,7 +8,7 @@ const path = require('path');
 const { connectDB } = require('./config/database');
 
 // 导入Cloudinary配置
-const { upload, deleteFile, getFileUrl } = require('./config/cloudinary');
+const { upload, uploadAvatar, uploadPostImages, uploadMessageImages, deleteFile, getFileUrl } = require('./config/cloudinary');
 
 // 导入mongoose
 const mongoose = require('mongoose');
@@ -350,7 +350,7 @@ app.get('/api/users/by-email', async (req, res) => {
 });
 
 // 上传头像（使用Cloudinary）
-app.post('/api/upload/avatar', upload.single('avatar'), async (req, res) => {
+app.post('/api/upload/avatar', uploadAvatar.single('avatar'), async (req, res) => {
   try {
     console.log('开始头像上传处理...');
     console.log('环境变量检查:', {
@@ -445,7 +445,7 @@ app.get('/api/posts', async (req, res) => {
 });
 
 // 发布帖子
-app.post('/api/posts', upload.array('images', 5), async (req, res) => {
+app.post('/api/posts', uploadPostImages.array('images', 5), async (req, res) => {
   try {
     const email = normalizeEmail(req.cookies.email);
     if (!email) {
@@ -673,7 +673,7 @@ app.get('/api/messages', async (req, res) => {
 });
 
 // 发送消息
-app.post('/api/messages', upload.array('images', 9), async (req, res) => {
+app.post('/api/messages', uploadMessageImages.array('images', 9), async (req, res) => {
   try {
     const { email: me, isAdmin: isAdminUser } = await getCurrentUser(req);
     if (!me) {
