@@ -342,10 +342,7 @@
         <div class="preview" id="preview"></div>
         <div id="fileInfo" style="margin-top: 8px; font-size: 12px; color: #666;"></div>
         <div style="margin-top: 8px;">
-          <button type="button" onclick="testMultipleFiles()" style="padding: 4px 8px; font-size: 12px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
-            🔧 测试多文件选择
-          </button>
-          <button type="button" onclick="clearAllImages()" style="margin-left: 8px; padding: 4px 8px; font-size: 12px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">
+          <button type="button" onclick="clearAllImages()" style="padding: 4px 8px; font-size: 12px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">
             🗑️ 清空所有图片
           </button>
         </div>
@@ -903,34 +900,5 @@
     console.log('徽章测试功能已加载，使用 testBadge(number) 来测试');
   </script>
   
-  <script>
-    // 测试多文件选择功能 - 全局函数
-    function testMultipleFiles() {
-      const fileInput = document.getElementById('images');
-      if (!fileInput) {
-        alert('找不到文件输入框');
-        return;
-      }
-      
-      console.log('=== 多文件选择测试 ===');
-      console.log('文件输入框元素:', fileInput);
-      console.log('multiple属性:', fileInput.multiple);
-      console.log('accept属性:', fileInput.accept);
-      console.log('当前文件数量:', fileInput.files.length);
-      
-      // 检查浏览器支持
-      if (fileInput.multiple) {
-        console.log('✅ 浏览器支持多文件选择');
-      } else {
-        console.log('❌ 浏览器不支持多文件选择');
-      }
-      
-      // 模拟文件选择
-      console.log('请手动选择多张图片来测试...');
-      fileInput.click();
-    }
-    
-    console.log('多文件测试功能已加载，点击"测试多文件选择"按钮来诊断问题');
-  </script>
 </body>
 </html>
