@@ -493,7 +493,19 @@ app.delete('/api/posts/:id', async (req, res) => {
     }
 
     const { id } = req.params;
-    const { reason } = req.body || {}; // 删除原因
+    let reason = '';
+    
+    // 处理JSON body
+    if (req.body && typeof req.body === 'object') {
+      reason = req.body.reason || '';
+    } else if (req.body && typeof req.body === 'string') {
+      try {
+        const parsed = JSON.parse(req.body);
+        reason = parsed.reason || '';
+      } catch (e) {
+        reason = req.body;
+      }
+    }
     
     if (!id) {
       return res.status(400).json({ msg: '帖子ID必填' });
@@ -574,9 +586,23 @@ app.patch('/api/posts/:id', async (req, res) => {
     }
 
     const { id } = req.params;
-    const { pinned, pinnedAt } = req.body || {};
+    let pinned, pinnedAt;
     
-    console.log('置顶操作:', { id, pinned, pinnedAt });
+    // 处理JSON body
+    if (req.body && typeof req.body === 'object') {
+      pinned = req.body.pinned;
+      pinnedAt = req.body.pinnedAt;
+    } else if (req.body && typeof req.body === 'string') {
+      try {
+        const parsed = JSON.parse(req.body);
+        pinned = parsed.pinned;
+        pinnedAt = parsed.pinnedAt;
+      } catch (e) {
+        console.warn('解析置顶请求body失败:', e);
+      }
+    }
+    
+    console.log('置顶操作:', { id, pinned, pinnedAt, body: req.body });
     
     const post = await Post.findById(id);
     if (!post) {
