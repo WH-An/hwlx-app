@@ -332,11 +332,17 @@
       <div class="control">
         <label>图片</label>
         <div class="file">
-          <label for="images">选择图片</label>
+          <label for="images">📁 选择多张图片（最多5张）</label>
           <input id="images" type="file" accept="image/*" multiple />
-          <span class="hint">支持多张，建议 &lt; 5MB / 张</span>
+          <span class="hint">支持多张，建议 &lt; 5MB / 张，可同时选择多张图片</span>
         </div>
         <div class="preview" id="preview"></div>
+        <div id="fileInfo" style="margin-top: 8px; font-size: 12px; color: #666;"></div>
+        <div style="margin-top: 8px;">
+          <button type="button" onclick="testMultipleFiles()" style="padding: 4px 8px; font-size: 12px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
+            🔧 测试多文件选择
+          </button>
+        </div>
       </div>
 
       <!-- 按钮行（取消在左，发布在右） -->
@@ -445,6 +451,18 @@
       currentFiles = Array.from(fileInput.files || []);
       console.log('当前文件数组长度:', currentFiles.length);
       
+      // 更新文件信息显示
+      const fileInfo = document.getElementById('fileInfo');
+      if (fileInfo) {
+        if (currentFiles.length === 0) {
+          fileInfo.textContent = '未选择图片';
+        } else if (currentFiles.length === 1) {
+          fileInfo.textContent = `已选择1张图片: ${currentFiles[0].name}`;
+        } else {
+          fileInfo.textContent = `已选择${currentFiles.length}张图片: ${currentFiles.map(f => f.name).join(', ')}`;
+        }
+      }
+      
       currentFiles.forEach((file, index) => {
         const reader = new FileReader();
         reader.onload = e => {
@@ -493,6 +511,18 @@
       // 重新渲染预览
       const u = getLocalUser();
       preview.innerHTML = '';
+      
+      // 更新文件信息显示
+      const fileInfo = document.getElementById('fileInfo');
+      if (fileInfo) {
+        if (currentFiles.length === 0) {
+          fileInfo.textContent = '未选择图片';
+        } else if (currentFiles.length === 1) {
+          fileInfo.textContent = `已选择1张图片: ${currentFiles[0].name}`;
+        } else {
+          fileInfo.textContent = `已选择${currentFiles.length}张图片: ${currentFiles.map(f => f.name).join(', ')}`;
+        }
+      }
       
       currentFiles.forEach((file, newIndex) => {
         const reader = new FileReader();
@@ -852,6 +882,34 @@
     };
     
     console.log('徽章测试功能已加载，使用 testBadge(number) 来测试');
+    
+    // 测试多文件选择功能
+    window.testMultipleFiles = function() {
+      const fileInput = document.getElementById('images');
+      if (!fileInput) {
+        alert('找不到文件输入框');
+        return;
+      }
+      
+      console.log('=== 多文件选择测试 ===');
+      console.log('文件输入框元素:', fileInput);
+      console.log('multiple属性:', fileInput.multiple);
+      console.log('accept属性:', fileInput.accept);
+      console.log('当前文件数量:', fileInput.files.length);
+      
+      // 检查浏览器支持
+      if (fileInput.multiple) {
+        console.log('✅ 浏览器支持多文件选择');
+      } else {
+        console.log('❌ 浏览器不支持多文件选择');
+      }
+      
+      // 模拟文件选择
+      console.log('请手动选择多张图片来测试...');
+      fileInput.click();
+    };
+    
+    console.log('多文件测试功能已加载，点击"测试多文件选择"按钮来诊断问题');
   </script>
 </body>
 </html>
