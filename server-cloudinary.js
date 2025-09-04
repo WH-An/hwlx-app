@@ -718,19 +718,31 @@ app.get('/api/messages', async (req, res) => {
 // 发送消息
 app.post('/api/messages', uploadMessageImages.array('images', 9), async (req, res) => {
   try {
+    console.log('=== 发送消息请求开始 ===');
+    console.log('请求头:', req.headers);
+    console.log('请求体:', req.body);
+    console.log('请求文件:', req.files);
+    
     const { email: me, isAdmin: isAdminUser } = await getCurrentUser(req);
+    console.log('发送消息权限检查:', { me, isAdminUser, cookies: req.cookies });
+    
     if (!me) {
+      console.log('❌ 未登录');
       return res.status(401).json({ msg: '请先登录' });
     }
 
     const { toEmail, content } = req.body;
     const images = req.files ? req.files.map(file => file.path) : [];
     
+    console.log('消息参数:', { toEmail, content, images });
+    
     if (!toEmail) {
+      console.log('❌ 收件人必填');
       return res.status(400).json({ msg: '收件人必填' });
     }
     
     if (!content && images.length === 0) {
+      console.log('❌ 请至少输入内容或选择图片');
       return res.status(400).json({ msg: '请至少输入内容或选择图片' });
     }
 
