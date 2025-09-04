@@ -332,15 +332,21 @@
       <div class="control">
         <label>图片</label>
         <div class="file">
-          <label for="images">📁 选择多张图片（最多5张）</label>
+          <label for="images">📁 选择图片</label>
           <input id="images" type="file" accept="image/*" multiple />
-          <span class="hint">支持多张，建议 &lt; 5MB / 张，可同时选择多张图片</span>
+          <button type="button" id="addMoreImages" style="margin-left: 8px; padding: 6px 12px; font-size: 12px; background: #16a34a; color: white; border: none; border-radius: 6px; cursor: pointer;">
+            ➕ 添加更多图片
+          </button>
+          <span class="hint">支持多张，建议 &lt; 5MB / 张，最多5张</span>
         </div>
         <div class="preview" id="preview"></div>
         <div id="fileInfo" style="margin-top: 8px; font-size: 12px; color: #666;"></div>
         <div style="margin-top: 8px;">
           <button type="button" onclick="testMultipleFiles()" style="padding: 4px 8px; font-size: 12px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
             🔧 测试多文件选择
+          </button>
+          <button type="button" onclick="clearAllImages()" style="margin-left: 8px; padding: 4px 8px; font-size: 12px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            🗑️ 清空所有图片
           </button>
         </div>
       </div>
@@ -439,30 +445,49 @@
   function bindPreviewAuthorBadge(){
     const fileInput = document.getElementById('images');
     const preview = document.getElementById('preview');
+    const addMoreBtn = document.getElementById('addMoreImages');
     if (!fileInput || !preview) return;
 
     // 存储当前选中的文件
     let currentFiles = [];
 
-    fileInput.addEventListener('change', () => {
-      console.log('文件选择事件触发，文件数量:', fileInput.files.length);
+    // 处理文件选择
+    function handleFileSelection(newFiles) {
+      console.log('处理文件选择，新文件数量:', newFiles.length);
       const u = getLocalUser();
-      preview.innerHTML = '';
-      currentFiles = Array.from(fileInput.files || []);
-      console.log('当前文件数组长度:', currentFiles.length);
       
-      // 更新文件信息显示
-      const fileInfo = document.getElementById('fileInfo');
-      if (fileInfo) {
-        if (currentFiles.length === 0) {
-          fileInfo.textContent = '未选择图片';
-        } else if (currentFiles.length === 1) {
-          fileInfo.textContent = `已选择1张图片: ${currentFiles[0].name}`;
-        } else {
-          fileInfo.textContent = `已选择${currentFiles.length}张图片: ${currentFiles.map(f => f.name).join(', ')}`;
+      // 合并新文件到现有文件列表
+      const validFiles = Array.from(newFiles).filter(file => {
+        if (!file.type.startsWith('image/')) {
+          alert(`文件 ${file.name} 不是图片格式`);
+          return false;
         }
+        if (file.size > 5 * 1024 * 1024) {
+          alert(`文件 ${file.name} 太大，请选择小于5MB的图片`);
+          return false;
+        }
+        return true;
+      });
+      
+      // 检查总数限制
+      if (currentFiles.length + validFiles.length > 5) {
+        alert('最多只能选择5张图片');
+        return;
       }
       
+      // 添加到现有文件列表
+      currentFiles = currentFiles.concat(validFiles);
+      console.log('当前文件总数:', currentFiles.length);
+      
+      // 重新渲染预览
+      renderPreview();
+      updateFileInfo();
+      updateFileInput();
+    }
+
+    // 渲染预览
+    function renderPreview() {
+      preview.innerHTML = '';
       currentFiles.forEach((file, index) => {
         const reader = new FileReader();
         reader.onload = e => {
@@ -485,7 +510,7 @@
           };
 
           // 添加作者徽章
-          const authorBadge = createAuthorBadge(u);
+          const authorBadge = createAuthorBadge(getLocalUser());
 
           wrap.appendChild(img);
           wrap.appendChild(deleteBtn);
@@ -494,25 +519,10 @@
         };
         reader.readAsDataURL(file);
       });
-    });
+    }
 
-    // 删除指定索引的图片
-    function deleteImage(index) {
-      if (index < 0 || index >= currentFiles.length) return;
-      
-      // 从数组中移除文件
-      currentFiles.splice(index, 1);
-      
-      // 重新创建FileList对象（因为FileList是只读的）
-      const dt = new DataTransfer();
-      currentFiles.forEach(file => dt.items.add(file));
-      fileInput.files = dt.files;
-      
-      // 重新渲染预览
-      const u = getLocalUser();
-      preview.innerHTML = '';
-      
-      // 更新文件信息显示
+    // 更新文件信息显示
+    function updateFileInfo() {
       const fileInfo = document.getElementById('fileInfo');
       if (fileInfo) {
         if (currentFiles.length === 0) {
@@ -523,37 +533,46 @@
           fileInfo.textContent = `已选择${currentFiles.length}张图片: ${currentFiles.map(f => f.name).join(', ')}`;
         }
       }
+    }
+
+    // 更新文件输入框
+    function updateFileInput() {
+      const dt = new DataTransfer();
+      currentFiles.forEach(file => dt.items.add(file));
+      fileInput.files = dt.files;
+    }
+
+    // 删除指定索引的图片
+    function deleteImage(index) {
+      if (index < 0 || index >= currentFiles.length) return;
       
-      currentFiles.forEach((file, newIndex) => {
-        const reader = new FileReader();
-        reader.onload = e => {
-          const wrap = document.createElement('div');
-          wrap.className = 'thumb';
-          wrap.dataset.fileIndex = newIndex;
+      currentFiles.splice(index, 1);
+      renderPreview();
+      updateFileInfo();
+      updateFileInput();
+    }
 
-          const img = document.createElement('img');
-          img.src = e.target.result;
-          img.alt = file.name;
+    // 清空所有图片
+    window.clearAllImages = function() {
+      currentFiles = [];
+      preview.innerHTML = '';
+      updateFileInfo();
+      updateFileInput();
+    };
 
-          // 添加删除按钮
-          const deleteBtn = document.createElement('button');
-          deleteBtn.className = 'delete-btn';
-          deleteBtn.innerHTML = '×';
-          deleteBtn.title = '删除此图片';
-          deleteBtn.onclick = (e) => {
-            e.stopPropagation();
-            deleteImage(newIndex);
-          };
+    // 原始文件输入事件
+    fileInput.addEventListener('change', () => {
+      handleFileSelection(fileInput.files);
+    });
 
-          // 添加作者徽章
-          const authorBadge = createAuthorBadge(u);
-
-          wrap.appendChild(img);
-          wrap.appendChild(deleteBtn);
-          wrap.appendChild(authorBadge);
-          preview.appendChild(wrap);
-        };
-        reader.readAsDataURL(file);
+    // 添加更多图片按钮
+    if (addMoreBtn) {
+      addMoreBtn.addEventListener('click', () => {
+        if (currentFiles.length >= 5) {
+          alert('最多只能选择5张图片');
+          return;
+        }
+        fileInput.click();
       });
     }
   }
