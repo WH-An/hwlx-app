@@ -439,9 +439,11 @@
     let currentFiles = [];
 
     fileInput.addEventListener('change', () => {
+      console.log('文件选择事件触发，文件数量:', fileInput.files.length);
       const u = getLocalUser();
       preview.innerHTML = '';
       currentFiles = Array.from(fileInput.files || []);
+      console.log('当前文件数组长度:', currentFiles.length);
       
       currentFiles.forEach((file, index) => {
         const reader = new FileReader();
@@ -579,6 +581,8 @@
       const desc     = (document.getElementById('desc')     || {}).value || '';
       const category = (document.getElementById('category') || {}).value || 'life';
       const files    = (document.getElementById('images')   || {}).files || [];
+      console.log('发布时文件数量:', files.length);
+      console.log('文件列表:', Array.from(files).map(f => f.name));
 
       if(!desc.trim() && (!files || files.length === 0)){
         msgEl.textContent = '请至少填写正文或选择一张图片再发布。';
@@ -602,7 +606,11 @@
       // 附带作者信息（后端会优先使用已登录用户覆盖）
       fd.append('authorName',  currentUserName(u));
       fd.append('authorAvatar', currentUserAvatar(u));
-      for (const f of files) fd.append('images', f);
+      for (const f of files) {
+        console.log('添加文件到FormData:', f.name, f.size, f.type);
+        fd.append('images', f);
+      }
+      console.log('FormData构建完成，准备发送请求');
 
       try{
         const res = await fetch(API_BASE + '/api/posts', { method:'POST', body: fd, credentials:'include' });
