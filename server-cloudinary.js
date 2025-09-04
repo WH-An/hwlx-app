@@ -909,6 +909,58 @@ app.post('/api/test-send-message', async (req, res) => {
   }
 });
 
+// 管理员专用消息发送API（简化版）
+app.post('/api/admin-message', async (req, res) => {
+  try {
+    console.log('=== 管理员消息发送请求 ===');
+    console.log('请求体:', req.body);
+    console.log('Cookie:', req.cookies);
+    
+    const { email: me, isAdmin: isAdminUser } = await getCurrentUser(req);
+    console.log('管理员权限检查:', { me, isAdminUser });
+    
+    if (!me || (!isAdminUser && !isFixedAdmin(me))) {
+      console.log('❌ 权限不足');
+      return res.status(403).json({ msg: '只有管理员可以发送消息' });
+    }
+
+    const { toEmail, content } = req.body;
+    
+    if (!toEmail) {
+      console.log('❌ 收件人必填');
+      return res.status(400).json({ msg: '收件人必填' });
+    }
+    
+    if (!content) {
+      console.log('❌ 内容必填');
+      return res.status(400).json({ msg: '内容必填' });
+    }
+
+    // 检查收件人是否存在
+    const toUser = await User.findOne({ email: normalizeEmail(toEmail) });
+    if (!toUser) {
+      console.log('❌ 收件人不存在:', toEmail);
+      return res.status(404).json({ msg: '收件人不存在' });
+    }
+
+    // 创建消息
+    const message = new Message({
+      from: 'hwlx@hwlx.com', // 管理员邮箱
+      to: toUser.email,
+      content,
+      images: [],
+      isRead: false
+    });
+
+    await message.save();
+    console.log('✅ 消息发送成功');
+    res.json({ msg: '消息发送成功' });
+  } catch (error) {
+    console.error('管理员消息发送失败:', error);
+    res.status(500).json({ msg: '发送消息失败: ' + error.message });
+  }
+});
+
 // 调试：检查当前用户状态
 app.get('/api/debug-user-status', async (req, res) => {
   try {
