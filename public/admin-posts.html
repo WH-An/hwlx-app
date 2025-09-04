@@ -409,7 +409,7 @@
         try{ await api(`/api/comments/${commentId}`, { method:'DELETE' }); }
         catch(e1){ /* fallback by postId not available in this page */ }
         toast('已删除评论');
-        if(email){ try{ await api('/api/messages', { method:'POST', body: JSON.stringify({ toEmail: email, text: `您的评论已被删除。原因：${reason}` }) }); }catch{} }
+        if(email){ try{ await api('/api/messages', { method:'POST', body: JSON.stringify({ toEmail: email, content: `您的评论已被删除。原因：${reason}` }) }); }catch{} }
       }catch(e){ toast('删除失败：'+e.message); }
     }
 

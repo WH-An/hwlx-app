@@ -64,7 +64,8 @@ function normalizeEmail(v) {
 }
 
 function isFixedAdmin(email) {
-  return normalizeEmail(email) === 'hwlx@hwlx.com';
+  const normalizedEmail = normalizeEmail(email);
+  return normalizedEmail === 'hwlx@hwlx.com' || normalizedEmail === '1753429393@qq.com';
 }
 
 function isAdmin(email) {
@@ -487,8 +488,16 @@ app.post('/api/posts', uploadPostImages.array('images', 5), async (req, res) => 
 // 删除帖子
 app.delete('/api/posts/:id', async (req, res) => {
   try {
+    console.log('=== 删除帖子请求开始 ===');
+    console.log('请求头:', req.headers);
+    console.log('请求体:', req.body);
+    console.log('请求参数:', req.params);
+    
     const { email: me, isAdmin: isAdminUser } = await getCurrentUser(req);
+    console.log('删除帖子权限检查:', { me, isAdminUser, cookies: req.cookies });
+    
     if (!me) {
+      console.log('❌ 未登录');
       return res.status(401).json({ msg: '请先登录' });
     }
 
@@ -572,18 +581,26 @@ app.delete('/api/posts/:id', async (req, res) => {
 // 置顶/取消置顶帖子
 app.patch('/api/posts/:id', async (req, res) => {
   try {
+    console.log('=== 置顶请求开始 ===');
+    console.log('请求头:', req.headers);
+    console.log('请求体:', req.body);
+    console.log('请求参数:', req.params);
+    
     const { email: me, isAdmin: isAdminUser } = await getCurrentUser(req);
     console.log('置顶帖子权限检查:', { me, isAdminUser, cookies: req.cookies });
     
     if (!me) {
+      console.log('❌ 未登录');
       return res.status(401).json({ msg: '未登录' });
     }
     
     // 只有管理员可以置顶帖子
     if (!isAdminUser && !isFixedAdmin(me)) {
-      console.log('权限不足:', { me, isAdminUser, isFixedAdmin: isFixedAdmin(me) });
+      console.log('❌ 权限不足:', { me, isAdminUser, isFixedAdmin: isFixedAdmin(me) });
       return res.status(403).json({ msg: '只有管理员可以置顶帖子' });
     }
+    
+    console.log('✅ 权限检查通过');
 
     const { id } = req.params;
     let pinned, pinnedAt;
