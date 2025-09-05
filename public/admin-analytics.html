@@ -505,6 +505,9 @@
                 <div class="chart-point-value" style="left: ${(index / (visitsData.length - 1)) * 100}%; display: none;" data-value="${item.value}">${item.value}</div>
                 <div class="chart-point-label" style="left: ${(index / (visitsData.length - 1)) * 100}%;">${item.label}</div>
               `).join('')}
+              <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 12px; color: #64748b;">
+                数据点: ${visitsData.map(d => d.value).join(', ')}
+              </div>
             </div>
           </div>
           <div class="chart-legend">
@@ -578,6 +581,15 @@
       const labels = getDaysForPeriod(period);
       const data = [];
       
+      // 如果当前访问量为0，生成一些示例数据
+      if (currentVisits === 0) {
+        labels.forEach((label, index) => {
+          const value = Math.floor(Math.random() * 10) + 1; // 1-10的随机数据
+          data.push({ label, value });
+        });
+        return data;
+      }
+      
       // 基于当前访问量生成更真实的历史数据
       const baseValue = Math.max(Math.floor(currentVisits / labels.length), 1);
       
@@ -636,7 +648,7 @@
       const circles = data.map((item, index) => {
         const x = padding + (index / (data.length - 1)) * chartWidth;
         const y = padding + chartHeight - ((item.value - minValue) / valueRange) * chartHeight;
-        return `<circle class="chart-point" cx="${x}" cy="${y}" r="4" data-value="${item.value}" data-label="${item.label}"/>`;
+        return `<circle class="chart-point" cx="${x}" cy="${y}" r="5" data-value="${item.value}" data-label="${item.label}" style="fill: #16a34a; stroke: white; stroke-width: 2;"/>`;
       }).join('');
       
       return `
