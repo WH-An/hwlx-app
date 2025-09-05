@@ -501,10 +501,18 @@
                 </defs>
                 ${generateLineChart(visitsData)}
               </svg>
-              ${visitsData.map((item, index) => `
-                <div class="chart-point-value" style="left: ${(index / (visitsData.length - 1)) * 100}%; display: none;" data-value="${item.value}">${item.value}</div>
-                <div class="chart-point-label" style="left: ${(index / (visitsData.length - 1)) * 100}%;">${item.label}</div>
-              `).join('')}
+              ${visitsData.map((item, index) => {
+                // 计算与SVG图表对应的位置（考虑SVG的padding）
+                const svgPadding = 40; // SVG的padding
+                const svgWidth = 400; // SVG的宽度
+                const chartWidth = svgWidth - svgPadding * 2; // 实际图表宽度
+                const xPosition = svgPadding + (index / (visitsData.length - 1)) * chartWidth;
+                const percentagePosition = (xPosition / svgWidth) * 100;
+                return `
+                  <div class="chart-point-value" style="left: ${percentagePosition}%; display: none;" data-value="${item.value}">${item.value}</div>
+                  <div class="chart-point-label" style="left: ${percentagePosition}%;">${item.label}</div>
+                `;
+              }).join('')}
             </div>
           </div>
           <div class="chart-legend">
