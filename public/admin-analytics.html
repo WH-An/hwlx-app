@@ -112,7 +112,7 @@
     
     .chart-line-container {
       position: relative;
-      height: 200px;
+      height: 240px;
       margin-bottom: 20px;
       border-bottom: 2px solid #e2e8f0;
       padding-bottom: 10px;
@@ -492,7 +492,7 @@
         <div class="chart-content">
           <div class="chart-line-container">
             <div class="chart-line">
-              <svg class="chart-line-svg" viewBox="0 0 400 200">
+              <svg class="chart-line-svg" viewBox="0 0 400 240">
                 <defs>
                   <linearGradient id="lineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                     <stop offset="0%" style="stop-color:#16a34a;stop-opacity:0.3" />
@@ -501,18 +501,6 @@
                 </defs>
                 ${generateLineChart(visitsData)}
               </svg>
-              ${visitsData.map((item, index) => {
-                // 使用与generateLineChart完全相同的计算方式
-                const width = 400;
-                const padding = 40;
-                const chartWidth = width - padding * 2;
-                const x = padding + (index / (visitsData.length - 1)) * chartWidth;
-                const percentagePosition = (x / width) * 100;
-                return `
-                  <div class="chart-point-value" style="left: ${percentagePosition}%; display: none;" data-value="${item.value}">${item.value}</div>
-                  <div class="chart-point-label" style="left: ${percentagePosition}%;">${item.label}</div>
-                `;
-              }).join('')}
             </div>
           </div>
           <div class="chart-legend">
@@ -627,8 +615,9 @@
       const width = 400;
       const height = 200;
       const padding = 40;
+      const bottomPadding = 60; // 为时间标签留出更多空间
       const chartWidth = width - padding * 2;
-      const chartHeight = height - padding * 2;
+      const chartHeight = height - padding - bottomPadding;
       
       // 计算最大值和最小值
       const values = data.map(d => d.value);
@@ -656,8 +645,8 @@
         return `<circle class="chart-point" cx="${x}" cy="${y}" r="5" data-value="${item.value}" data-label="${item.label}" style="fill: #16a34a; stroke: white; stroke-width: 2;"/>`;
       }).join('');
       
-      // 生成数据点标签
-      const labels = data.map((item, index) => {
+      // 生成数据点标签（数值）
+      const valueLabels = data.map((item, index) => {
         const x = padding + (index / (data.length - 1)) * chartWidth;
         const y = padding + chartHeight - ((item.value - minValue) / valueRange) * chartHeight;
         // 标签位置：数据点上方
@@ -665,11 +654,19 @@
         return `<text x="${x}" y="${labelY}" text-anchor="middle" style="font-size: 12px; fill: #374151; font-weight: 600;">${item.value}</text>`;
       }).join('');
       
+      // 生成时间标签（在底部）
+      const timeLabels = data.map((item, index) => {
+        const x = padding + (index / (data.length - 1)) * chartWidth;
+        const y = height - 10; // 底部位置
+        return `<text x="${x}" y="${y}" text-anchor="middle" style="font-size: 11px; fill: #64748b;">${item.label}</text>`;
+      }).join('');
+      
       return `
         <path class="chart-line-area" d="${areaPath}"/>
         <path class="chart-line-path" d="${linePath}"/>
         ${circles}
-        ${labels}
+        ${valueLabels}
+        ${timeLabels}
       `;
     }
     
