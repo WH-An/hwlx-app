@@ -505,9 +505,6 @@
                 <div class="chart-point-value" style="left: ${(index / (visitsData.length - 1)) * 100}%; display: none;" data-value="${item.value}">${item.value}</div>
                 <div class="chart-point-label" style="left: ${(index / (visitsData.length - 1)) * 100}%;">${item.label}</div>
               `).join('')}
-              <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 12px; color: #64748b;">
-                数据点: ${visitsData.map(d => d.value).join(', ')}
-              </div>
             </div>
           </div>
           <div class="chart-legend">
@@ -644,17 +641,27 @@
       // 生成区域路径（用于填充）
       const areaPath = `M ${padding},${padding + chartHeight} L ${points.join(' L ')} L ${padding + chartWidth},${padding + chartHeight} Z`;
       
-      // 生成数据点
+      // 生成数据点和标签
       const circles = data.map((item, index) => {
         const x = padding + (index / (data.length - 1)) * chartWidth;
         const y = padding + chartHeight - ((item.value - minValue) / valueRange) * chartHeight;
         return `<circle class="chart-point" cx="${x}" cy="${y}" r="5" data-value="${item.value}" data-label="${item.label}" style="fill: #16a34a; stroke: white; stroke-width: 2;"/>`;
       }).join('');
       
+      // 生成数据点标签
+      const labels = data.map((item, index) => {
+        const x = padding + (index / (data.length - 1)) * chartWidth;
+        const y = padding + chartHeight - ((item.value - minValue) / valueRange) * chartHeight;
+        // 标签位置：数据点上方
+        const labelY = y - 15;
+        return `<text x="${x}" y="${labelY}" text-anchor="middle" style="font-size: 12px; fill: #374151; font-weight: 600;">${item.value}</text>`;
+      }).join('');
+      
       return `
         <path class="chart-line-area" d="${areaPath}"/>
         <path class="chart-line-path" d="${linePath}"/>
         ${circles}
+        ${labels}
       `;
     }
     
