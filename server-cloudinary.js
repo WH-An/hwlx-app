@@ -387,13 +387,26 @@ app.get('/api/users/me', async (req, res) => {
     }
 
     if (isAdmin) {
+      // 尝试从数据库获取管理员头像信息
+      let adminUser = await User.findOne({ email });
+      if (!adminUser) {
+        // 如果数据库中没有管理员记录，创建一个默认的
+        adminUser = new User({
+          email: email,
+          nickname: '海外留学',
+          password: 'admin', // 占位符
+          isAdmin: true
+        });
+        await adminUser.save();
+      }
+      
       return res.json({
-        id: 1,
-        nickname: '海外留学',
+        id: adminUser._id || 1,
+        nickname: adminUser.nickname || '海外留学',
         email: email,
-        area: '',
-        degree: '',
-        avatarPath: '',
+        area: adminUser.area || '',
+        degree: adminUser.degree || '',
+        avatarPath: adminUser.avatarPath || '',
         isAdmin: true
       });
     }
