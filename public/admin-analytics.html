@@ -502,12 +502,12 @@
                 ${generateLineChart(visitsData)}
               </svg>
               ${visitsData.map((item, index) => {
-                // 计算与SVG图表对应的位置（考虑SVG的padding）
-                const svgPadding = 40; // SVG的padding
-                const svgWidth = 400; // SVG的宽度
-                const chartWidth = svgWidth - svgPadding * 2; // 实际图表宽度
-                const xPosition = svgPadding + (index / (visitsData.length - 1)) * chartWidth;
-                const percentagePosition = (xPosition / svgWidth) * 100;
+                // 使用与generateLineChart完全相同的计算方式
+                const width = 400;
+                const padding = 40;
+                const chartWidth = width - padding * 2;
+                const x = padding + (index / (visitsData.length - 1)) * chartWidth;
+                const percentagePosition = (x / width) * 100;
                 return `
                   <div class="chart-point-value" style="left: ${percentagePosition}%; display: none;" data-value="${item.value}">${item.value}</div>
                   <div class="chart-point-label" style="left: ${percentagePosition}%;">${item.label}</div>
