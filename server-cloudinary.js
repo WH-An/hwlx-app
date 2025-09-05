@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const fs = require('fs');
 
 // 导入数据库配置
 const { connectDB } = require('./config/database');
@@ -49,6 +50,78 @@ app.use(cookieParser());
 
 // 静态文件服务
 app.use(express.static(path.join(__dirname, 'public')));
+
+// ====== 数据统计相关变量和持久化 ======
+const STATS_FILE = path.join(__dirname, 'analytics.json');
+
+// 读取统计数据
+function readVisitStats() {
+  try {
+    if (fs.existsSync(STATS_FILE)) {
+      return JSON.parse(fs.readFileSync(STATS_FILE, 'utf8'));
+    }
+  } catch (error) {
+    console.warn('读取统计数据失败:', error);
+  }
+  return {
+    total: 0,
+    daily: {},
+    weekly: {},
+    monthly: {},
+    yearly: {}
+  };
+}
+
+// 保存统计数据
+function saveVisitStats(stats) {
+  try {
+    fs.writeFileSync(STATS_FILE, JSON.stringify(stats, null, 2));
+  } catch (error) {
+    console.warn('保存统计数据失败:', error);
+  }
+}
+
+let visitStats = readVisitStats();
+
+// 访问量统计中间件
+app.use((req, res, next) => {
+  // 跳过静态文件和API请求的统计
+  if (req.path.startsWith('/api/') || req.path.includes('.')) {
+    return next();
+  }
+  
+  // 统计页面访问
+  const today = new Date().toISOString().split('T')[0];
+  const now = new Date();
+  const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+  const weekKey = weekStart.toISOString().split('T')[0];
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  const yearKey = now.getFullYear().toString();
+  
+  // 更新总访问量
+  visitStats.total++;
+  
+  // 更新日访问量
+  if (!visitStats.daily[today]) visitStats.daily[today] = 0;
+  visitStats.daily[today]++;
+  
+  // 更新周访问量
+  if (!visitStats.weekly[weekKey]) visitStats.weekly[weekKey] = 0;
+  visitStats.weekly[weekKey]++;
+  
+  // 更新月访问量
+  if (!visitStats.monthly[monthKey]) visitStats.monthly[monthKey] = 0;
+  visitStats.monthly[monthKey]++;
+  
+  // 更新年访问量
+  if (!visitStats.yearly[yearKey]) visitStats.yearly[yearKey] = 0;
+  visitStats.yearly[yearKey]++;
+  
+  // 保存统计数据到文件
+  saveVisitStats(visitStats);
+  
+  next();
+});
 
 // 默认路由
 app.get('/', (req, res) => {
@@ -1301,51 +1374,7 @@ app.post('/api/verify-code', async (req, res) => {
   }
 });
 
-// 数据统计相关变量
-let visitStats = {
-  total: 0,
-  daily: {},
-  weekly: {},
-  monthly: {},
-  yearly: {}
-};
 
-// 访问量统计中间件
-app.use((req, res, next) => {
-  // 跳过静态文件和API请求的统计
-  if (req.path.startsWith('/api/') || req.path.includes('.')) {
-    return next();
-  }
-  
-  // 统计页面访问
-  const today = new Date().toISOString().split('T')[0];
-  const now = new Date();
-  const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
-  const weekKey = weekStart.toISOString().split('T')[0];
-  const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-  const yearKey = now.getFullYear().toString();
-  
-  // 更新总访问量
-  visitStats.total++;
-  
-  // 更新日访问量
-  if (!visitStats.daily[today]) visitStats.daily[today] = 0;
-  visitStats.daily[today]++;
-  
-  // 更新周访问量
-  if (!visitStats.weekly[weekKey]) visitStats.weekly[weekKey] = 0;
-  visitStats.weekly[weekKey]++;
-  
-  // 更新月访问量
-  if (!visitStats.monthly[monthKey]) visitStats.monthly[monthKey] = 0;
-  visitStats.monthly[monthKey]++;
-  
-  // 更新年访问量
-  if (!visitStats.yearly[yearKey]) visitStats.yearly[yearKey] = 0;
-  visitStats.yearly[yearKey]++;
-  
-  next();
-});
 
 // 数据统计API
 app.get('/api/analytics', async (req, res) => {
