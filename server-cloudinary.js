@@ -18,6 +18,7 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const Post = require('./models/Post');
 const Comment = require('./models/Comment');
+const Analytics = require('./models/Analytics');
 
 // 清除Message模型缓存并重新导入
 if (mongoose.models.Message) {
@@ -52,36 +53,49 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ====== 数据统计相关变量和持久化 ======
-const STATS_FILE = path.join(__dirname, 'analytics.json');
+// 使用内存缓存提高性能
+let visitStatsCache = {
+  total: 0,
+  daily: {},
+  weekly: {},
+  monthly: {},
+  yearly: {}
+};
 
-// 读取统计数据
-function readVisitStats() {
+// 从数据库读取统计数据
+async function loadVisitStats() {
   try {
-    if (fs.existsSync(STATS_FILE)) {
-      return JSON.parse(fs.readFileSync(STATS_FILE, 'utf8'));
-    }
+    const analytics = await Analytics.getOrCreate();
+    visitStatsCache = {
+      total: analytics.total || 0,
+      daily: analytics.daily ? Object.fromEntries(analytics.daily) : {},
+      weekly: analytics.weekly ? Object.fromEntries(analytics.weekly) : {},
+      monthly: analytics.monthly ? Object.fromEntries(analytics.monthly) : {},
+      yearly: analytics.yearly ? Object.fromEntries(analytics.yearly) : {}
+    };
   } catch (error) {
-    console.warn('读取统计数据失败:', error);
-  }
-  return {
-    total: 0,
-    daily: {},
-    weekly: {},
-    monthly: {},
-    yearly: {}
-  };
-}
-
-// 保存统计数据
-function saveVisitStats(stats) {
-  try {
-    fs.writeFileSync(STATS_FILE, JSON.stringify(stats, null, 2));
-  } catch (error) {
-    console.warn('保存统计数据失败:', error);
+    console.warn('从数据库读取统计数据失败:', error);
   }
 }
 
-let visitStats = readVisitStats();
+// 保存统计数据到数据库
+async function saveVisitStats() {
+  try {
+    const analytics = await Analytics.getOrCreate();
+    analytics.total = visitStatsCache.total;
+    analytics.daily = new Map(Object.entries(visitStatsCache.daily));
+    analytics.weekly = new Map(Object.entries(visitStatsCache.weekly));
+    analytics.monthly = new Map(Object.entries(visitStatsCache.monthly));
+    analytics.yearly = new Map(Object.entries(visitStatsCache.yearly));
+    analytics.lastUpdated = new Date();
+    await analytics.save();
+  } catch (error) {
+    console.warn('保存统计数据到数据库失败:', error);
+  }
+}
+
+// 初始化统计数据
+loadVisitStats();
 
 // 访问量统计中间件
 app.use((req, res, next) => {
@@ -99,26 +113,26 @@ app.use((req, res, next) => {
   const yearKey = now.getFullYear().toString();
   
   // 更新总访问量
-  visitStats.total++;
+  visitStatsCache.total++;
   
   // 更新日访问量
-  if (!visitStats.daily[today]) visitStats.daily[today] = 0;
-  visitStats.daily[today]++;
+  if (!visitStatsCache.daily[today]) visitStatsCache.daily[today] = 0;
+  visitStatsCache.daily[today]++;
   
   // 更新周访问量
-  if (!visitStats.weekly[weekKey]) visitStats.weekly[weekKey] = 0;
-  visitStats.weekly[weekKey]++;
+  if (!visitStatsCache.weekly[weekKey]) visitStatsCache.weekly[weekKey] = 0;
+  visitStatsCache.weekly[weekKey]++;
   
   // 更新月访问量
-  if (!visitStats.monthly[monthKey]) visitStats.monthly[monthKey] = 0;
-  visitStats.monthly[monthKey]++;
+  if (!visitStatsCache.monthly[monthKey]) visitStatsCache.monthly[monthKey] = 0;
+  visitStatsCache.monthly[monthKey]++;
   
   // 更新年访问量
-  if (!visitStats.yearly[yearKey]) visitStats.yearly[yearKey] = 0;
-  visitStats.yearly[yearKey]++;
+  if (!visitStatsCache.yearly[yearKey]) visitStatsCache.yearly[yearKey] = 0;
+  visitStatsCache.yearly[yearKey]++;
   
-  // 保存统计数据到文件
-  saveVisitStats(visitStats);
+  // 异步保存统计数据到数据库（不阻塞请求）
+  saveVisitStats().catch(err => console.warn('保存统计数据失败:', err));
   
   next();
 });
@@ -1391,20 +1405,20 @@ app.get('/api/analytics', async (req, res) => {
     switch (period) {
       case 'day':
         const today = now.toISOString().split('T')[0];
-        visits = visitStats.daily[today] || 0;
+        visits = visitStatsCache.daily[today] || 0;
         break;
       case 'week':
         const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
         const weekKey = weekStart.toISOString().split('T')[0];
-        visits = visitStats.weekly[weekKey] || 0;
+        visits = visitStatsCache.weekly[weekKey] || 0;
         break;
       case 'month':
         const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-        visits = visitStats.monthly[monthKey] || 0;
+        visits = visitStatsCache.monthly[monthKey] || 0;
         break;
       case 'year':
         const yearKey = now.getFullYear().toString();
-        visits = visitStats.yearly[yearKey] || 0;
+        visits = visitStatsCache.yearly[yearKey] || 0;
         break;
     }
     
