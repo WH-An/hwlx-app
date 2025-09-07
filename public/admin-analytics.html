@@ -301,6 +301,12 @@
     <!-- 主要内容区域 -->
     <main class="main">
       <h1>📊 数据显示 <span class="badge admin">管理员</span></h1>
+      
+      <!-- 时区信息显示 -->
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; margin-bottom: 16px; font-size: 12px; color: #64748b;">
+        <span>🕐 当前时间: </span><span id="currentTime"></span>
+        <span style="margin-left: 16px;">🌍 时区: </span><span id="timezone"></span>
+      </div>
 
       <!-- 时间选择器 -->
       <div class="time-selector">
@@ -548,22 +554,51 @@
       `;
     }
     
-    // 根据时间周期获取天数
+    // 根据时间周期获取天数 - 修复时区问题
     function getDaysForPeriod(period) {
       const now = new Date();
+      const timezoneOffset = now.getTimezoneOffset(); // 获取时区偏移（分钟）
+      
       switch (period) {
         case 'day':
-          return ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'];
-        case 'week':
-          return ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
-        case 'month':
-          const days = [];
-          for (let i = 1; i <= 7; i++) {
-            days.push(`${i * 4}日`);
+          // 生成今天的小时标签，考虑时区
+          const hours = [];
+          for (let i = 0; i < 24; i += 4) {
+            const hour = String(i).padStart(2, '0');
+            hours.push(`${hour}:00`);
           }
-          return days;
+          return hours;
+        case 'week':
+          // 生成本周的日期标签
+          const weekDays = [];
+          const weekStart = new Date(now);
+          weekStart.setDate(now.getDate() - now.getDay()); // 本周一
+          
+          for (let i = 0; i < 7; i++) {
+            const day = new Date(weekStart);
+            day.setDate(weekStart.getDate() + i);
+            const dayNames = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+            weekDays.push(dayNames[day.getDay()]);
+          }
+          return weekDays;
+        case 'month':
+          // 生成本月的周标签
+          const monthWeeks = [];
+          const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+          const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+          const weeksInMonth = Math.ceil((monthEnd.getDate() + monthStart.getDay()) / 7);
+          
+          for (let i = 1; i <= Math.min(weeksInMonth, 7); i++) {
+            monthWeeks.push(`第${i}周`);
+          }
+          return monthWeeks;
         case 'year':
-          return ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+          // 生成本年的月份标签
+          const yearMonths = [];
+          for (let i = 1; i <= 12; i++) {
+            yearMonths.push(`${i}月`);
+          }
+          return yearMonths;
         default:
           return ['数据1', '数据2', '数据3', '数据4', '数据5', '数据6'];
       }
@@ -709,11 +744,39 @@
       }
     }
 
+    // 更新时间显示
+    function updateTimeDisplay() {
+      const now = new Date();
+      const timeString = now.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
+      
+      const timezoneString = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const offset = now.getTimezoneOffset();
+      const offsetHours = Math.floor(Math.abs(offset) / 60);
+      const offsetMinutes = Math.abs(offset) % 60;
+      const offsetSign = offset <= 0 ? '+' : '-';
+      const timezoneOffset = `UTC${offsetSign}${offsetHours.toString().padStart(2, '0')}:${offsetMinutes.toString().padStart(2, '0')}`;
+      
+      document.getElementById('currentTime').textContent = timeString;
+      document.getElementById('timezone').textContent = `${timezoneString} (${timezoneOffset})`;
+    }
+
     // 页面加载完成后执行
     document.addEventListener('DOMContentLoaded', () => {
       loadUserInfo();
       initTimeSelector();
       updateStats(currentPeriod);
+      updateTimeDisplay();
+      
+      // 每秒更新时间显示
+      setInterval(updateTimeDisplay, 1000);
       
       // 每5分钟自动刷新数据
       setInterval(() => {

@@ -104,11 +104,17 @@ app.use((req, res, next) => {
     return next();
   }
   
-  // 统计页面访问
-  const today = new Date().toISOString().split('T')[0];
+  // 统计页面访问 - 修复时区问题
   const now = new Date();
-  const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
-  const weekKey = weekStart.toISOString().split('T')[0];
+  
+  // 使用本地时间而不是UTC时间
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  
+  // 计算本周开始（周一）
+  const weekStart = new Date(now);
+  weekStart.setDate(now.getDate() - now.getDay() + 1); // 本周一
+  const weekKey = `${weekStart.getFullYear()}-${String(weekStart.getMonth() + 1).padStart(2, '0')}-${String(weekStart.getDate()).padStart(2, '0')}`;
+  
   const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   const yearKey = now.getFullYear().toString();
   
@@ -1414,15 +1420,18 @@ app.get('/api/analytics', async (req, res) => {
     let posts = 0;
     let comments = 0;
     
-    // 根据时间周期获取数据
+    // 根据时间周期获取数据 - 修复时区问题
     switch (period) {
       case 'day':
-        const today = now.toISOString().split('T')[0];
+        // 使用本地时间
+        const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         visits = visitStatsCache.daily[today] || 0;
         break;
       case 'week':
-        const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
-        const weekKey = weekStart.toISOString().split('T')[0];
+        // 计算本周开始（周一）
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - now.getDay() + 1);
+        const weekKey = `${weekStart.getFullYear()}-${String(weekStart.getMonth() + 1).padStart(2, '0')}-${String(weekStart.getDate()).padStart(2, '0')}`;
         visits = visitStatsCache.weekly[weekKey] || 0;
         break;
       case 'month':
