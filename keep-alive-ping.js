@@ -1,0 +1,22 @@
+const https = require('https');
+
+// 使用专门的健康检查端点进行保活
+const URL = 'https://hai-wai-liu-xue.onrender.com/__ping';
+
+const req = https.get(URL, (res) => {
+  console.log('OK');
+  process.exit(0);
+});
+
+req.on('error', () => {
+  console.log('FAIL');
+  process.exit(1);
+});
+
+req.setTimeout(5000, () => {
+  req.destroy();
+  console.log('TIMEOUT');
+  process.exit(1);
+});
+
+req.end();
