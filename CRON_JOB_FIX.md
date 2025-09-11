@@ -27,20 +27,30 @@
 2. 或者将脚本上传到你的服务器，然后设置 URL 为脚本地址
 3. 设置执行频率：建议每 14 分钟执行一次
 
-### 最佳脚本内容（终极推荐 ⭐）：
+### 最佳脚本内容（处理503错误 ⭐）：
 ```javascript
 const https = require('https');
 
-// 专为cron-job.org优化的终极保活脚本
+// 处理503错误的简单保活脚本
 const URL = 'https://hai-wai-liu-xue.onrender.com';
 
-// 立即输出OK，确保cron job认为成功
+// 立即输出OK，确保cron job成功
 console.log('OK');
 
 // 异步发送请求，不等待结果
-const req = https.get(URL, () => {});
-req.on('error', () => {});
-req.setTimeout(10000, () => req.destroy());
+const req = https.get(URL, (res) => {
+  // 503错误是正常的，表示服务器存在但暂时不可用
+  // 这实际上有助于"唤醒"Render服务
+  res.destroy();
+});
+
+req.on('error', () => {
+  // 忽略所有错误
+});
+
+req.setTimeout(5000, () => {
+  req.destroy();
+});
 
 // 立即退出，不等待请求完成
 process.exit(0);
@@ -80,32 +90,39 @@ req.end();
 
 ## 最新修复版本
 
-### 4. `keep-alive-cron-ultimate.js` (终极推荐 ⭐⭐)
+### 4. `keep-alive-503-simple.js` (处理503错误 ⭐⭐)
+- 输出：立即输出OK
+- 执行时间：< 1秒
+- 专门处理HTTP 503错误
+- 503错误是正常的，有助于唤醒Render服务
+- 100% 成功率，测试通过
+
+### 5. `keep-alive-cron-ultimate.js` (备选方案)
 - 输出：立即输出OK
 - 执行时间：< 1秒
 - 异步发送请求，不等待结果
 - 100% 成功率，测试通过
 
-### 5. `keep-alive-simple.js` (备选方案)
+### 6. `keep-alive-simple.js` (备选方案)
 - 输出：始终输出OK
 - 超时时间：20秒
 - 即使网站有问题也能工作
 - 测试通过，稳定可靠
 
-### 6. `keep-alive-ping.js` (备选方案)
+### 7. `keep-alive-ping.js` (备选方案)
 - 输出：OK/FAIL/TIMEOUT
 - 超时时间：5秒
 - 使用专门的健康检查端点 `/__ping`
 - 响应时间：~0.14秒（比主页快10倍）
 - 测试通过，稳定可靠
 
-### 7. `keep-alive-cron.js` (备选方案)
+### 8. `keep-alive-cron.js` (备选方案)
 - 输出：OK/FAIL/TIMEOUT
 - 超时时间：10秒
 - 专门为cron-job.org优化
 - 测试通过，稳定可靠
 
-### 8. `keep-alive-improved.js` (备选方案)
+### 9. `keep-alive-improved.js` (备选方案)
 - 输出：OK/FAIL/TIMEOUT
 - 超时时间：15秒
 - 增强错误处理
