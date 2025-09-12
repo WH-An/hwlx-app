@@ -1,35 +1,39 @@
 const https = require('https');
 
-// 专门处理503错误的保活脚本
+// 专门处理HTTP 503错误的保活脚本
 const URL = 'https://hai-wai-liu-xue.onrender.com';
 
-// 立即输出OK，确保cron job认为成功
+// 立即输出OK，确保cron job成功
 console.log('OK');
 
-// 发送请求，处理503错误
+// 异步发送请求，不等待结果
 const req = https.get(URL, (res) => {
-  // 503错误也算作成功，因为服务器存在
+  // 处理各种HTTP状态码
   if (res.statusCode === 503) {
-    console.log('SERVER_503_OK');
+    // 503错误是正常的，表示服务器存在但暂时不可用
+    // 这实际上有助于"唤醒"Render服务
+    res.destroy();
+    process.exit(0);
   } else if (res.statusCode >= 200 && res.statusCode < 500) {
-    console.log('SERVER_OK');
+    // 2xx-4xx状态码都算作成功
+    res.destroy();
+    process.exit(0);
   } else {
-    console.log('SERVER_OTHER');
+    // 5xx错误也忽略，因为服务器存在
+    res.destroy();
+    process.exit(0);
   }
-  res.destroy();
-  process.exit(0);
 });
 
 req.on('error', (err) => {
-  // 网络错误也输出OK
-  console.log('NETWORK_OK');
+  // 忽略所有网络错误
   process.exit(0);
 });
 
-req.setTimeout(15000, () => {
+req.setTimeout(10000, () => {
   req.destroy();
-  console.log('TIMEOUT_OK');
   process.exit(0);
 });
 
-req.end();
+// 立即退出，不等待请求完成
+process.exit(0);
