@@ -1,7 +1,7 @@
 const https = require('https');
 
-// 改进版保活脚本 - 增加超时时间和错误处理
-const URL = 'https://hai-wai-liu-xue.onrender.com';
+// 改进版保活脚本 - 增加超时时间和错误处理（使用 /__ping）
+const URL = 'https://hai-wai-liu-xue.onrender.com/__ping';
 
 const req = https.get(URL, {
   timeout: 15000, // 15秒超时

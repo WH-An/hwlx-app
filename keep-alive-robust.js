@@ -1,7 +1,7 @@
 const https = require('https');
 
-// 强化版保活脚本 - 处理网站可能暂时不可用的情况
-const URL = 'https://hai-wai-liu-xue.onrender.com';
+// 强化版保活脚本 - 处理网站可能暂时不可用的情况（使用 /__ping）
+const URL = 'https://hai-wai-liu-xue.onrender.com/__ping';
 
 const req = https.get(URL, (res) => {
   // 检查状态码

@@ -1,7 +1,7 @@
 const https = require('https');
 
-// 专为cron-job.org优化的终极保活脚本
-const URL = 'https://hai-wai-liu-xue.onrender.com';
+// 专为cron-job.org优化的终极保活脚本（使用轻量健康检查端点）
+const URL = 'https://hai-wai-liu-xue.onrender.com/__ping';
 
 // 立即输出OK，确保cron job认为成功
 console.log('OK');

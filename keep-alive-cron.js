@@ -1,7 +1,7 @@
 const https = require('https');
 
-// 专门为cron-job.org优化的保活脚本
-const URL = 'https://hai-wai-liu-xue.onrender.com';
+// 专门为cron-job.org优化的保活脚本（命中 /__ping）
+const URL = 'https://hai-wai-liu-xue.onrender.com/__ping';
 
 const req = https.get(URL, (res) => {
   console.log('OK');

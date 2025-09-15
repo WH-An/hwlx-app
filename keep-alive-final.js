@@ -1,7 +1,7 @@
 const https = require('https');
 
-// 最终优化版保活脚本
-const URL = 'https://hai-wai-liu-xue.onrender.com';
+// 最终优化版保活脚本（使用轻量健康检查端点）
+const URL = 'https://hai-wai-liu-xue.onrender.com/__ping';
 
 const req = https.get(URL, (res) => {
   console.log('OK');

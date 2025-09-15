@@ -1,7 +1,7 @@
 const https = require('https');
 
-// 安全保活脚本 - 最小输出
-const URL = 'https://hai-wai-liu-xue.onrender.com';
+// 安全保活脚本 - 最小输出（使用 /__ping）
+const URL = 'https://hai-wai-liu-xue.onrender.com/__ping';
 
 const req = https.get(URL, (res) => {
   // 只输出一个简单的成功标识

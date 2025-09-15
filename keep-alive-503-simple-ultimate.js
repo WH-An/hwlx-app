@@ -1,7 +1,7 @@
 const https = require('https');
 
-// 超简单503错误处理保活脚本
-const URL = 'https://hai-wai-liu-xue.onrender.com';
+// 超简单503错误处理保活脚本（优先打轻量健康端点）
+const URL = 'https://hai-wai-liu-xue.onrender.com/__ping';
 
 // 立即输出OK，确保cron job成功
 console.log('OK');

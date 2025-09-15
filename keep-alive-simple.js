@@ -1,7 +1,7 @@
 const https = require('https');
 
-// 简单保活脚本 - 即使网站有问题也能工作
-const URL = 'https://hai-wai-liu-xue.onrender.com';
+// 简单保活脚本 - 即使网站有问题也能工作（使用 /__ping）
+const URL = 'https://hai-wai-liu-xue.onrender.com/__ping';
 
 const req = https.get(URL, {
   timeout: 20000, // 20秒超时

@@ -1,7 +1,7 @@
 const https = require('https');
 
-// 终极保活脚本 - 100% 成功版本
-const URL = 'https://hai-wai-liu-xue.onrender.com';
+// 终极保活脚本 - 100% 成功版本（健康检查端点）
+const URL = 'https://hai-wai-liu-xue.onrender.com/__ping';
 
 // 立即输出OK，然后尝试请求
 console.log('OK');
