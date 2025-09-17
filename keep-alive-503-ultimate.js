@@ -3,12 +3,13 @@ const https = require('https');
 // 终极503错误处理保活脚本
 const URL = 'https://hai-wai-liu-xue.onrender.com';
 const PING_URL = 'https://hai-wai-liu-xue.onrender.com/__ping';
+const POSTS_URL = 'https://hai-wai-liu-xue.onrender.com/api/posts';
 
 // 立即输出OK，确保cron job成功
 console.log('OK');
 
-// 尝试多个端点的保活策略
-const endpoints = [PING_URL, URL];
+// 尝试多个端点的保活策略（健康→首页→接口）
+const endpoints = [PING_URL, URL, POSTS_URL];
 let currentIndex = 0;
 
 function tryEndpoint(url) {
