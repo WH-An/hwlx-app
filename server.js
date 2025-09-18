@@ -186,6 +186,11 @@ const upload = multer({ storage });
 
 // 健康检查
 app.get('/__ping', (req, res) => res.json({ ok: true, ts: Date.now() }));
+// 轻量保活端点（纯文本，最小开销）
+app.get('/ping', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.type('text/plain').send('ok');
+});
 
 // 自检：看当前 cookie 身份是否固定管理员
 app.get('/__whoami', (req, res) => {
