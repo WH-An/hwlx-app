@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>海外留学 · 主页面</title>
+  
+  <!-- 预加载关键资源 -->
+  <link rel="preload" href="mobile-optimization.css" as="style">
+  <link rel="preload" href="app.js" as="script">
+  
+  <!-- 移动端优化CSS -->
+  <link rel="stylesheet" href="mobile-optimization.css">
+  
+  <!-- Open Graph 元标签 -->
+  <meta property="og:title" content="海外留学 · 主页面" />
+  <meta property="og:description" content="海外留学生活指南，包含学习指导、生活小贴士、入学步骤等实用信息" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/WH-An/hwlx-app/main/%E8%93%9D%E9%BB%84%E5%B0%8F%E5%B8%86%E8%88%B9.png" />
+  <meta property="og:url" content="https://hai-wai-liu-xue.onrender.com" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="海外留学" />
+  
+  <!-- Twitter Card 元标签 -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="海外留学 · 主页面" />
+  <meta name="twitter:description" content="海外留学生活指南，包含学习指导、生活小贴士、入学步骤等实用信息" />
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/WH-An/hwlx-app/main/%E8%93%9D%E9%BB%84%E5%B0%8F%E5%B8%86%E8%88%B9.png" />
+  
+  <!-- 其他元标签 -->
+  <meta name="description" content="海外留学生活指南，包含学习指导、生活小贴士、入学步骤等实用信息" />
+  <meta name="keywords" content="海外留学,留学生活,学习指导,生活小贴士,入学步骤" />
+  <meta name="author" content="海外留学" />
+  
+  <!-- 性能优化：内联关键CSS -->
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --accent:#16a34a;
+      --accent-2:#22c55e;
+      --border:#e5e7eb;
+      --shadow:0 10px 30px rgba(0,0,0,.18);
+      --radius:18px;
+      --mobile-nav-height: 70px;
+    }
+    
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Microsoft YaHei',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'PingFang SC',sans-serif;
+      background:radial-gradient(1200px 600px at 10% -10%,#1f8db8 18%, transparent 60%),radial-gradient(900px 500px at 110% 110%,#2bb8d6 12%, transparent 60%), var(--bg);
+      color:#fff;
+      overflow:visible;
+      line-height:1.6;
+    }
+
+    .container{
+      display:grid;
+      grid-template-columns: 220px 1fr;
+      grid-template-rows: 220px 1fr;
+      gap:18px;
+      min-height:100vh;
+      padding:24px;
+      overflow:visible;
+    }
+
+    .sidebar{
+      grid-row:1/3;
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:20px 16px;
+      color:var(--text);
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+    
+    .account-info{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+      color:inherit;
+      border:1px dashed #eef2ff;
+      border-radius:14px;
+      padding:14px;
+      background:#fff;
+      transition:all 0.3s ease;
+    }
+    
+    .account-info:hover{
+      transform:translateY(-2px);
+      box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .avatar{
+      width:56px;
+      height:56px;
+      border-radius:50%;
+      object-fit:cover;
+      border:2px solid var(--accent);
+    }
+    
+    .username{
+      font-weight:600;
+      font-size:14px;
+      text-align:center;
+    }
+    
+    .user-email{
+      font-size:12px;
+      color:var(--muted);
+      text-align:center;
+    }
+    
+    .nav-menu{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    
+    .nav-item{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px 16px;
+      border-radius:12px;
+      text-decoration:none;
+      color:var(--text);
+      font-size:14px;
+      font-weight:500;
+      transition:all 0.3s ease;
+      position:relative;
+    }
+    
+    .nav-item:hover{
+      background:#f8fafc;
+      transform:translateX(4px);
+    }
+    
+    .nav-item.active{
+      background:var(--accent);
+      color:white;
+    }
+    
+    .nav-item.active::before{
+      content:'';
+      position:absolute;
+      left:-8px;
+      top:50%;
+      transform:translateY(-50%);
+      width:4px;
+      height:20px;
+      background:var(--accent-2);
+      border-radius:2px;
+    }
+    
+    .nav-icon{
+      width:20px;
+      height:20px;
+      opacity:0.8;
+    }
+    
+    .main-content{
+      grid-column:2;
+      grid-row:1/3;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    
+    .header{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:24px;
+      color:var(--text);
+    }
+    
+    .welcome-title{
+      font-size:28px;
+      font-weight:700;
+      margin:0 0 8px 0;
+      background:linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    
+    .welcome-subtitle{
+      font-size:16px;
+      color:var(--muted);
+      margin:0;
+    }
+    
+    .content-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));
+      gap:18px;
+      flex:1;
+    }
+    
+    .content-card{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:24px;
+      color:var(--text);
+      transition:all 0.3s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    
+    .content-card:hover{
+      transform:translateY(-4px);
+      box-shadow:0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .content-card::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      height:4px;
+      background:linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+    
+    .card-title{
+      font-size:20px;
+      font-weight:600;
+      margin:0 0 12px 0;
+      color:var(--text);
+    }
+    
+    .card-description{
+      font-size:14px;
+      color:var(--muted);
+      margin:0 0 16px 0;
+      line-height:1.5;
+    }
+    
+    .card-button{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 20px;
+      background:var(--accent);
+      color:white;
+      text-decoration:none;
+      border-radius:8px;
+      font-size:14px;
+      font-weight:500;
+      transition:all 0.3s ease;
+      border:none;
+      cursor:pointer;
+    }
+    
+    .card-button:hover{
+      background:var(--accent-2);
+      transform:translateY(-1px);
+    }
+    
+    .stats-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));
+      gap:16px;
+      margin-top:16px;
+    }
+    
+    .stat-item{
+      text-align:center;
+      padding:16px;
+      background:#f8fafc;
+      border-radius:12px;
+    }
+    
+    .stat-number{
+      font-size:24px;
+      font-weight:700;
+      color:var(--accent);
+      margin:0;
+    }
+    
+    .stat-label{
+      font-size:12px;
+      color:var(--muted);
+      margin:4px 0 0 0;
+    }
+    
+    /* 移动端优化 */
+    @media (max-width: 768px) {
+      .container{
+        grid-template-columns:1fr;
+        grid-template-rows:auto auto 1fr;
+        padding:16px;
+        gap:12px;
+      }
+      
+      .sidebar{
+        grid-row:1;
+        flex-direction:row;
+        overflow-x:auto;
+        padding:12px;
+      }
+      
+      .nav-menu{
+        flex-direction:row;
+        gap:12px;
+        min-width:max-content;
+      }
+      
+      .nav-item{
+        white-space:nowrap;
+        padding:8px 12px;
+      }
+      
+      .main-content{
+        grid-column:1;
+        grid-row:2/4;
+      }
+      
+      .content-grid{
+        grid-template-columns:1fr;
+      }
+      
+      .welcome-title{
+        font-size:24px;
+      }
+      
+      .header{
+        padding:16px;
+      }
+    }
+    
+    /* 加载动画 */
+    .loading{
+      display:inline-block;
+      width:20px;
+      height:20px;
+      border:3px solid #f3f3f3;
+      border-top:3px solid var(--accent);
+      border-radius:50%;
+      animation:spin 1s linear infinite;
+    }
+    
+    @keyframes spin{
+      0%{transform:rotate(0deg)}
+      100%{transform:rotate(360deg)}
+    }
+    
+    /* 错误状态 */
+    .error{
+      color:#ef4444;
+      background:#fef2f2;
+      border:1px solid #fecaca;
+      padding:12px;
+      border-radius:8px;
+      margin:8px 0;
+    }
+    
+    /* 成功状态 */
+    .success{
+      color:#16a34a;
+      background:#f0fdf4;
+      border:1px solid #bbf7d0;
+      padding:12px;
+      border-radius:8px;
+      margin:8px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 侧边栏 -->
+    <nav class="sidebar">
+      <a href="#" class="account-info" id="accountInfo">
+        <img src="your-avatar.png" alt="头像" class="avatar" id="userAvatar">
+        <div class="username" id="userName">请登录</div>
+        <div class="user-email" id="userEmail">点击登录</div>
+      </a>
+      
+      <div class="nav-menu">
+        <a href="#" class="nav-item active" data-page="home">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+          </svg>
+          首页
+        </a>
+        <a href="#" class="nav-item" data-page="posts">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+          </svg>
+          帖子
+        </a>
+        <a href="#" class="nav-item" data-page="messages">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+          </svg>
+          消息
+        </a>
+        <a href="#" class="nav-item" data-page="profile">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          个人资料
+        </a>
+        <a href="#" class="nav-item" data-page="admin" id="adminLink" style="display:none;">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+          </svg>
+          管理后台
+        </a>
+      </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+      <!-- 头部 -->
+      <header class="header">
+        <h1 class="welcome-title">欢迎来到海外留学社区</h1>
+        <p class="welcome-subtitle">分享你的留学经历，获取实用的生活指导</p>
+      </header>
+
+      <!-- 内容网格 -->
+      <div class="content-grid">
+        <!-- 学习指导卡片 -->
+        <div class="content-card">
+          <h3 class="card-title">📚 学习指导</h3>
+          <p class="card-description">获取专业的学习建议，分享学习经验，提高学术成绩</p>
+          <button class="card-button" onclick="navigateToPage('study-guide.html')">
+            开始学习
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- 生活小贴士卡片 -->
+        <div class="content-card">
+          <h3 class="card-title">💡 生活小贴士</h3>
+          <p class="card-description">实用的生活建议，帮助你更好地适应海外生活</p>
+          <button class="card-button" onclick="navigateToPage('life-tips.html')">
+            查看贴士
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- 入学步骤卡片 -->
+        <div class="content-card">
+          <h3 class="card-title">🎓 入学步骤</h3>
+          <p class="card-description">详细的入学流程指导，让你顺利完成入学手续</p>
+          <button class="card-button" onclick="navigateToPage('enrollment-steps.html')">
+            查看步骤
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- 医院信息卡片 -->
+        <div class="content-card">
+          <h3 class="card-title">🏥 医院信息</h3>
+          <p class="card-description">查找附近的医院和诊所，获取医疗服务信息</p>
+          <button class="card-button" onclick="navigateToPage('hospital.html')">
+            查找医院
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- 分享功能卡片 -->
+        <div class="content-card">
+          <h3 class="card-title">📤 分享经验</h3>
+          <p class="card-description">分享你的留学经历，帮助其他同学</p>
+          <button class="card-button" onclick="navigateToPage('share.html')">
+            开始分享
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- 社区统计卡片 -->
+        <div class="content-card">
+          <h3 class="card-title">📊 社区统计</h3>
+          <p class="card-description">查看社区活跃度和用户数据</p>
+          <div class="stats-grid" id="statsGrid">
+            <div class="stat-item">
+              <div class="stat-number" id="totalUsers">-</div>
+              <div class="stat-label">用户数</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number" id="totalPosts">-</div>
+              <div class="stat-label">帖子数</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number" id="totalComments">-</div>
+              <div class="stat-label">评论数</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 加载提示 -->
+  <div id="loadingIndicator" style="display:none; position:fixed; top:20px; right:20px; background:var(--panel); padding:12px 20px; border-radius:8px; box-shadow:var(--shadow); z-index:1000;">
+    <div class="loading"></div>
+    <span style="margin-left:8px;">加载中...</span>
+  </div>
+
+  <!-- 错误提示 -->
+  <div id="errorMessage" style="display:none; position:fixed; top:20px; right:20px; background:#fef2f2; color:#ef4444; padding:12px 20px; border-radius:8px; box-shadow:var(--shadow); z-index:1000; border:1px solid #fecaca;">
+    <span id="errorText"></span>
+  </div>
+
+  <!-- 成功提示 -->
+  <div id="successMessage" style="display:none; position:fixed; top:20px; right:20px; background:#f0fdf4; color:#16a34a; padding:12px 20px; border-radius:8px; box-shadow:var(--shadow); z-index:1000; border:1px solid #bbf7d0;">
+    <span id="successText"></span>
+  </div>
+
+  <!-- 脚本 -->
+  <script src="app.js"></script>
+  <script>
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeApp();
+    });
+
+    // 初始化应用
+    async function initializeApp() {
+      showLoading('正在加载用户信息...');
+      
+      try {
+        // 检查用户登录状态
+        await checkUserStatus();
+        
+        // 加载统计数据
+        await loadStats();
+        
+        // 设置导航事件
+        setupNavigation();
+        
+        hideLoading();
+      } catch (error) {
+        console.error('初始化失败:', error);
+        showError('初始化失败，请刷新页面重试');
+        hideLoading();
+      }
+    }
+
+    // 检查用户状态
+    async function checkUserStatus() {
+      try {
+        const response = await fetch('/api/users/me', {
+          credentials: 'include'
+        });
+        
+        if (response.ok) {
+          const user = await response.json();
+          updateUserInfo(user);
+          
+          // 如果是管理员，显示管理链接
+          if (user.isAdmin) {
+            document.getElementById('adminLink').style.display = 'block';
+          }
+        } else {
+          // 未登录，显示登录按钮
+          showLoginPrompt();
+        }
+      } catch (error) {
+        console.error('检查用户状态失败:', error);
+        showLoginPrompt();
+      }
+    }
+
+    // 更新用户信息显示
+    function updateUserInfo(user) {
+      document.getElementById('userName').textContent = user.nickname || '用户';
+      document.getElementById('userEmail').textContent = user.email || '';
+      
+      if (user.avatarPath) {
+        document.getElementById('userAvatar').src = user.avatarPath;
+      }
+      
+      // 更新账户信息链接
+      document.getElementById('accountInfo').href = 'profile.html';
+    }
+
+    // 显示登录提示
+    function showLoginPrompt() {
+      document.getElementById('userName').textContent = '请登录';
+      document.getElementById('userEmail').textContent = '点击登录';
+      document.getElementById('accountInfo').href = 'login.html';
+    }
+
+    // 加载统计数据
+    async function loadStats() {
+      try {
+        const response = await fetch('/api/analytics');
+        if (response.ok) {
+          const stats = await response.json();
+          document.getElementById('totalUsers').textContent = stats.users || 0;
+          document.getElementById('totalPosts').textContent = stats.posts || 0;
+          document.getElementById('totalComments').textContent = stats.comments || 0;
+        }
+      } catch (error) {
+        console.error('加载统计数据失败:', error);
+        // 不显示错误，因为统计数据不是关键功能
+      }
+    }
+
+    // 设置导航事件
+    function setupNavigation() {
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          const page = this.dataset.page;
+          navigateToPage(page);
+        });
+      });
+    }
+
+    // 页面导航
+    function navigateToPage(page) {
+      const pageMap = {
+        'home': 'main page.html',
+        'posts': 'post.html',
+        'messages': 'messages.html',
+        'profile': 'profile.html',
+        'admin': 'admin-all.html'
+      };
+      
+      const targetPage = pageMap[page];
+      if (targetPage) {
+        window.location.href = targetPage;
+      }
+    }
+
+    // 显示加载提示
+    function showLoading(message = '加载中...') {
+      const indicator = document.getElementById('loadingIndicator');
+      indicator.querySelector('span').textContent = message;
+      indicator.style.display = 'block';
+    }
+
+    // 隐藏加载提示
+    function hideLoading() {
+      document.getElementById('loadingIndicator').style.display = 'none';
+    }
+
+    // 显示错误信息
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      document.getElementById('errorText').textContent = message;
+      errorDiv.style.display = 'block';
+      
+      // 3秒后自动隐藏
+      setTimeout(() => {
+        errorDiv.style.display = 'none';
+      }, 3000);
+    }
+
+    // 显示成功信息
+    function showSuccess(message) {
+      const successDiv = document.getElementById('successMessage');
+      document.getElementById('successText').textContent = message;
+      successDiv.style.display = 'block';
+      
+      // 3秒后自动隐藏
+      setTimeout(() => {
+        successDiv.style.display = 'none';
+      }, 3000);
+    }
+
+    // 全局错误处理
+    window.addEventListener('error', function(e) {
+      console.error('全局错误:', e.error);
+      showError('发生未知错误，请刷新页面重试');
+    });
+
+    // 网络状态检测
+    window.addEventListener('online', function() {
+      showSuccess('网络连接已恢复');
+    });
+
+    window.addEventListener('offline', function() {
+      showError('网络连接已断开，请检查网络设置');
+    });
+  </script>
+</body>
+</html>

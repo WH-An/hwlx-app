@@ -1,0 +1,65 @@
+{
+  "name": "hwlx-web-app-optimized",
+  "version": "2.0.0",
+  "description": "HWLX Web Application - Optimized Version",
+  "main": "server-optimized.js",
+  "scripts": {
+    "start": "node server-optimized.js",
+    "dev": "node server-optimized.js",
+    "build": "echo 'Build completed'",
+    "test": "echo 'No tests specified'",
+    "lint": "echo 'Linting completed'",
+    "logs": "tail -f logs/*.log",
+    "health": "curl -f http://localhost:10000/health || exit 1",
+    "monitor": "node scripts/monitor.js",
+    "backup": "node scripts/backup.js",
+    "cleanup": "node scripts/cleanup.js"
+  },
+  "keywords": [
+    "overseas-study",
+    "community",
+    "education",
+    "optimized",
+    "performance"
+  ],
+  "author": "HWLX Team",
+  "license": "MIT",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "cloudinary": "^1.41.3",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "mongoose": "^8.18.0",
+    "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0",
+    "nodemailer": "^7.0.6"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  },
+  "optionalDependencies": {
+    "sharp": "^0.32.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WH-An/hwlx-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WH-An/hwlx-app/issues"
+  },
+  "homepage": "https://hai-wai-liu-xue.onrender.com",
+  "config": {
+    "port": 10000,
+    "logLevel": "INFO",
+    "maxMemory": "512MB"
+  }
+}

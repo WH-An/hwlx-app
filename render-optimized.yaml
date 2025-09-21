@@ -1,0 +1,48 @@
+services:
+  - type: web
+    name: hwlx-web-app-optimized
+    env: node
+    plan: free
+    buildCommand: |
+      npm ci --only=production
+      npm run build
+    startCommand: node server-optimized.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: PORT
+        value: 10000
+    autoDeploy: true
+    healthCheckPath: /ping
+    healthCheckGracePeriod: 30s
+    
+    # 性能优化配置
+    scaling:
+      minInstances: 1
+      maxInstances: 3
+      
+    # 资源限制
+    resources:
+      cpu: 0.5
+      memory: 512Mi
+      
+    # 环境变量
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=512
+      - UV_THREADPOOL_SIZE=4
+      
+    # 健康检查配置
+    healthCheck:
+      path: /ping
+      intervalSeconds: 30
+      timeoutSeconds: 10
+      unhealthyThreshold: 3
+      healthyThreshold: 2
+      
+    # 部署配置
+    deploy:
+      strategy: rolling
+      maxUnavailable: 1
+      maxSurge: 1
