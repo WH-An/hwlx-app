@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>海外留学 · {{PAGE_TITLE}}</title>
+  
+  <!-- 移动端优化CSS -->
+  <link rel="stylesheet" href="mobile-optimization.css">
+  
+  <!-- Open Graph 元标签 -->
+  <meta property="og:title" content="海外留学 · {{PAGE_TITLE}}" />
+  <meta property="og:description" content="{{PAGE_DESCRIPTION}}" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/WH-An/hwlx-app/main/%E8%93%9D%E9%BB%84%E5%B0%8F%E5%B8%86%E8%88%B9.png" />
+  <meta property="og:url" content="https://hai-wai-liu-xue.onrender.com/{{PAGE_URL}}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="海外留学" />
+  
+  <!-- Twitter Card 元标签 -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="海外留学 · {{PAGE_TITLE}}" />
+  <meta name="twitter:description" content="{{PAGE_DESCRIPTION}}" />
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/WH-An/hwlx-app/main/%E8%93%9D%E9%BB%84%E5%B0%8F%E5%B8%86%E8%88%B9.png" />
+  
+  <!-- 其他元标签 -->
+  <meta name="description" content="{{PAGE_DESCRIPTION}}" />
+  <meta name="keywords" content="{{PAGE_KEYWORDS}}" />
+  <meta name="author" content="海外留学" />
+  
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #16a34a;
+      --accent-2: #22c55e;
+      --border: #e5e7eb;
+      --shadow: 0 10px 30px rgba(0,0,0,.18);
+      --radius: 18px;
+    }
+    
+    * { box-sizing: border-box }
+    html, body { height: 100% }
+    
+    body {
+      margin: 0;
+      font-family: 'Microsoft YaHei', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'PingFang SC', sans-serif;
+      background: radial-gradient(1200px 600px at 10% -10%, #1f8db8 18%, transparent 60%),
+                  radial-gradient(900px 500px at 110% 110%, #2bb8d6 12%, transparent 60%), var(--bg);
+      color: #fff;
+      overflow: visible;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 18px;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .sidebar {
+      grid-row: 1/3;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px 16px;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .account-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: inherit;
+      border: 1px dashed #eef2ff;
+      border-radius: 14px;
+      padding: 14px;
+      background: #fff;
+      transition: all 0.3s ease;
+    }
+    
+    .account-info:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent);
+    }
+    
+    .username {
+      font-weight: 600;
+      font-size: 14px;
+      text-align: center;
+    }
+    
+    .user-email {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+    
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .nav-item:hover {
+      background: #f8fafc;
+      transform: translateX(4px);
+    }
+    
+    .nav-item.active {
+      background: var(--accent);
+      color: white;
+    }
+    
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 20px;
+      background: var(--accent-2);
+      border-radius: 2px;
+    }
+    
+    .nav-icon {
+      width: 20px;
+      height: 20px;
+      opacity: 0.8;
+    }
+
+    .main-content {
+      grid-column: 2;
+      grid-row: 1/3;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .header {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      color: var(--text);
+    }
+    
+    .welcome-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .welcome-subtitle {
+      font-size: 16px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .content-area {
+      flex: 1;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      color: var(--text);
+      overflow-y: auto;
+    }
+
+    /* 移动端优化 */
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr;
+        padding: 16px;
+        gap: 12px;
+      }
+      
+      .sidebar {
+        grid-row: 1;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 12px;
+      }
+      
+      .nav-menu {
+        flex-direction: row;
+        gap: 12px;
+        min-width: max-content;
+      }
+      
+      .nav-item {
+        white-space: nowrap;
+        padding: 8px 12px;
+      }
+      
+      .main-content {
+        grid-column: 1;
+        grid-row: 2/4;
+      }
+      
+      .welcome-title {
+        font-size: 24px;
+      }
+      
+      .header {
+        padding: 16px;
+      }
+      
+      .content-area {
+        padding: 16px;
+      }
+    }
+
+    /* 加载动画 */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg) }
+      100% { transform: rotate(360deg) }
+    }
+    
+    /* 错误状态 */
+    .error {
+      color: #ef4444;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 8px 0;
+    }
+    
+    /* 成功状态 */
+    .success {
+      color: #16a34a;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 8px 0;
+    }
+
+    /* 浮动操作按钮 */
+    .fab {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .fab:hover {
+      background: var(--accent-2);
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 侧边栏 -->
+    <nav class="sidebar">
+      <a href="#" class="account-info" id="accountInfo">
+        <img src="your-avatar.png" alt="头像" class="avatar" id="userAvatar">
+        <div class="username" id="userName">请登录</div>
+        <div class="user-email" id="userEmail">点击登录</div>
+      </a>
+      
+      <div class="nav-menu">
+        <a href="main page.html" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+          </svg>
+          首页
+        </a>
+        <a href="post-optimized.html" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+          </svg>
+          帖子
+        </a>
+        <a href="messages.html" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+          </svg>
+          消息
+        </a>
+        <a href="profile.html" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          个人资料
+        </a>
+        <a href="admin-all.html" class="nav-item" id="adminLink" style="display:none;">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+          </svg>
+          管理后台
+        </a>
+      </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+      <!-- 头部 -->
+      <header class="header">
+        <h1 class="welcome-title">{{PAGE_TITLE}}</h1>
+        <p class="welcome-subtitle">{{PAGE_DESCRIPTION}}</p>
+      </header>
+
+      <!-- 内容区域 -->
+      <div class="content-area" id="contentArea">
+        <!-- 帖子展示组件将在这里渲染 -->
+      </div>
+    </main>
+  </div>
+
+  <!-- 浮动操作按钮 -->
+  <button class="fab" onclick="window.location.href='publish.html'" title="发布帖子">
+    ✏️
+  </button>
+
+  <!-- 加载提示 -->
+  <div id="loadingIndicator" style="display:none; position:fixed; top:20px; right:20px; background:var(--panel); padding:12px 20px; border-radius:8px; box-shadow:var(--shadow); z-index:1000;">
+    <div class="loading"></div>
+    <span style="margin-left:8px;">加载中...</span>
+  </div>
+
+  <!-- 错误提示 -->
+  <div id="errorMessage" style="display:none; position:fixed; top:20px; right:20px; background:#fef2f2; color:#ef4444; padding:12px 20px; border-radius:8px; box-shadow:var(--shadow); z-index:1000; border:1px solid #fecaca;">
+    <span id="errorText"></span>
+  </div>
+
+  <!-- 成功提示 -->
+  <div id="successMessage" style="display:none; position:fixed; top:20px; right:20px; background:#f0fdf4; color:#16a34a; padding:12px 20px; border-radius:8px; box-shadow:var(--shadow); z-index:1000; border:1px solid #bbf7d0;">
+    <span id="successText"></span>
+  </div>
+
+  <!-- 脚本 -->
+  <script src="app.js"></script>
+  <script src="components/post-display.js"></script>
+  <script>
+    // 页面配置
+    const PAGE_CONFIG = {
+      title: '{{PAGE_TITLE}}',
+      description: '{{PAGE_DESCRIPTION}}',
+      category: '{{PAGE_CATEGORY}}',
+      keywords: '{{PAGE_KEYWORDS}}'
+    };
+
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeApp();
+    });
+
+    // 初始化应用
+    async function initializeApp() {
+      showLoading('正在初始化...');
+      
+      try {
+        // 检查用户登录状态
+        await checkUserStatus();
+        
+        // 初始化帖子展示组件
+        initializePostDisplay();
+        
+        hideLoading();
+      } catch (error) {
+        console.error('初始化失败:', error);
+        showError('初始化失败，请刷新页面重试');
+        hideLoading();
+      }
+    }
+
+    // 检查用户状态
+    async function checkUserStatus() {
+      try {
+        const response = await fetch('/api/users/me', {
+          credentials: 'include'
+        });
+        
+        if (response.ok) {
+          const user = await response.json();
+          updateUserInfo(user);
+          
+          // 如果是管理员，显示管理链接
+          if (user.isAdmin) {
+            document.getElementById('adminLink').style.display = 'block';
+          }
+        } else {
+          // 未登录，显示登录按钮
+          showLoginPrompt();
+        }
+      } catch (error) {
+        console.error('检查用户状态失败:', error);
+        showLoginPrompt();
+      }
+    }
+
+    // 更新用户信息显示
+    function updateUserInfo(user) {
+      document.getElementById('userName').textContent = user.nickname || '用户';
+      document.getElementById('userEmail').textContent = user.email || '';
+      
+      if (user.avatarPath) {
+        document.getElementById('userAvatar').src = user.avatarPath;
+      }
+      
+      // 更新账户信息链接
+      document.getElementById('accountInfo').href = 'profile.html';
+    }
+
+    // 显示登录提示
+    function showLoginPrompt() {
+      document.getElementById('userName').textContent = '请登录';
+      document.getElementById('userEmail').textContent = '点击登录';
+      document.getElementById('accountInfo').href = 'login.html';
+    }
+
+    // 初始化帖子展示组件
+    function initializePostDisplay() {
+      const contentArea = document.getElementById('contentArea');
+      
+      // 创建帖子展示组件
+      window.postDisplay = new PostDisplay(contentArea, {
+        category: PAGE_CONFIG.category,
+        searchEnabled: true,
+        infiniteScroll: true,
+        lazyLoad: true,
+        masonry: true,
+        itemsPerPage: 12
+      });
+    }
+
+    // 显示加载提示
+    function showLoading(message = '加载中...') {
+      const indicator = document.getElementById('loadingIndicator');
+      indicator.querySelector('span').textContent = message;
+      indicator.style.display = 'block';
+    }
+
+    // 隐藏加载提示
+    function hideLoading() {
+      document.getElementById('loadingIndicator').style.display = 'none';
+    }
+
+    // 显示错误信息
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      document.getElementById('errorText').textContent = message;
+      errorDiv.style.display = 'block';
+      
+      // 3秒后自动隐藏
+      setTimeout(() => {
+        errorDiv.style.display = 'none';
+      }, 3000);
+    }
+
+    // 显示成功信息
+    function showSuccess(message) {
+      const successDiv = document.getElementById('successMessage');
+      document.getElementById('successText').textContent = message;
+      successDiv.style.display = 'block';
+      
+      // 3秒后自动隐藏
+      setTimeout(() => {
+        successDiv.style.display = 'none';
+      }, 3000);
+    }
+
+    // 全局错误处理
+    window.addEventListener('error', function(e) {
+      console.error('全局错误:', e.error);
+      showError('发生未知错误，请刷新页面重试');
+    });
+
+    // 网络状态检测
+    window.addEventListener('online', function() {
+      showSuccess('网络连接已恢复');
+    });
+
+    window.addEventListener('offline', function() {
+      showError('网络连接已断开，请检查网络设置');
+    });
+  </script>
+</body>
+</html>
