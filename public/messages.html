@@ -64,7 +64,7 @@
     /* 右侧：内部滚动的是 .chat-box（微信式） */
     .chat{display:flex;flex-direction:column;min-height:0; overscroll-behavior:contain;}
     .chat-box{ flex:1; overflow:auto; padding:14px } /* 关键：只消息区滚动 */
-    .msg{max-width:72%;margin:6px 0;padding:10px 12px;border-radius:14px;border:1px solid var(--border);background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+    .msg{max-width:72%;margin:6px 0;padding:10px 12px;border-radius:14px;border:1px solid var(--border);background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.06);-webkit-user-select:text;user-select:text}
     /* 只给“气泡”上样式，不影响整行容器 */
 .msg.me{ margin-left:auto; background:#eafff1; border-color:#bbf7d0; }
 .msg.peer{ margin-right:auto; }
@@ -78,6 +78,10 @@
     .msgrow.me{ justify-content:flex-end; }
     .msgrow .msg{ margin:0; }
     .msgrow .avatar{ width:28px; height:28px; }
+
+    /* 日期分隔条 */
+    .date-sep{ display:flex; align-items:center; justify-content:center; gap:12px; margin:10px 0; color:#64748b; font-size:12px }
+    .date-sep::before,.date-sep::after{ content:""; flex:1; height:1px; background:#e5e7eb }
 
     /* 发送区固定在右侧面板底部 */
     .composer{display:flex;gap:10px;padding:12px;border-top:1px solid var(--border);position:sticky;bottom:0;background:#fff;z-index:2}
@@ -533,8 +537,14 @@
       const sortedList = list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       
       box.innerHTML='';
+      let lastDay = '';
       for(const m of sortedList){
         const mine=(m.from||'').toLowerCase()===(ME?.email||'').toLowerCase();
+        const dayStr = new Date(m.createdAt||Date.now()).toLocaleDateString();
+        if(dayStr !== lastDay){
+          lastDay = dayStr;
+          const sep=document.createElement('div'); sep.className='date-sep'; sep.textContent=dayStr; box.appendChild(sep);
+        }
         const row=document.createElement('div'); row.className='msgrow '+(mine?'me':'peer');
         if(!mine){
           const u=await getUser(m.from); const av=document.createElement('img');

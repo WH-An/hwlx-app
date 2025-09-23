@@ -45,6 +45,11 @@
       border-radius: 12px;
       background: #fff;
     }
+    /* 移动端滑动提示，仅在窄屏显示 */
+    .emgs-swipe-hint{
+      display:none; color:#64748b; font-size:12px; padding:10px 12px; border-bottom:1px dashed #e5e7eb; background:#fafafa; border-radius:12px 12px 0 0;
+    }
+    @media (max-width: 960px){ .emgs-swipe-hint{ display:block } }
     
     .emgs-table {
       width: 100%;
@@ -286,6 +291,7 @@
       
       <!-- EMGS诊所表格容器 -->
       <div id="emgsTableContainer" class="emgs-table-container">
+        <div class="emgs-swipe-hint">← 向右滑动可查看“地图”等列（移动端）</div>
         <h3 class="emgs-title">EMGS诊所列表 - Kuala Lumpur</h3>
         <table class="emgs-table">
           <thead>
