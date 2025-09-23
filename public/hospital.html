@@ -39,6 +39,11 @@
     .emgs-table-container {
       display: none;
       margin-top: 20px;
+      overflow-x: auto;              /* 移动端横向滚动，避免页面整体右移 */
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #fff;
     }
     
     .emgs-table {
@@ -48,6 +53,7 @@
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      min-width: 820px;              /* 设定最小宽度，触发容器横向滚动 */
     }
     
     .emgs-table th,
@@ -56,6 +62,8 @@
       text-align: left;
       border-bottom: 1px solid #e5e7eb;
       font-size: 14px;
+      white-space: normal;           /* 允许换行 */
+      word-break: break-word;        /* 长链接/英文自动断行 */
     }
     
     .emgs-table th {
@@ -75,6 +83,13 @@
     
     .emgs-table a:hover {
       text-decoration: underline;
+    }
+
+    /* 窄屏优化：缩小字号和内边距 */
+    @media (max-width: 480px) {
+      .emgs-table th,
+      .emgs-table td { font-size: 12px; padding: 10px 6px; }
+      .emgs-title { font-size: 18px; }
     }
     
     .emgs-title {
