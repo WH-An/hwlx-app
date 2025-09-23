@@ -510,6 +510,7 @@
     .posts-masonry{
       column-count:3; 
       column-gap:20px;
+  column-fill: balance;
       margin-top: 20px;
     }
     
@@ -553,7 +554,7 @@
       position:relative; 
       display:inline-block; 
       width:100%;
-      margin:0 0 20px; 
+  margin:0 0 16px; 
       border:1px solid var(--border); 
       background:#fff;
       border-radius:20px; 
@@ -589,18 +590,18 @@
       border-color: var(--accent);
     }
     
-    .post-card img{ 
-      width:100%; 
-      display:block; 
-      aspect-ratio:4/5; 
-      object-fit:cover;
-      transition: var(--transition);
-    }
+.post-card img{ 
+  width:100%; 
+  display:block; 
+  aspect-ratio:16/9; 
+  object-fit:cover;
+  transition: var(--transition);
+}
     
     @media (max-width: 960px) {
-      .post-card img {
-        aspect-ratio: 3/4;
-      }
+  .post-card img {
+    aspect-ratio: 4/3;
+  }
     }
     
     @media (max-width: 640px) {
