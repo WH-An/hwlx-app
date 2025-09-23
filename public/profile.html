@@ -566,6 +566,8 @@
       page-break-inside:avoid;
       cursor:pointer;
       transition: var(--transition);
+      /* 修复 Safari/Chrome 在 columns 中偶发不渲染子元素的情况 */
+      contain: paint;
     }
     
     @media (max-width: 960px) {
@@ -595,7 +597,12 @@
   display:block; 
   aspect-ratio:16/9; 
   object-fit:cover;
-  transition: var(--transition);
+      transition: var(--transition);
+      /* 强制合成层，避免首次不绘制 */
+      backface-visibility:hidden;
+      -webkit-transform: translateZ(0);
+      will-change: transform, opacity;
+      opacity: 1;
 }
     
     @media (max-width: 960px) {
@@ -611,7 +618,7 @@
     }
     
     .post-card:hover img {
-      transform: scale(1.05);
+      transform: scale(1.02);
     }
     
     /* 移动端触摸优化 */
