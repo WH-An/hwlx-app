@@ -659,7 +659,8 @@
       console.log('FormData构建完成，准备发送请求');
 
       try{
-        const editId = (new URL(location.href)).searchParams.get('editId');
+        const urlNow = new URL(location.href);
+        const editId = urlNow.searchParams.get('editId') || urlNow.searchParams.get('id');
         let res;
         if(editId){
           const payload = { title: finalTitle, desc, category };
@@ -710,11 +711,13 @@
     bindCancel();
     (async()=>{ try{
       const url = new URL(location.href);
-      const editId = url.searchParams.get('editId');
+      const editId = url.searchParams.get('editId') || url.searchParams.get('id');
+      console.log('[edit prefill] editId=', editId);
       if(!editId) return;
       const r = await fetch(`${API_BASE}/api/posts/${encodeURIComponent(editId)}`, { credentials:'include' });
       if(!r.ok) return;
       const p = await r.json();
+      console.log('[edit prefill] loaded post:', p && (p.id||p._id||'-'));
       (document.getElementById('title')   || {}).value = p.title || '';
       (document.getElementById('desc')    || {}).value = p.desc || p.content || '';
       (document.getElementById('category')|| {}).value = p.category || 'life';
