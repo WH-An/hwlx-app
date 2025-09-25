@@ -57,17 +57,17 @@
     /* 右侧发布表单 */
     .panel{
       background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
-      box-shadow:var(--shadow); padding:12px; color:var(--text);
-      display:flex; flex-direction:column; gap:8px; max-width:980px; width:100%;
+      box-shadow:var(--shadow); padding:18px; color:var(--text);
+      display:flex; flex-direction:column; gap:12px; max-width:1100px; width:100%;
     }
     .panel h2{margin:0; font-size:18px; font-weight:800}
     .control{display:flex; flex-direction:column; gap:4px; flex:1}
     label{font-weight:700; color:#111827; font-size:14px; margin-bottom:2px}
     input[type="text"], textarea, select{
-      border:1px solid var(--border); border-radius:12px; padding:5px 8px; outline:none;
-      font-size:14px; background:#fff;
+      border:1px solid var(--border); border-radius:14px; padding:12px 14px; outline:none;
+      font-size:16px; background:#fff;
     }
-    textarea{min-height:70px; resize:vertical}
+    textarea{min-height:200px; resize:vertical}
     .file{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
     .file input[type="file"]{display:none}
     .btn, .file label{
@@ -181,10 +181,7 @@
         display: none;
       }
       
-      .panel {
-        padding: 16px;
-        border-radius: 16px;
-      }
+      .panel { padding: 18px; border-radius: 16px; max-width: 100%; }
       
       .search-box {
         flex-direction: column;
@@ -212,10 +209,7 @@
         padding-bottom: calc(var(--mobile-nav-height) + 16px);
       }
       
-      .panel {
-        padding: 12px;
-        border-radius: 12px;
-      }
+      .panel { padding: 14px; border-radius: 12px; max-width: 100%; }
       
       .search-box input {
         padding: 16px;
