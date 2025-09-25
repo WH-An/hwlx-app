@@ -747,12 +747,26 @@ class PostDisplay {
             <button class="action-btn" onclick="event.stopPropagation(); this.likePost('${post.id}')" title="点赞">
               <span>👍</span>
             </button>
+            ${this.renderEditBtnHTML(post)}
           </div>
         </div>
       </div>
     `;
     
     return card;
+  }
+
+  // 渲染编辑按钮（仅作者显示）
+  renderEditBtnHTML(post){
+    try{
+      const meRaw = localStorage.getItem('currentUser') || localStorage.getItem('user') || localStorage.getItem('USER') || localStorage.getItem('auth_user');
+      const me = meRaw ? JSON.parse(meRaw) : null;
+      const meEmail = (me && (me.email || me.username || me.nickname)) || '';
+      const authorEmail = (post.authorEmail || (post.author && post.author.email) || '');
+      const isOwner = String(meEmail).toLowerCase() === String(authorEmail||'').toLowerCase();
+      if(!isOwner) return '';
+      return `<button class="action-btn" onclick="event.stopPropagation(); window.location.href='publish.html?editId=${post.id}'" title="编辑"><span>✏️</span></button>`;
+    }catch{ return '' }
   }
 
   // 打开帖子详情

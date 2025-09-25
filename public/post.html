@@ -299,6 +299,7 @@ body{
             <button id="favBtn">⭐ 收藏</button>
             <button id="cmtBtn">💬 评论 <span id="cmtCount">0</span></button>
             <button id="copyBtn">🔗 复制链接</button>
+            <button id="editBtn" style="display:none">✏️ 编辑</button>
             <button id="deleteBtn" style="display:none; background:#ef4444; color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer;">🗑️ 删除</button>
           </div>
 
@@ -607,10 +608,15 @@ const avaEl = q('#authorAvatar'); avaEl.src = avatar; avaEl.onerror = ()=>{ avaE
     const authorObj = post.user || post.author || post.owner || { email: post.authorEmail, username: post.authorName };
     const authorKey = userKey(authorObj);
 
-    // 删除功能：只有作者可以删除自己的帖子
+    // 删除/编辑功能：只有作者可以删除/编辑自己的帖子
     const deleteBtn = q('#deleteBtn');
+    const editBtn   = q('#editBtn');
     if (meKey === authorKey) {
       deleteBtn.style.display = 'inline-block';
+      editBtn.style.display   = 'inline-block';
+      editBtn.addEventListener('click', ()=>{
+        location.href = `publish.html?editId=${encodeURIComponent(id)}`;
+      });
       deleteBtn.addEventListener('click', async () => {
         if (!confirm('确定要删除这个帖子吗？删除后无法恢复。')) {
           return;

@@ -659,7 +659,16 @@
       console.log('FormData构建完成，准备发送请求');
 
       try{
-        const res = await fetch(API_BASE + '/api/posts', { method:'POST', body: fd, credentials:'include' });
+        const editId = (new URL(location.href)).searchParams.get('editId');
+        let res;
+        if(editId){
+          const payload = { title: finalTitle, desc, category };
+          res = await fetch(`${API_BASE}/api/posts/${encodeURIComponent(editId)}`, {
+            method:'PUT', headers:{'Content-Type':'application/json'}, credentials:'include', body: JSON.stringify(payload)
+          });
+        }else{
+          res = await fetch(API_BASE + '/api/posts', { method:'POST', body: fd, credentials:'include' });
+        }
         if (res.status === 401) {
           alert('未登录，请先登录再发布。');
           location.href = 'login.html';
@@ -674,7 +683,7 @@
         }
         // 成功提示并跳转
         msgEl.style.color = '#16a34a';
-        msgEl.textContent = '发布成功，正在跳转...';
+        msgEl.textContent = (editId ? '保存成功，正在跳转...' : '发布成功，正在跳转...');
         location.href = pageOfCategory(category);
       }catch(e){
         msgEl.textContent = '发布失败：无法连接后端服务。';
@@ -697,8 +706,20 @@
   document.addEventListener('DOMContentLoaded', () => {
     ensureUser();
     bindPreviewAuthorBadge();
-    bindPublish();       // <- 关键：启用真正的发布
+    bindPublish();       // <- 关键：启用真正的发布/编辑
     bindCancel();
+    (async()=>{ try{
+      const url = new URL(location.href);
+      const editId = url.searchParams.get('editId');
+      if(!editId) return;
+      const r = await fetch(`${API_BASE}/api/posts/${encodeURIComponent(editId)}`, { credentials:'include' });
+      if(!r.ok) return;
+      const p = await r.json();
+      (document.getElementById('title')   || {}).value = p.title || '';
+      (document.getElementById('desc')    || {}).value = p.desc || p.content || '';
+      (document.getElementById('category')|| {}).value = p.category || 'life';
+      const btn = document.getElementById('publishBtn'); if(btn) btn.textContent = '保存修改';
+    }catch{}})();
   });
 </script>
 

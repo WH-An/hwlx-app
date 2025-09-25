@@ -635,6 +635,38 @@ app.patch('/api/posts/:id', (req, res) => {
 });
 console.log('[WIRE] PATCH /api/posts/:id wired');
 
+// PUT /api/posts/:id - 更新帖子（作者或管理员）
+app.put('/api/posts/:id', (req, res) => {
+  const { email: me, isAdmin: isAdminUser } = getCurrentUser(req);
+  if (!me) return res.status(401).json({ msg: '未登录' });
+
+  const id = String(req.params.id || '');
+  const list = readPosts();
+  const idx = list.findIndex(p => String(p.id) === id);
+  if (idx === -1) return res.status(404).json({ msg: '帖子不存在' });
+
+  const post = list[idx];
+  const isPostAuthor = normalizeEmail(post.authorEmail) === normalizeEmail(me);
+  const isAdminUserFromDB = isAdmin(me);
+  if (!isPostAuthor && !isAdminUser && !isAdminUserFromDB) {
+    return res.status(403).json({ msg: '无权编辑此帖子' });
+  }
+
+  const { title, desc, content, category } = req.body || {};
+  if (typeof title === 'string') post.title = title;
+  if (typeof desc === 'string') post.desc = desc;
+  if (typeof content === 'string') post.content = content; // 兼容字段
+  if (typeof category === 'string') post.category = category;
+
+  // 可选：记录更新时间
+  post.updatedAt = new Date().toISOString();
+
+  list[idx] = post;
+  writePosts(list);
+  res.json(post);
+});
+console.log('[WIRE] PUT /api/posts/:id wired');
+
 // DELETE /api/posts/:id - 删除帖子
 app.delete('/api/posts/:id', (req, res) => {
   const { email: me, isAdmin: isAdminUser } = getCurrentUser(req);
