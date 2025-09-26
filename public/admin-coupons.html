@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>后台管理 · 优惠券发放</title>
+  <link rel="stylesheet" href="mobile-optimization.css">
+  <style>
+    :root{--bg:#0b0f14;--panel:#ffffff;--text:#0f172a;--muted:#64748b;--accent:#16a34a;--danger:#ef4444;--border:#e5e7eb;--shadow:0 10px 30px rgba(0,0,0,.18);--radius:18px}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:'Microsoft YaHei',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'PingFang SC',sans-serif;background:radial-gradient(1200px 600px at 10% -10%,#1f8db8 18%, transparent 60%),radial-gradient(900px 500px at 110% 110%,#2bb8d6 12%, transparent 60%),var(--bg);color:#fff}
+    .layout{display:grid;grid-template-columns:220px 1fr;gap:18px;min-height:100vh;padding:24px}
+    .sidebar{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 16px;display:flex;flex-direction:column;gap:16px}
+    .account-info{display:flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none;color:inherit;border:1px dashed #eef2ff;border-radius:14px;padding:14px;background:#fff}
+    .avatar{width:56px;height:56px;border-radius:50%;object-fit:cover}
+    .username{font-weight:700}
+    .nav-list{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+    .nav-list a{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);border:1px solid var(--border);background:#fafafa;border-radius:12px;padding:10px 14px;transition:.2s}
+    .nav-list a:hover{background:#f3f4f6;transform:translateY(-1px)}
+    .nav-icon{width:22px;display:inline-flex;justify-content:center}
+    .main{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;gap:14px}
+    h1{font-size:18px;margin:0}
+    .form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .form .field{display:flex;flex-direction:column;gap:6px}
+    .form input,.form select{border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-size:14px;outline:none;background:#fff}
+    .btn{display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:1px solid var(--border);background:#fff;color:#111827;border-radius:12px;padding:8px 12px;font-weight:700;transition:.15s}
+    .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .table{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid #eef2f7;padding:10px 12px;text-align:left;color:#374151;font-size:14px}
+    th{background:#f8fafc;color:#111827}
+    .danger{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca}
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="account-info" href="admin-profile.html">
+        <img src="" alt="头像" class="avatar">
+        <span class="username">我的账号</span>
+      </a>
+      <ul class="nav-list">
+        <li><a href="admin-all.html"><span class="nav-icon">⚙️</span><span>后台管理</span></a></li>
+        <li><a href="admin-posts.html"><span class="nav-icon">📋</span><span>帖子管理</span></a></li>
+        <li><a href="admin-analytics.html"><span class="nav-icon">📊</span><span>数据显示</span></a></li>
+      </ul>
+    </aside>
+
+    <main class="main">
+      <h1>优惠券发放</h1>
+      <div class="form">
+        <div class="field">
+          <label>优惠券名称</label>
+          <input id="name" placeholder="例如：新用户立减10"/>
+        </div>
+        <div class="field">
+          <label>面额（数字）</label>
+          <input id="amount" type="number" min="0" step="1" placeholder="10"/>
+        </div>
+        <div class="field">
+          <label>有效天数</label>
+          <input id="days" type="number" min="1" step="1" placeholder="30"/>
+        </div>
+        <div class="field">
+          <label>适用用户邮箱（可选）</label>
+          <input id="email" type="email" placeholder="留空代表所有用户可用"/>
+        </div>
+      </div>
+      <div>
+        <button class="btn primary" id="createBtn">发放优惠券</button>
+        <a class="btn" href="admin-all.html">返回后台</a>
+      </div>
+
+      <div class="table" style="margin-top:14px">
+        <table>
+          <thead>
+            <tr>
+              <th>名称</th>
+              <th>面额</th>
+              <th>有效期至</th>
+              <th>目标邮箱</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="list"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="utils.js"></script>
+  <script>
+    const API = window.API_BASE || '';
+    async function apiGetCoupons(){ const r=await fetch(API+'/api/coupons',{credentials:'include'}); if(!r.ok) throw 0; return r.json(); }
+    async function apiCreateCoupon(body){ const r=await fetch(API+'/api/coupons',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}); if(!r.ok) throw 0; return r.json(); }
+    async function apiDeleteCoupon(id){ const r=await fetch(API+'/api/coupons/'+encodeURIComponent(id),{method:'DELETE',credentials:'include'}); if(!r.ok) throw 0; return r.json(); }
+
+    function fmtDate(d){ try{ return new Date(d).toLocaleDateString(); }catch{ return d||'' } }
+    function render(list){ const box=document.getElementById('list'); box.innerHTML=''; (list||[]).forEach(c=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${c.name||''}</td><td>${c.amount||0}</td><td>${fmtDate(c.expiresAt)}</td><td>${c.email||''}</td><td><button class="btn danger" data-id="${c.id}">删除</button></td>`; box.appendChild(tr); }); box.querySelectorAll('[data-id]').forEach(btn=>btn.addEventListener('click', async e=>{ const id=e.currentTarget.getAttribute('data-id'); if(!confirm('确认删除该优惠券？')) return; try{ await apiDeleteCoupon(id); await load(); }catch{ alert('删除失败'); } })); }
+
+    async function load(){ try{ const list=await apiGetCoupons(); render(list); }catch{ render([]); } }
+
+    document.getElementById('createBtn').addEventListener('click', async ()=>{
+      const name=(document.getElementById('name').value||'').trim();
+      const amount=parseInt(document.getElementById('amount').value||'0',10)||0;
+      const days=parseInt(document.getElementById('days').value||'30',10)||30;
+      const email=(document.getElementById('email').value||'').trim();
+      if(!name||amount<=0||days<=0){ alert('请填写名称、面额、有效天数'); return; }
+      const body={ name, amount, days, email: email||undefined };
+      try{ await apiCreateCoupon(body); await load(); alert('发放成功'); }catch{ alert('发放失败'); }
+    });
+
+    load();
+  </script>
+</body>
+</html>
+
+

@@ -59,6 +59,7 @@ const UPLOADS_DIR   = path.join(__dirname, 'uploads');
 const POSTS_FILE    = path.join(__dirname, 'posts.json');
 const MESSAGES_FILE = path.join(__dirname, 'messages.json'); // ✅ 消息持久化文件
 const COMMENTS_FILE = path.join(__dirname, 'comments.json'); // ✅ 评论持久化文件
+const COUPONS_FILE  = path.join(__dirname, 'coupons.json');  // ✅ 优惠券持久化文件
 
 // ====== 工具：邮箱规范化（小写 + 去空格 + 尝试解码 %40） ======
 function normalizeEmail(v) {
@@ -698,6 +699,45 @@ app.delete('/api/posts/:id', (req, res) => {
   res.json({ msg: '已删除帖子' });
 });
 console.log('[WIRE] DELETE /api/posts/:id wired');
+
+// ====== ✅ 优惠券：列表 / 创建 / 删除（管理员） ======
+function readCoupons(){ try{ return JSON.parse(fs.readFileSync(COUPONS_FILE,'utf8')||'[]'); }catch{ return [] } }
+function writeCoupons(list){ fs.writeFileSync(COUPONS_FILE, JSON.stringify(list, null, 2)); }
+
+// GET /api/coupons - 列表
+app.get('/api/coupons', (req, res) => {
+  const { email: me } = getCurrentUser(req);
+  if (!me || !isAdmin(me)) return res.status(401).json({ msg: '未登录或无权限' });
+  return res.json(readCoupons());
+});
+
+// POST /api/coupons - 创建
+app.post('/api/coupons', (req, res) => {
+  const { email: me } = getCurrentUser(req);
+  if (!me || !isAdmin(me)) return res.status(401).json({ msg: '未登录或无权限' });
+  const { name = '', amount = 0, days = 30, email = '' } = req.body || {};
+  if (!name || Number(amount) <= 0 || Number(days) <= 0) return res.status(400).json({ msg: '参数不完整' });
+  const list = readCoupons();
+  const now = Date.now();
+  const item = { id: String(now), name: String(name), amount: Number(amount), email: String(email||''), createdAt: new Date(now).toISOString(), expiresAt: new Date(now + Number(days)*24*60*60*1000).toISOString() };
+  list.unshift(item);
+  writeCoupons(list);
+  res.json(item);
+});
+
+// DELETE /api/coupons/:id - 删除
+app.delete('/api/coupons/:id', (req, res) => {
+  const { email: me } = getCurrentUser(req);
+  if (!me || !isAdmin(me)) return res.status(401).json({ msg: '未登录或无权限' });
+  const id = String(req.params.id||'');
+  const list = readCoupons();
+  const idx = list.findIndex(c => String(c.id) === id);
+  if (idx === -1) return res.status(404).json({ msg: '不存在' });
+  list.splice(idx,1);
+  writeCoupons(list);
+  res.json({ msg: '已删除' });
+});
+console.log('[WIRE] /api/coupons wired');
 
 // ====== ✅ 评论：独立API ======
 
