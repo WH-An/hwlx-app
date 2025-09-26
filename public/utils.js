@@ -23,6 +23,17 @@ if (typeof window !== 'undefined') {
   window.API_BASE = API_BASE;
   window.utilsEsc = esc;
   window.utilsToAbs = toAbs;
+
+  // 生产环境屏蔽冗余日志（保留 warn/error）
+  try{
+    const isLocal = /^(localhost|127\.0\.0\.1)$/i.test(location.hostname);
+    if (!isLocal) {
+      const noop = function(){};
+      console.log = noop;
+      if (console.info)  console.info  = noop;
+      if (console.debug) console.debug = noop;
+    }
+  }catch{}
 }
 
 
