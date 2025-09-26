@@ -353,14 +353,10 @@
     </div>
   </div>
 
+  <script src="utils.js"></script>
   <script>
   // 自动检测API基础URL
-  const API_BASE = (() => {
-    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-      return 'http://127.0.0.1:3001';
-    }
-    return ''; // 生产环境使用相对路径
-  })();
+  const API_BASE = window.API_BASE;
   const FALLBACK = 'https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp';
 
   function getLocalUser() {
