@@ -1,0 +1,163 @@
+/* 多语言支持样式 */
+.language-selector {
+  margin-top: 16px;
+  position: relative;
+}
+
+.language-dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.language-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  background: #fafafa;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  color: var(--text, #0f172a);
+  text-decoration: none;
+}
+
+.language-btn:hover {
+  background: #f3f4f6;
+  transform: translateY(-1px);
+}
+
+.language-icon {
+  font-size: 16px;
+}
+
+.language-text {
+  flex: 1;
+  text-align: left;
+}
+
+.dropdown-arrow {
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+.language-dropdown.open .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.language-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  z-index: 1000;
+  display: none;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 14px;
+  color: var(--text, #0f172a);
+}
+
+.language-option:hover {
+  background: #f8fafc;
+}
+
+.language-option.active {
+  background: var(--accent, #16a34a);
+  color: white;
+}
+
+.language-option.active:hover {
+  background: var(--accent, #16a34a);
+}
+
+.flag {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .language-selector {
+    margin-top: 12px;
+  }
+  
+  .language-btn {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .language-option {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
+
+/* 深色主题适配 */
+@media (prefers-color-scheme: dark) {
+  .language-btn {
+    background: #1f2937;
+    border-color: #374151;
+    color: #f9fafb;
+  }
+  
+  .language-btn:hover {
+    background: #374151;
+  }
+  
+  .language-options {
+    background: #1f2937;
+    border-color: #374151;
+  }
+  
+  .language-option {
+    color: #f9fafb;
+  }
+  
+  .language-option:hover {
+    background: #374151;
+  }
+}
+
+/* 动画效果 */
+.language-options {
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 语言切换时的过渡效果 */
+[data-i18n] {
+  transition: opacity 0.3s ease;
+}
+
+.language-switching [data-i18n] {
+  opacity: 0.7;
+}
