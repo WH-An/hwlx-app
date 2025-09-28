@@ -32,6 +32,9 @@ console.log('Message模型content字段定义:', Message.schema.paths.content);
 const app = express();
 const PORT = process.env.PORT || 10000;
 
+// ====== 数据文件路径 ======
+const COUPONS_FILE = path.join(__dirname, 'coupons.json');  // ✅ 优惠券持久化文件
+
 // ====== 前端允许的域名 ======
 const FRONTEND_ALLOWED = [
   'http://localhost:3000',
@@ -96,6 +99,19 @@ async function saveVisitStats() {
 
 // 初始化统计数据
 loadVisitStats();
+
+// ====== 优惠券数据管理 ======
+function readCoupons() { 
+  try { 
+    return JSON.parse(fs.readFileSync(COUPONS_FILE, 'utf8') || '[]'); 
+  } catch { 
+    return [] 
+  } 
+}
+
+function writeCoupons(list) { 
+  fs.writeFileSync(COUPONS_FILE, JSON.stringify(list, null, 2)); 
+}
 
 // 访问量统计中间件
 app.use((req, res, next) => {
@@ -1407,7 +1423,76 @@ app.post('/api/verify-code', async (req, res) => {
   }
 });
 
+// ====== ✅ 优惠券：列表 / 创建 / 删除（管理员） ======
 
+// GET /api/coupons - 列表
+app.get('/api/coupons', async (req, res) => {
+  try {
+    const { email: me, isAdmin: isAdminUser } = await getCurrentUser(req);
+    if (!me || (!isAdminUser && !isFixedAdmin(me))) {
+      return res.status(401).json({ msg: '未登录或无权限' });
+    }
+    return res.json(readCoupons());
+  } catch (error) {
+    console.error('获取优惠券列表失败:', error);
+    res.status(500).json({ msg: '获取优惠券列表失败' });
+  }
+});
+
+// POST /api/coupons - 创建
+app.post('/api/coupons', async (req, res) => {
+  try {
+    const { email: me, isAdmin: isAdminUser } = await getCurrentUser(req);
+    if (!me || (!isAdminUser && !isFixedAdmin(me))) {
+      return res.status(401).json({ msg: '未登录或无权限' });
+    }
+    
+    const { name = '', amount = 0, days = 30, email = '' } = req.body || {};
+    if (!name || Number(amount) <= 0 || Number(days) <= 0) {
+      return res.status(400).json({ msg: '参数不完整' });
+    }
+    
+    const list = readCoupons();
+    const now = Date.now();
+    const item = { 
+      id: String(now), 
+      name: String(name), 
+      amount: Number(amount), 
+      email: String(email || ''), 
+      createdAt: new Date(now).toISOString(), 
+      expiresAt: new Date(now + Number(days) * 24 * 60 * 60 * 1000).toISOString() 
+    };
+    list.unshift(item);
+    writeCoupons(list);
+    res.json(item);
+  } catch (error) {
+    console.error('创建优惠券失败:', error);
+    res.status(500).json({ msg: '创建优惠券失败' });
+  }
+});
+
+// DELETE /api/coupons/:id - 删除
+app.delete('/api/coupons/:id', async (req, res) => {
+  try {
+    const { email: me, isAdmin: isAdminUser } = await getCurrentUser(req);
+    if (!me || (!isAdminUser && !isFixedAdmin(me))) {
+      return res.status(401).json({ msg: '未登录或无权限' });
+    }
+    
+    const id = String(req.params.id || '');
+    const list = readCoupons();
+    const idx = list.findIndex(c => String(c.id) === id);
+    if (idx === -1) {
+      return res.status(404).json({ msg: '不存在' });
+    }
+    list.splice(idx, 1);
+    writeCoupons(list);
+    res.json({ msg: '已删除' });
+  } catch (error) {
+    console.error('删除优惠券失败:', error);
+    res.status(500).json({ msg: '删除优惠券失败' });
+  }
+});
 
 // 数据统计API
 app.get('/api/analytics', async (req, res) => {
