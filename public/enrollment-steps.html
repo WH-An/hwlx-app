@@ -3,10 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>海外留学 · 入学步骤</title>
+  <title data-i18n="page.title.enrollment">海外留学 · 入学步骤</title>
   
   <!-- 移动端优化CSS -->
   <link rel="stylesheet" href="mobile-optimization.css">
+  
+  <!-- 多语言支持CSS -->
+  <link rel="stylesheet" href="i18n.css">
   
   <style>
     :root{--bg:#0b0f14; --panel:#ffffff; --text:#0f172a; --muted:#64748b; --accent:#16a34a; --border:#e5e7eb; --shadow:0 10px 30px rgba(0,0,0,.18); --radius:18px;}
@@ -210,13 +213,13 @@
         <img src="https://raw.githubusercontent.com/WH-An/hwlx-app/2df4e97b395bebb7977074fbb31741f3c35da9a0/assets-task_01k3v2vy06fra8er06x602xnpe-1756476933_img_1.webp" alt="头像" class="avatar"><span class="username">我的账号</span>
       </a>
       <ul class="nav-list">
-        <li><a href="main page.html"><span class="nav-icon">🏠</span><span>主页</span></a></li>
-        <li><a href="life-tips.html"><span class="nav-icon">💡</span><span>生活小贴士</span></a></li>
-        <li><a href="study-guide.html"><span class="nav-icon">📚</span><span>学习指导</span></a></li>
-        <li><a href="enrollment-steps.html"><span class="nav-icon">📝</span><span>入学步骤</span></a></li>
-        <li><a href="share.html"><span class="nav-icon">🔗</span><span>分享</span></a></li>
-        <li><a href="fun.html"><span class="nav-icon">🎉</span><span>娱乐</span></a></li>
-        <li><a href="hospital.html"><span class="nav-icon">🏥</span><span>医院</span></a></li>
+        <li><a href="main page.html"><span class="nav-icon">🏠</span><span data-i18n="nav.home">主页</span></a></li>
+        <li><a href="life-tips.html"><span class="nav-icon">💡</span><span data-i18n="nav.life">生活小贴士</span></a></li>
+        <li><a href="study-guide.html"><span class="nav-icon">📚</span><span data-i18n="nav.study">学习指导</span></a></li>
+        <li><a href="enrollment-steps.html"><span class="nav-icon">📝</span><span data-i18n="nav.enrollment">入学步骤</span></a></li>
+        <li><a href="share.html"><span class="nav-icon">🔗</span><span data-i18n="nav.share">分享</span></a></li>
+        <li><a href="fun.html"><span class="nav-icon">🎉</span><span data-i18n="nav.fun">娱乐</span></a></li>
+        <li><a href="hospital.html"><span class="nav-icon">🏥</span><span data-i18n="nav.hospital">医院</span></a></li>
       </ul>
     </div>
 
@@ -242,49 +245,49 @@
       <li class="mobile-nav-item">
         <a href="main page.html" class="mobile-nav-link">
           <span class="mobile-nav-icon">🏠</span>
-          <span>主页</span>
+          <span data-i18n="nav.home">主页</span>
         </a>
       </li>
       <li class="mobile-nav-item">
         <a href="life-tips.html" class="mobile-nav-link">
           <span class="mobile-nav-icon">💡</span>
-          <span>生活</span>
+          <span data-i18n="nav.life">生活</span>
         </a>
       </li>
       <li class="mobile-nav-item">
         <a href="study-guide.html" class="mobile-nav-link">
           <span class="mobile-nav-icon">📚</span>
-          <span>学习</span>
+          <span data-i18n="nav.study">学习</span>
         </a>
       </li>
       <li class="mobile-nav-item">
         <a href="profile.html" class="mobile-nav-link">
           <span class="mobile-nav-icon">👤</span>
-          <span>个人</span>
+          <span data-i18n="nav.profile">个人</span>
         </a>
       </li>
       <li class="mobile-nav-item">
         <a href="enrollment-steps.html" class="mobile-nav-link active">
           <span class="mobile-nav-icon">📝</span>
-          <span>入学</span>
+          <span data-i18n="nav.enrollment">入学</span>
         </a>
       </li>
       <li class="mobile-nav-item">
         <a href="share.html" class="mobile-nav-link">
           <span class="mobile-nav-icon">🔗</span>
-          <span>分享</span>
+          <span data-i18n="nav.share">分享</span>
         </a>
       </li>
       <li class="mobile-nav-item">
         <a href="fun.html" class="mobile-nav-link">
           <span class="mobile-nav-icon">🎉</span>
-          <span>娱乐</span>
+          <span data-i18n="nav.fun">娱乐</span>
         </a>
       </li>
       <li class="mobile-nav-item">
         <a href="hospital.html" class="mobile-nav-link">
           <span class="mobile-nav-icon">🏥</span>
-          <span>医院</span>
+          <span data-i18n="nav.hospital">医院</span>
         </a>
       </li>
     </ul>
@@ -542,5 +545,8 @@
       setInterval(updateUnreadBadge, 30000); // 每30秒更新一次
     });
   </script>
+  
+  <!-- 多语言支持JavaScript -->
+  <script src="i18n.js"></script>
 </body>
 </html>

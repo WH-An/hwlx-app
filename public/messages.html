@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>消息</title>
+  <title data-i18n="page.title.messages">消息</title>
   <!-- 移动端优化CSS -->
   <link rel="stylesheet" href="mobile-optimization.css">
+  
+  <!-- 多语言支持CSS -->
+  <link rel="stylesheet" href="i18n.css">
   
 
   <style>
@@ -359,49 +362,49 @@
       <li class="mobile-nav-item">
         <a href="main page.html" class="mobile-nav-link">
           <span class="mobile-nav-icon">🏠</span>
-          <span>主页</span>
+          <span data-i18n="nav.home">主页</span>
         </a>
       </li>
       <li class="mobile-nav-item">
         <a href="life-tips.html" class="mobile-nav-link">
           <span class="mobile-nav-icon">💡</span>
-          <span>生活</span>
+          <span data-i18n="nav.life">生活</span>
         </a>
       </li>
       <li class="mobile-nav-item">
         <a href="study-guide.html" class="mobile-nav-link">
           <span class="mobile-nav-icon">📚</span>
-          <span>学习</span>
+          <span data-i18n="nav.study">学习</span>
         </a>
       </li>
       <li class="mobile-nav-item">
         <a href="profile.html" class="mobile-nav-link">
           <span class="mobile-nav-icon">👤</span>
-          <span>个人</span>
+          <span data-i18n="nav.profile">个人</span>
         </a>
       </li>
       <li class="mobile-nav-item">
         <a href="enrollment-steps.html" class="mobile-nav-link">
           <span class="mobile-nav-icon">📝</span>
-          <span>入学</span>
+          <span data-i18n="nav.enrollment">入学</span>
         </a>
       </li>
       <li class="mobile-nav-item">
         <a href="share.html" class="mobile-nav-link">
           <span class="mobile-nav-icon">🔗</span>
-          <span>分享</span>
+          <span data-i18n="nav.share">分享</span>
         </a>
       </li>
       <li class="mobile-nav-item">
         <a href="fun.html" class="mobile-nav-link">
           <span class="mobile-nav-icon">🎉</span>
-          <span>娱乐</span>
+          <span data-i18n="nav.fun">娱乐</span>
         </a>
       </li>
       <li class="mobile-nav-item">
         <a href="hospital.html" class="mobile-nav-link">
           <span class="mobile-nav-icon">🏥</span>
-          <span>医院</span>
+          <span data-i18n="nav.hospital">医院</span>
         </a>
       </li>
     </ul>
@@ -807,5 +810,8 @@
   <!-- 公共工具 + 未读消息功能（公共脚本） -->
   <script src="utils.js"></script>
   <script src="unread-badge.js"></script>
+  
+  <!-- 多语言支持JavaScript -->
+  <script src="i18n.js"></script>
 </body>
 </html>
