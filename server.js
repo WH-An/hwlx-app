@@ -704,6 +704,10 @@ console.log('[WIRE] DELETE /api/posts/:id wired');
 function readCoupons(){ try{ return JSON.parse(fs.readFileSync(COUPONS_FILE,'utf8')||'[]'); }catch{ return [] } }
 function writeCoupons(list){ fs.writeFileSync(COUPONS_FILE, JSON.stringify(list, null, 2)); }
 
+// ====== ✅ 消息：读写函数 ======
+function readMessages(){ try{ return JSON.parse(fs.readFileSync(MESSAGES_FILE,'utf8')||'[]'); }catch{ return [] } }
+function writeMessages(list){ fs.writeFileSync(MESSAGES_FILE, JSON.stringify(list, null, 2)); }
+
 // GET /api/coupons - 列表
 app.get('/api/coupons', (req, res) => {
   const { email: me } = getCurrentUser(req);
@@ -722,6 +726,32 @@ app.post('/api/coupons', (req, res) => {
   const item = { id: String(now), name: String(name), amount: Number(amount), email: String(email||''), createdAt: new Date(now).toISOString(), expiresAt: new Date(now + Number(days)*24*60*60*1000).toISOString() };
   list.unshift(item);
   writeCoupons(list);
+  
+  // 如果指定了目标用户邮箱，发送优惠券通知消息
+  if (email && email.trim()) {
+    try {
+      console.log(`🔍 尝试发送优惠券通知给: ${email}`);
+      const messages = readMessages();
+      const message = {
+        id: String(Date.now() + 1),
+        from: 'hwlx@hwlx.com', // 管理员邮箱
+        to: normalizeEmail(email),
+        content: `🎫 您收到了一张新的优惠券！\n\n优惠券名称：${name}\n面额：${amount}元\n有效期至：${new Date(item.expiresAt).toLocaleDateString()}\n\n请及时使用，祝您使用愉快！`,
+        images: [],
+        time: new Date().toISOString(),
+        isRead: false
+      };
+      messages.unshift(message);
+      writeMessages(messages);
+      console.log(`✅ 优惠券通知已发送给用户: ${email}`);
+    } catch (error) {
+      console.error('发送优惠券通知失败:', error);
+      // 不影响优惠券创建，继续执行
+    }
+  } else {
+    console.log(`⚠️ 没有指定目标用户邮箱，跳过通知发送`);
+  }
+  
   res.json(item);
 });
 

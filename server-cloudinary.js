@@ -1464,6 +1464,30 @@ app.post('/api/coupons', async (req, res) => {
     };
     list.unshift(item);
     writeCoupons(list);
+    
+    // 如果指定了目标用户邮箱，发送优惠券通知消息
+    if (email && email.trim()) {
+      try {
+        const targetUser = await User.findOne({ email: normalizeEmail(email) });
+        if (targetUser) {
+          const message = new Message({
+            from: 'hwlx@hwlx.com', // 管理员邮箱
+            to: targetUser.email,
+            content: `🎫 您收到了一张新的优惠券！\n\n优惠券名称：${name}\n面额：${amount}元\n有效期至：${new Date(item.expiresAt).toLocaleDateString()}\n\n请及时使用，祝您使用愉快！`,
+            images: [],
+            isRead: false
+          });
+          await message.save();
+          console.log(`✅ 优惠券通知已发送给用户: ${email}`);
+        } else {
+          console.log(`⚠️ 目标用户不存在: ${email}`);
+        }
+      } catch (error) {
+        console.error('发送优惠券通知失败:', error);
+        // 不影响优惠券创建，继续执行
+      }
+    }
+    
     res.json(item);
   } catch (error) {
     console.error('创建优惠券失败:', error);
