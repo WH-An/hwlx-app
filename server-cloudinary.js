@@ -232,6 +232,12 @@ app.get('/__ping', (req, res) => {
   });
 });
 
+// 轻量保活端点（与 Render healthCheckPath 一致）
+app.get('/ping', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.type('text/plain').send('ok');
+});
+
 // Cloudinary连接测试
 app.get('/api/test-cloudinary', async (req, res) => {
   try {
